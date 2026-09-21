@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Site\ArticleController;
 use App\Http\Controllers\Site\HomeController;
+use App\Http\Controllers\Site\PageController;
 use App\Http\Controllers\Site\RobotsController;
 use App\Http\Controllers\Site\SitemapController;
 use Illuminate\Support\Facades\Route;
@@ -20,3 +22,17 @@ Route::get('/', HomeController::class)->name('home');
 // SEO endpoints (environment aware — see config/seo.php).
 Route::get('/robots.txt', RobotsController::class)->name('robots');
 Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
+
+// Managed content. Only published items resolve (see the controllers).
+$slug = '[a-z0-9]+(?:-[a-z0-9]+)*';
+
+Route::get('/articles/{slug}', [ArticleController::class, 'show'])->where('slug', $slug)->name('articles.show');
+
+// Single-segment page slugs. This is the ONLY catch-all and it stays last:
+// the negative lookahead excludes every reserved path (admin, build, storage,
+// up, robots.txt, sitemap.xml, ...) so it can never shadow application routes.
+$reserved = implode('|', array_map(fn ($r) => preg_quote($r, '#'), config('cms.reserved_slugs')));
+
+Route::get('/{slug}', [PageController::class, 'show'])
+    ->where('slug', "(?!(?:{$reserved})\$){$slug}")
+    ->name('pages.show');

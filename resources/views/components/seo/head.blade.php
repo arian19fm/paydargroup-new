@@ -9,7 +9,12 @@
     $description = $seo->getDescription();
     $canonical = $seo->getCanonical();
     $image = $seo->getImage();
-    $ogTitle = $seo->rawTitle() ?? $title;
+    $ogTitle = $seo->getOgTitle();
+    $ogDescription = $seo->getOgDescription();
+    $twitterTitle = $seo->getTwitterTitle();
+    $twitterDescription = $seo->getTwitterDescription();
+    $twitterImage = $seo->getTwitterImage();
+    $twitterSite = $seo->getTwitterSite();
 @endphp
 <title>{{ $title }}</title>
 @if ($description)
@@ -20,11 +25,11 @@
 
 {{-- Open Graph --}}
 <meta property="og:type" content="{{ $seo->getOgType() }}">
-<meta property="og:site_name" content="{{ config('site.name') }}">
+<meta property="og:site_name" content="{{ \App\Support\Seo\SeoManager::siteName() }}">
 <meta property="og:locale" content="{{ config('site.og_locale') }}">
 <meta property="og:title" content="{{ $ogTitle }}">
-@if ($description)
-<meta property="og:description" content="{{ $description }}">
+@if ($ogDescription)
+<meta property="og:description" content="{{ $ogDescription }}">
 @endif
 <meta property="og:url" content="{{ $canonical }}">
 @if ($image)
@@ -41,18 +46,18 @@
 @endif
 
 {{-- Twitter / X --}}
-<meta name="twitter:card" content="{{ $image ? 'summary_large_image' : 'summary' }}">
-@if (config('seo.twitter_site'))
-<meta name="twitter:site" content="{{ config('seo.twitter_site') }}">
+<meta name="twitter:card" content="{{ $twitterImage ? 'summary_large_image' : 'summary' }}">
+@if ($twitterSite)
+<meta name="twitter:site" content="{{ $twitterSite }}">
 @endif
-<meta name="twitter:title" content="{{ $ogTitle }}">
-@if ($description)
-<meta name="twitter:description" content="{{ $description }}">
+<meta name="twitter:title" content="{{ $twitterTitle }}">
+@if ($twitterDescription)
+<meta name="twitter:description" content="{{ $twitterDescription }}">
 @endif
-@if ($image)
-<meta name="twitter:image" content="{{ $image['url'] }}">
-@isset($image['alt'])
-<meta name="twitter:image:alt" content="{{ $image['alt'] }}">
+@if ($twitterImage)
+<meta name="twitter:image" content="{{ $twitterImage['url'] }}">
+@isset($twitterImage['alt'])
+<meta name="twitter:image:alt" content="{{ $twitterImage['alt'] }}">
 @endisset
 @endif
 

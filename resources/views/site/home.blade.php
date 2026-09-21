@@ -9,6 +9,6 @@
 
 @section('content')
     <x-layout.section>
-        <h1>{{ config('site.name') }}</h1>
+        <h1>{{ \App\Support\Seo\SeoManager::siteName() }}</h1>
     </x-layout.section>
 @endsection

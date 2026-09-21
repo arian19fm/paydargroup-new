@@ -1,0 +1,36 @@
+// Admin panel shell — structural only. Uses Bootstrap utilities plus a
+// fixed-width sidebar on large screens (offcanvas below lg).
+
+.pg-admin {
+    --pg-admin-sidebar-width: 16rem;
+}
+
+.pg-admin__sidebar {
+    background: var(--pg-surface);
+    border-inline-end: 1px solid var(--pg-border);
+
+    .nav-link {
+        color: var(--pg-text);
+        border-radius: var(--pg-radius-sm);
+
+        &.active {
+            background: var(--pg-primary);
+            color: var(--pg-background);
+        }
+    }
+}
+
+@include media-breakpoint-up(lg) {
+    .pg-admin__sidebar {
+        width: var(--pg-admin-sidebar-width);
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+    }
+}
+
+.pg-admin__topbar {
+    background: var(--pg-background);
+    border-bottom: 1px solid var(--pg-border);
+}

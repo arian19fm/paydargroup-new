@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'articles' => 'Articles & news',
     'home' => 'Home',
     'menu' => 'Menu',
     'open_menu' => 'Open menu',

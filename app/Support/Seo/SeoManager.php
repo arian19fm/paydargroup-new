@@ -2,6 +2,8 @@
 
 namespace App\Support\Seo;
 
+use App\Contracts\Seoable;
+use App\Models\Media;
 use Illuminate\Support\Str;
 
 /**
@@ -60,15 +62,23 @@ class SeoManager
     /** The full <title> text: "{page}{sep}{site}" or the site name (+ tagline). */
     public function fullTitle(): string
     {
-        $site = config('site.name');
+        $site = self::siteName();
+        $separator = settings('seo.title_separator', config('seo.title_separator'));
 
         if ($this->rawTitle() === null) {
-            $tagline = config('site.tagline');
+            $default = settings('seo.default_title');
+            $tagline = settings('general.site_tagline', config('site.tagline'));
 
-            return $tagline ? $site.config('seo.title_separator').$tagline : $site;
+            return $default ?: ($tagline ? $site.$separator.$tagline : $site);
         }
 
-        return $this->rawTitle().config('seo.title_separator').$site;
+        return $this->rawTitle().$separator.$site;
+    }
+
+    /** Site name from settings, falling back to config/site.php. */
+    public static function siteName(): string
+    {
+        return settings('general.site_name', config('site.name'));
     }
 
     // ------------------------------------------------------------ description
@@ -84,7 +94,7 @@ class SeoManager
 
     public function getDescription(): ?string
     {
-        return $this->description ?? config('seo.default_description');
+        return $this->description ?? settings('seo.default_description', config('seo.default_description'));
     }
 
     // -------------------------------------------------------------- canonical
@@ -204,6 +214,14 @@ class SeoManager
             return $this->image;
         }
 
+        if ($mediaId = settings('seo.default_og_image_id')) {
+            $media = Media::find($mediaId);
+
+            if ($media) {
+                return self::imageFromMedia($media);
+            }
+        }
+
         $default = config('seo.default_image');
 
         return $default ? [
@@ -211,6 +229,120 @@ class SeoManager
             'width' => config('seo.default_image_width'),
             'height' => config('seo.default_image_height'),
         ] : null;
+    }
+
+    /** @return array{url: string, width?: int, height?: int, alt?: string} */
+    public static function imageFromMedia(Media $media): array
+    {
+        return array_filter([
+            'url' => $media->url(),
+            'width' => $media->width,
+            'height' => $media->height,
+            'alt' => $media->alt_text,
+        ]);
+    }
+
+    // ------------------------------------------------------------- from model
+
+    /**
+     * Fill the head from a managed content item and its stored SEO
+     * overrides. Precedence for each field: explicit override in seo_meta →
+     * the model's own fallback → site default. Nothing is written back.
+     */
+    public function fromModel(Seoable $model): static
+    {
+        $meta = $model->seoMeta();
+
+        $this->title($meta?->title ?: $model->seoDefaultTitle());
+        $this->description($meta?->description ?: $model->seoDefaultDescription());
+        $this->canonical($meta?->canonical_url ?: $model->publicUrl());
+        $this->ogType($model->seoOgType());
+
+        if ($meta) {
+            $this->noindex(! $meta->robots_index);
+            $this->nofollow(! $meta->robots_follow);
+            $this->ogOverrides($meta->og_title, $meta->og_description);
+            $this->twitterOverrides($meta->twitter_title, $meta->twitter_description);
+        }
+
+        $image = $meta?->ogImage ?? $model->seoDefaultImage();
+
+        if ($image) {
+            $this->image($image->url(), $image->width, $image->height, $image->alt_text);
+        }
+
+        if ($meta?->twitterImage) {
+            $this->twitterImage(self::imageFromMedia($meta->twitterImage));
+        }
+
+        return $this;
+    }
+
+    // ----------------------------------------------------- social overrides
+
+    protected ?string $ogTitle = null;
+
+    protected ?string $ogDescription = null;
+
+    protected ?string $twitterTitle = null;
+
+    protected ?string $twitterDescription = null;
+
+    /** @var array{url: string, width?: int, height?: int, alt?: string}|null */
+    protected ?array $twitterImage = null;
+
+    public function ogOverrides(?string $title, ?string $description): static
+    {
+        $this->ogTitle = $title ?: null;
+        $this->ogDescription = $description ?: null;
+
+        return $this;
+    }
+
+    public function twitterOverrides(?string $title, ?string $description): static
+    {
+        $this->twitterTitle = $title ?: null;
+        $this->twitterDescription = $description ?: null;
+
+        return $this;
+    }
+
+    public function twitterImage(?array $image): static
+    {
+        $this->twitterImage = $image;
+
+        return $this;
+    }
+
+    public function getOgTitle(): string
+    {
+        return $this->ogTitle ?? $this->rawTitle() ?? $this->fullTitle();
+    }
+
+    public function getOgDescription(): ?string
+    {
+        return $this->ogDescription ?? $this->getDescription();
+    }
+
+    public function getTwitterTitle(): string
+    {
+        return $this->twitterTitle ?? $this->getOgTitle();
+    }
+
+    public function getTwitterDescription(): ?string
+    {
+        return $this->twitterDescription ?? $this->getOgDescription();
+    }
+
+    /** @return array{url: string, width?: int, height?: int, alt?: string}|null */
+    public function getTwitterImage(): ?array
+    {
+        return $this->twitterImage ?? $this->getImage();
+    }
+
+    public function getTwitterSite(): ?string
+    {
+        return settings('seo.twitter_site', config('seo.twitter_site'));
     }
 
     // --------------------------------------------------------------- hreflang

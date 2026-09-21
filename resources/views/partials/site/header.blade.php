@@ -4,7 +4,7 @@
         <x-layout.container>
             <a class="navbar-brand" href="{{ route('home') }}">
                 {{-- Logo pending brand assets; text brand for now. --}}
-                {{ config('site.name') }}
+                {{ \App\Support\Seo\SeoManager::siteName() }}
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#site-nav" aria-controls="site-nav" aria-expanded="false" aria-label="{{ __('nav.open_menu') }}">
                 <span class="navbar-toggler-icon"></span>

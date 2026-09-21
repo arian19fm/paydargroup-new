@@ -2,10 +2,13 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ErrorPageTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_unknown_url_returns_404_with_branded_page(): void
     {
         $this->get('/this-page-does-not-exist')

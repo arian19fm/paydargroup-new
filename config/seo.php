@@ -1,5 +1,7 @@
 <?php
 
+use App\Support\Seo\Sitemap\ArticlesSource;
+use App\Support\Seo\Sitemap\PagesSource;
 use App\Support\Seo\Sitemap\StaticPagesSource;
 
 return [
@@ -68,14 +70,18 @@ return [
     |--------------------------------------------------------------------------
     |
     | Classes implementing App\Support\Seo\Sitemap\SitemapSource. Each returns
-    | the URLs it owns; later phases add sources for managed pages, articles
-    | and company/project pages. See docs/SEO.md.
+    | the URLs it owns: static routes, published pages, published articles.
+    | Only published, indexable, canonical content is emitted. See docs/SEO.md.
     |
     */
 
     'sitemap_sources' => [
         StaticPagesSource::class,
+        PagesSource::class,
+        ArticlesSource::class,
     ],
+
+    'sitemap_cache_key' => 'seo.sitemap.xml',
 
     'sitemap_cache_seconds' => 3600,
 

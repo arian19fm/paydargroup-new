@@ -1,6 +1,7 @@
 <?php
 
 use App\Support\Seo\SeoManager;
+use App\Support\Settings\Settings;
 
 if (! function_exists('seo')) {
     /**
@@ -10,5 +11,17 @@ if (! function_exists('seo')) {
     function seo(): SeoManager
     {
         return app(SeoManager::class);
+    }
+}
+
+if (! function_exists('settings')) {
+    /**
+     * Read a site setting ("group.key") with a default, or get the service.
+     */
+    function settings(?string $key = null, mixed $default = null): mixed
+    {
+        $settings = app(Settings::class);
+
+        return $key === null ? $settings : $settings->get($key, $default);
     }
 }

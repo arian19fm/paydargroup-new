@@ -18,46 +18,75 @@ implemented once, centrally, and reused by every page. Do not hand-write
 | `SitemapController` + `Sitemap\*` | `/sitemap.xml` | Dynamic sitemap from registered sources. |
 | `config/seo.php`, `config/site.php` | | Defaults, indexability, identity. |
 
-### Setting page metadata
+### 1.1 Managed content: the `seo_meta` model
 
-Preferred — in the controller, where the data is:
+Polymorphic table `seo_meta` (`App\Models\SeoMeta`), one optional row per
+content item: `title`, `description`, `canonical_url`, `robots_index`,
+`robots_follow`, `og_title`, `og_description`, `og_image_id`,
+`twitter_title`, `twitter_description`, `twitter_image_id`, `schema_type`.
+Attached with the `HasSeo` trait (`seo()` morphOne, `saveSeo()`,
+`indexable()` scope) to any model implementing `App\Contracts\Seoable`
+(Page and Article today; future models reuse it unchanged).
+
+**Values are overrides.** Every column is nullable; a blank means "use the
+content's own data". Fallbacks are resolved at render time and are never
+written to the database. If a form submits nothing but defaults, no row is
+created at all.
+
+### 1.2 The bridge: `seo()->fromModel($model)`
 
 ```php
-public function show(Article $article): View
+public function show(string $slug): View
 {
-    seo()
-        ->title($article->title)
-        ->description($article->excerpt)
-        ->ogType('article')
-        ->image($article->cover_url, 1200, 630, $article->cover_alt)
-        ->breadcrumbs([
-            ['label' => __('nav.home'), 'url' => route('home')],
-            ['label' => __('nav.news'), 'url' => route('news.index')],
-            ['label' => $article->title],
-        ])
-        ->jsonLd(JsonLd::article([...]));
+    $article = Article::published()->where('slug', $slug)->firstOrFail();
 
-    return view('site.news.show', compact('article'));
+    seo()->fromModel($article)
+        ->breadcrumbs([...])
+        ->jsonLd(JsonLd::article([...]));   // article pages only
+
+    return view('site.articles.show', compact('article'));
 }
 ```
 
-Also possible at the top of a view (runs before the layout renders):
+Precedence per field (override → model fallback → site default):
+
+| Head field | `seo_meta` override | Model fallback (`Seoable`) | Site default |
+|---|---|---|---|
+| title | `title` | `seoDefaultTitle()` (the title) | — |
+| description | `description` | `seoDefaultDescription()` (excerpt) | `seo.default_description` setting / config |
+| canonical | `canonical_url` | `publicUrl()` (built from `APP_URL`) | — |
+| robots | `robots_index` / `robots_follow` | index, follow | `SEO_INDEXABLE` environment rule still wins |
+| og:type | — | `seoOgType()` (`website` / `article`) | — |
+| og:title / description | `og_title` / `og_description` | page title / description | — |
+| og:image | `og_image_id` | `seoDefaultImage()` (featured image) | `seo.default_og_image_id` setting / config |
+| twitter:* | `twitter_*` | the OG values | — |
+
+### 1.3 Setting metadata by hand
+
+For pages without a model (home, contact, listings) call the setters in the
+controller, or at the top of a view (runs before the layout renders):
 
 ```blade
 @extends('layouts.site')
 @php seo()->title(__('pages.contact.title'))->description(__('pages.contact.description')); @endphp
 ```
 
-Managed content (later phases) will carry its own SEO fields (`meta_title`,
-`meta_description`, `canonical_url`, `robots`, `og_*`) via a polymorphic
-`seo_meta` relation; controllers feed those into `seo()` with fallbacks to
-the content itself.
+### 1.4 Admin SEO form
+
+`<x-admin.seo-fields :seo="$model->seo" />` renders the reusable section on
+Page and Article forms: SEO title, meta description, canonical URL,
+index/follow checkboxes, OG title/description/image, Twitter
+title/description/image, schema type. Character counts (60 / 160 / 200) are
+**advisory** — shown live, never enforced; validation only guards column
+sizes, URL format and media/schema references (`ValidatesSeoFields`).
 
 ## 2. Title strategy
 
-- Format: `{page title} | {site name}` (`config('seo.title_separator')`).
-- Home page: `{site name}` or `{site name} | {tagline}` when `SITE_TAGLINE`
-  is set. No page sets a title that repeats the site name.
+- Format: `{page title} | {site name}` (separator from the
+  `seo.title_separator` setting, then `config('seo.title_separator')`; site
+  name from `general.site_name`, then `config('site.name')`).
+- Home page: the `seo.default_title` setting, else `{site name}` or
+  `{site name} | {tagline}`. No page sets a title that repeats the site name.
 - Unique per page; ≤ 60 characters ideally; the H1 and the title describe
   the same subject but need not be identical.
 - Error pages: `{error title} | {site name}`, `noindex`.
@@ -66,8 +95,9 @@ the content itself.
 
 - `seo()->description()` strips tags, collapses whitespace and limits to 300
   characters (target 120–160 for display).
-- Site default: `SEO_DEFAULT_DESCRIPTION` in `.env` (null → tag omitted;
-  never emit placeholder text).
+- Site default: the `seo.default_description` setting (admin → Settings →
+  SEO), then `SEO_DEFAULT_DESCRIPTION` in `.env` (null → tag omitted; never
+  emit placeholder text).
 - Same text is reused for `og:description` and `twitter:description`.
 
 ## 4. Canonical URLs
@@ -144,10 +174,15 @@ the sources listed in `config/seo.php → sitemap_sources`, cached for
 
 | Source | Status | URLs | lastmod |
 |---|---|---|---|
-| `StaticPagesSource` | implemented | named static routes (`home`, later `about`, `contact`, …) | – |
-| managed pages | planned | published CMS pages | `updated_at` |
-| articles / news | planned | published articles (+ category listings, page 1 only) | `updated_at` |
-| company / project pages | planned | future project or company entity pages | `updated_at` |
+| `StaticPagesSource` | implemented | named static routes (`home`, …) | – |
+| `PagesSource` | implemented | `Page::published()->indexable()` | `updated_at` |
+| `ArticlesSource` | implemented | `Article::published()->indexable()` | `updated_at` |
+| category listings | planned | article category pages once they exist (page 1 only) | – |
+| company / project pages | planned | future entity pages | `updated_at` |
+
+`indexable()` excludes items whose `seo_meta.robots_index` is false; drafts,
+scheduled items, admin routes and redirects are never listed. The cached
+XML is invalidated whenever a page or article is saved or deleted.
 
 Rules: only canonical, indexable, published URLs; absolute URLs under
 `APP_URL`; invalidate the cache on publish; switch to a sitemap index with
@@ -180,8 +215,9 @@ via the image sitemap extension when the media library exists.
 is emitted for single-language pages. When a second language is added, each
 translated page must list *all* its variants (including itself).
 
-## 14. 301 redirects (future)
+## 14. 301 redirects
 
-A `redirects` table (`from_path`, `to_url`, `status_code`) applied by
-middleware before routing, editable in the admin, with automatic entries on
-slug changes. Documented here so URL changes are never silent.
+Implemented — see `docs/CMS.md` §7: `redirects` table managed in the admin,
+`HandleRedirects` middleware before routing, per-path cache, deferred hit
+counting, loop and protected-path validation. Automatic redirects on slug
+changes are a planned follow-up.

@@ -7,6 +7,7 @@
 
 import './site/bootstrap';
 import './site/navigation';
+import './admin/char-counter';
 import { mountVueComponents } from './vue/mount';
 
 mountVueComponents();

@@ -12,7 +12,7 @@ class SitemapController extends Controller
     public function __invoke(): Response
     {
         $xml = Cache::remember(
-            'seo.sitemap.xml',
+            config('seo.sitemap_cache_key', 'seo.sitemap.xml'),
             now()->addSeconds((int) config('seo.sitemap_cache_seconds', 3600)),
             fn () => (new SitemapBuilder(config('seo.sitemap_sources', [])))->toXml()
         );

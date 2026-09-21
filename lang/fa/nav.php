@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'articles' => 'مقالات و اخبار',
     'home' => 'خانه',
     'menu' => 'منو',
     'open_menu' => 'باز کردن منو',

@@ -20,7 +20,8 @@ Full details: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 | UI        | Bootstrap 5 compiled from SCSS and flipped to RTL with RTLCSS; vanilla JavaScript, progressive enhancement |
 | Widgets   | Vue 3 **only** for isolated interactive components — no SPA, no Nuxt/React, no Tailwind |
 | Assets    | Everything self-hosted and built with Vite into `public/build`. **No runtime CDNs** (no Google Fonts, jsDelivr, unpkg, cdnjs, …) |
-| Admin     | Custom admin panel under `/admin` (no Filament/Nova/etc.)               |
+| Admin     | Custom admin panel under `/admin` with roles/permissions (spatie) — see [`docs/ADMIN.md`](docs/ADMIN.md) |
+| CMS       | Pages, articles, categories, media, menus, settings, redirects — see [`docs/CMS.md`](docs/CMS.md) |
 | SEO       | First-class: `seo()` manager + `<x-seo.head>`, JSON-LD, environment-aware robots.txt/sitemap.xml — see [`docs/SEO.md`](docs/SEO.md) |
 
 ### Directory conventions
@@ -69,7 +70,9 @@ php artisan key:generate
 
 # create the database (see "Database setup" below), then:
 php artisan migrate
+php artisan db:seed          # roles, permissions, menu locations, blank settings
 php artisan storage:link
+php artisan admin:create     # first administrator (interactive, password prompted)
 
 npm run build          # or: npm run dev (Vite dev server with HMR)
 php artisan serve      # http://localhost:8000
@@ -132,6 +135,8 @@ npm run build                     # production assets → public/build
 
 php artisan migrate               # run migrations
 php artisan migrate:status        # migration state
+php artisan db:seed               # structural seed data (idempotent)
+php artisan admin:create          # create an administrator account
 php artisan db:show               # connection / table overview
 
 php artisan route:list            # all routes
@@ -157,5 +162,7 @@ vendor/bin/pint                   # code style (Laravel Pint)
 
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — architecture decisions and phase status
 - [`docs/FRONTEND.md`](docs/FRONTEND.md) — Bootstrap RTL, SCSS/tokens, fonts, Vite, isolated Vue, Blade structure, accessibility, performance
-- [`docs/SEO.md`](docs/SEO.md) — title/description/canonical/robots strategy, Open Graph, JSON-LD, sitemap plan, URL and image rules, Core Web Vitals
+- [`docs/SEO.md`](docs/SEO.md) — title/description/canonical/robots strategy, Open Graph, JSON-LD, SEO data model, sitemap, URL and image rules, Core Web Vitals
+- [`docs/ADMIN.md`](docs/ADMIN.md) — authentication, roles/permissions, `admin:create`, admin screens
+- [`docs/CMS.md`](docs/CMS.md) — content models, publishing rules, editor strategy, media, menus, settings, redirects
 - [`docs/database/setup.sql`](docs/database/setup.sql) — database bootstrap script

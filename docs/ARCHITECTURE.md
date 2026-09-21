@@ -1,9 +1,9 @@
 # Paydar Group Website — Architecture
 
-Status: Phase 2 (frontend foundation, RTL, SEO core). This document records
-the decisions that later phases must build on. It is intentionally
-prescriptive. Implementation details: [`FRONTEND.md`](FRONTEND.md),
-[`SEO.md`](SEO.md).
+Status: Phase 3 (admin core, authentication, CMS data model, SEO data model).
+This document records the decisions that later phases must build on. It is
+intentionally prescriptive. Implementation details: [`FRONTEND.md`](FRONTEND.md),
+[`SEO.md`](SEO.md), [`ADMIN.md`](ADMIN.md), [`CMS.md`](CMS.md).
 
 ## 1. Purpose and scope
 
@@ -132,17 +132,19 @@ defaults in a settings table.
 - Full-page / fragment caching for public pages, and query caching for navigation and settings.
 - Target: good LCP, INP and CLS scores on mobile.
 
-## 6. Admin panel (custom)
+## 6. Admin panel (custom) — implemented
 
-- Lives under `/admin` (`routes/admin.php`, prefix `admin`, names `admin.*`), guarded by Laravel's session auth (`users` table = admin users initially; roles/permissions added when needed).
-- Bootstrap-based Blade UI, same asset pipeline; Vue widgets only where a rich control is truly needed (e.g. media picker).
-- Manages: pages, articles/news, categories/tags, media library, SEO fields, redirects, site settings, menus.
-- Content editing produces sanitized HTML (server-side purification) and stores plain-text excerpts for meta descriptions.
+- Lives under `/admin` (`routes/admin.php`, prefix `admin`, names `admin.*`), guarded by Laravel's session auth (`auth` + `admin` middleware). Staff accounts only; no public registration.
+- Roles/permissions via `spatie/laravel-permission`: `super_admin` (all permissions), `admin`, `editor`; policies map abilities to `resource.action` permissions. Details: [`ADMIN.md`](ADMIN.md).
+- Bootstrap-based Blade UI, same asset pipeline; Vue widgets only where a rich control is truly needed (e.g. a future media picker).
+- Manages: pages, articles/news, categories, media library, SEO fields, redirects, site settings, menus, users.
+- Content editing is a plain textarea until the editor/HTML-sanitisation policy is decided ([`CMS.md`](CMS.md) §3).
 
-## 7. Content and media (direction)
+## 7. Content and media — implemented
 
-- Content types are Eloquent models with `slug`, publication status (`draft`/`published`, `published_at`), SEO relation (§5.2), and author.
-- Media is stored on the `public` disk (`storage/app/public` → `public/storage` via `storage:link`); a `media` table records original + generated variants, dimensions, alt text and captions. Storage is private to this project.
+- Pages and articles are Eloquent models with `slug`, `draft`/`published` status + `published_at`, polymorphic SEO overrides (`seo_meta`, §5.2), audit fields and soft deletes. "Published" always means status published **and** date reached.
+- Media metadata lives in `media`; files on the `public` disk (`storage/app/public` → `public/storage`), S3-compatible later by changing the disk. Uploads are allow-listed (no SVG/executables) and MIME-sniffed.
+- Menus (`menus`/`menu_items`), typed settings (`settings`, schema in `config/settings.php`) and redirects (`redirects`, middleware + cache) are managed data — see [`CMS.md`](CMS.md).
 - Persian (`fa`) is the default locale with `en` fallback; timezone `Asia/Tehran`. Dates are stored in UTC and displayed in the app timezone (Jalali formatting can be added at the presentation layer).
 
 ## 8. Environments and deployment
@@ -158,6 +160,10 @@ defaults in a settings table.
   architecture, Blade layout system, SEO core (head, JSON-LD, robots,
   sitemap, breadcrumbs), accessibility/performance foundations, error pages,
   tests, documentation. Done — with all visual values pending Figma.
-- **Later** — Figma token mapping and visual pages, admin panel and
-  authentication, content models (pages, articles, media) with SEO fields,
-  redirects, media processing, full-page caching.
+- **Phase 3** — admin authentication, roles/permissions, custom admin
+  panel, CMS models (pages, articles, categories, media, menus, settings,
+  redirects) with the polymorphic SEO model, `seo()->fromModel()` bridge,
+  sitemap sources, `admin:create`, tests and docs. Done.
+- **Later** — Figma token mapping and visual pages, rich editor + HTML
+  sanitisation, media picker and image variants, automatic redirects on slug
+  change, article listings/category pages, full-page caching.

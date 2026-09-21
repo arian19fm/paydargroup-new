@@ -2,10 +2,13 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class RobotsAndSitemapTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_robots_txt_disallows_everything_when_not_indexable(): void
     {
         config(['seo.indexable' => false]);

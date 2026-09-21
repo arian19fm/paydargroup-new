@@ -1,5 +1,16 @@
 <?php
 
+use App\Http\Controllers\Admin\ArticleCategoryController;
+use App\Http\Controllers\Admin\ArticleController;
+use App\Http\Controllers\Admin\Auth\LoginController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\MenuItemController;
+use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\RedirectController;
+use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -8,12 +19,37 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 |
 | Registered in bootstrap/app.php under the "/admin" prefix with the
-| "admin." route-name prefix and the "web" middleware group. The custom
-| admin panel (authentication, content, media, SEO management) is built
-| here in later phases — no third-party admin package is used.
+| "admin." route-name prefix and the "web" middleware group. Staff-only:
+| there is no registration or password reset in this phase.
 |
 */
 
-// Route::middleware('auth')->group(function () {
-//     Route::get('/', DashboardController::class)->name('dashboard');
-// });
+Route::middleware('guest')->group(function () {
+    Route::get('login', [LoginController::class, 'create'])->name('login');
+    Route::post('login', [LoginController::class, 'store'])->middleware('throttle:10,1')->name('login.store');
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::post('logout', [LoginController::class, 'destroy'])->name('logout');
+
+    Route::get('/', DashboardController::class)->name('dashboard');
+
+    Route::resource('pages', PageController::class)->except('show');
+    Route::resource('articles', ArticleController::class)->except('show');
+    Route::resource('categories', ArticleCategoryController::class)->except('show');
+    Route::resource('redirects', RedirectController::class)->except('show');
+    Route::resource('media', MediaController::class)->except('show');
+
+    Route::resource('menus', MenuController::class)->except('show');
+    Route::post('menus/{menu}/items', [MenuItemController::class, 'store'])->name('menus.items.store');
+    Route::put('menus/{menu}/items/{item}', [MenuItemController::class, 'update'])->name('menus.items.update');
+    Route::delete('menus/{menu}/items/{item}', [MenuItemController::class, 'destroy'])->name('menus.items.destroy');
+
+    Route::middleware('can:settings.view')->group(function () {
+        Route::get('settings/{group}', [SettingsController::class, 'edit'])->name('settings.edit');
+        Route::put('settings/{group}', [SettingsController::class, 'update'])->name('settings.update');
+    });
+
+    Route::resource('users', UserController::class)->except(['show', 'destroy']);
+    Route::patch('users/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active');
+});
