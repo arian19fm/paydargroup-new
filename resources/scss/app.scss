@@ -1,0 +1,14 @@
+// Paydar Group — main stylesheet.
+//
+// Bootstrap is compiled from source here so brand variables can be overridden
+// before import (see docs/ARCHITECTURE.md → "Frontend"). The compiled output
+// lands in public/build and is served locally; no external CDN is involved.
+
+// 1. Bootstrap variable overrides go here (before the import).
+//    e.g. $primary: #123456;
+
+// 2. Bootstrap source.
+@import 'bootstrap/scss/bootstrap';
+
+// 3. Self-hosted fonts (@font-face pointing at /fonts/...) and site styles
+//    will be added in later phases.
