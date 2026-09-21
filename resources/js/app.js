@@ -1,16 +1,12 @@
 // Paydar Group — main script entry.
 //
-// Bootstrap's JS (with Popper) is bundled locally by Vite. Pages are
-// server-rendered Blade; JavaScript is progressive enhancement only.
-import * as bootstrap from 'bootstrap';
+// The site is server-rendered Blade; JavaScript is progressive enhancement.
+// Keep this bundle small: import only the Bootstrap components that are
+// actually used, and mount Vue only where a page opts in (see vue/mount.js).
+// Everything is bundled locally by Vite — no CDN.
 
-window.bootstrap = bootstrap;
+import './site/bootstrap';
+import './site/navigation';
+import { mountVueComponents } from './vue/mount';
 
-// Vue is reserved for isolated interactive widgets mounted onto specific
-// elements (never a full-page SPA). Register them here in later phases, e.g.:
-//
-//   import { createApp } from 'vue';
-//   import ExampleWidget from './components/ExampleWidget.vue';
-//   document.querySelectorAll('[data-vue="example-widget"]').forEach((el) => {
-//       createApp(ExampleWidget, { ...el.dataset }).mount(el);
-//   });
+mountVueComponents();

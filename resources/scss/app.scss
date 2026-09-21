@@ -1,14 +1,82 @@
-// Paydar Group — main stylesheet.
+// ============================================================================
+// Paydar Group — main stylesheet
 //
-// Bootstrap is compiled from source here so brand variables can be overridden
-// before import (see docs/ARCHITECTURE.md → "Frontend"). The compiled output
-// lands in public/build and is served locally; no external CDN is involved.
+// Load order matters:
+//   1. abstracts   design tokens + Bootstrap variable overrides (no CSS output)
+//   2. bootstrap   compiled from source with our variables
+//   3. base        fonts, :root custom properties, typography, utilities
+//   4. layout      header / footer / navigation
+//   5. components  project components on top of Bootstrap's
+//   6. pages       page-specific styles (keep rare)
+//
+// The compiled LTR output is flipped to RTL by RTLCSS (postcss.config.js).
+// Everything here is self-hosted; never reference an external URL.
+// See docs/FRONTEND.md.
+// ============================================================================
 
-// 1. Bootstrap variable overrides go here (before the import).
-//    e.g. $primary: #123456;
+// 1. Abstracts (tokens, functions, mixins) — must come before Bootstrap.
+@import 'abstracts/variables';
+@import 'abstracts/functions';
+@import 'abstracts/mixins';
 
-// 2. Bootstrap source.
-@import 'bootstrap/scss/bootstrap';
+// 2. Bootstrap. Individual parts are imported so unused modules can be
+//    dropped later to trim the bundle; the list mirrors bootstrap.scss.
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/variables-dark';
+@import 'bootstrap/scss/maps';
+@import 'bootstrap/scss/mixins';
+@import 'bootstrap/scss/utilities';
 
-// 3. Self-hosted fonts (@font-face pointing at /fonts/...) and site styles
-//    will be added in later phases.
+@import 'bootstrap/scss/root';
+@import 'bootstrap/scss/reboot';
+@import 'bootstrap/scss/type';
+@import 'bootstrap/scss/images';
+@import 'bootstrap/scss/containers';
+@import 'bootstrap/scss/grid';
+@import 'bootstrap/scss/tables';
+@import 'bootstrap/scss/forms';
+@import 'bootstrap/scss/buttons';
+@import 'bootstrap/scss/transitions';
+@import 'bootstrap/scss/dropdown';
+@import 'bootstrap/scss/button-group';
+@import 'bootstrap/scss/nav';
+@import 'bootstrap/scss/navbar';
+@import 'bootstrap/scss/card';
+@import 'bootstrap/scss/accordion';
+@import 'bootstrap/scss/breadcrumb';
+@import 'bootstrap/scss/pagination';
+@import 'bootstrap/scss/badge';
+@import 'bootstrap/scss/alert';
+@import 'bootstrap/scss/progress';
+@import 'bootstrap/scss/list-group';
+@import 'bootstrap/scss/close';
+@import 'bootstrap/scss/toasts';
+@import 'bootstrap/scss/modal';
+@import 'bootstrap/scss/tooltip';
+@import 'bootstrap/scss/popover';
+@import 'bootstrap/scss/carousel';
+@import 'bootstrap/scss/spinners';
+@import 'bootstrap/scss/offcanvas';
+@import 'bootstrap/scss/placeholders';
+@import 'bootstrap/scss/helpers';
+@import 'bootstrap/scss/utilities/api';
+
+// 3. Base
+@import 'base/fonts';
+@import 'base/root';
+@import 'base/typography';
+@import 'base/utilities';
+
+// 4. Layout
+@import 'layout/header';
+@import 'layout/navigation';
+@import 'layout/footer';
+
+// 5. Components
+@import 'components/buttons';
+@import 'components/forms';
+@import 'components/cards';
+@import 'components/badges';
+
+// 6. Pages (none yet)

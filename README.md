@@ -17,31 +17,34 @@ Full details: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 |-----------|------------------------------------------------------------------------|
 | Backend   | Laravel 13 (PHP ≥ 8.3), standard MVC, Blade server-side rendering       |
 | Database  | MySQL 8, `utf8mb4` / `utf8mb4_unicode_ci` everywhere                    |
-| UI        | Bootstrap 5 (compiled from SCSS), vanilla JavaScript, progressive enhancement |
+| UI        | Bootstrap 5 compiled from SCSS and flipped to RTL with RTLCSS; vanilla JavaScript, progressive enhancement |
 | Widgets   | Vue 3 **only** for isolated interactive components — no SPA, no Nuxt/React, no Tailwind |
 | Assets    | Everything self-hosted and built with Vite into `public/build`. **No runtime CDNs** (no Google Fonts, jsDelivr, unpkg, cdnjs, …) |
 | Admin     | Custom admin panel under `/admin` (no Filament/Nova/etc.)               |
-| SEO       | First-class: per-page meta, canonical, OpenGraph/Twitter, JSON-LD, sitemap, redirects — see the architecture doc |
+| SEO       | First-class: `seo()` manager + `<x-seo.head>`, JSON-LD, environment-aware robots.txt/sitemap.xml — see [`docs/SEO.md`](docs/SEO.md) |
 
 ### Directory conventions
 
 ```
 app/Http/Controllers/Site/    public corporate pages
 app/Http/Controllers/Admin/   custom admin panel
-app/Support/Seo/              SEO helpers (meta, JSON-LD, sitemap, …)
+app/Support/Seo/              SeoManager, JsonLd, Sitemap sources/builder
+app/Support/Localization/     text direction helper
+app/Http/Middleware/          SetRobotsHeader (noindex outside production)
 routes/web.php                public routes
 routes/admin.php              admin routes (prefix /admin, name admin.*)
 resources/views/layouts/      base layouts
 resources/views/site/         public page views
 resources/views/admin/        admin views
-resources/views/components/   Blade components
-resources/views/partials/     shared partials (SEO head, nav, footer, …)
-resources/scss/app.scss       Bootstrap + brand overrides
-resources/js/app.js           Bootstrap JS + Vue widget mounting
-resources/js/components/      Vue single-file components (widgets only)
-resources/fonts/              font sources (self-hosted)
-public/fonts/                 served font files
-docs/                         project documentation
+resources/views/components/   Blade components (seo/, layout/, ui/)
+resources/views/partials/site shared partials (header, navigation, footer)
+resources/views/errors/       404 / 500 / 503
+resources/scss/               design tokens, Bootstrap overrides, base, layout, components
+resources/js/                 app.js, site/ (vanilla), vue/mount.js, components/ (*.vue)
+resources/fonts/              self-hosted WOFF2 fonts
+lang/fa, lang/en              UI strings (Persian default)
+config/site.php, config/seo.php   site identity, navigation, SEO defaults
+docs/                         ARCHITECTURE.md, FRONTEND.md, SEO.md
 ```
 
 ## Requirements
@@ -141,8 +144,18 @@ php artisan test                  # PHPUnit test suite
 vendor/bin/pint                   # code style (Laravel Pint)
 ```
 
+## Environment variables worth knowing
+
+| Variable | Purpose |
+|---|---|
+| `APP_URL` | Exact public origin — canonical URLs, sitemap and JSON-LD are built from it |
+| `SEO_INDEXABLE` | Defaults to true only when `APP_ENV=production`; local/staging emit `noindex` + `X-Robots-Tag` and a disallow-all robots.txt |
+| `SEO_DEFAULT_DESCRIPTION`, `SEO_DEFAULT_IMAGE`, `SEO_TWITTER_SITE` | Site-wide SEO fallbacks (omitted when empty) |
+| `SITE_TAGLINE`, `SITE_LOGO_URL`, `SITE_SAME_AS` | Identity used in titles and Organization JSON-LD (omitted when empty) |
+
 ## Documentation
 
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — architecture, frontend
-  policy, SEO requirements, admin panel, content model direction
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — architecture decisions and phase status
+- [`docs/FRONTEND.md`](docs/FRONTEND.md) — Bootstrap RTL, SCSS/tokens, fonts, Vite, isolated Vue, Blade structure, accessibility, performance
+- [`docs/SEO.md`](docs/SEO.md) — title/description/canonical/robots strategy, Open Graph, JSON-LD, sitemap plan, URL and image rules, Core Web Vitals
 - [`docs/database/setup.sql`](docs/database/setup.sql) — database bootstrap script

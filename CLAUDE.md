@@ -1,6 +1,7 @@
 # Paydar Group Website — project guidelines
 
-Read `docs/ARCHITECTURE.md` before making changes. Hard rules:
+Read `docs/ARCHITECTURE.md`, `docs/FRONTEND.md` and `docs/SEO.md` before
+making changes. Hard rules:
 
 - Independent from Paydar Fund: never reference its code, database
   (`paydargroup_db`), credentials or storage.
@@ -10,8 +11,15 @@ Read `docs/ARCHITECTURE.md` before making changes. Hard rules:
   Nuxt, React or Tailwind.
 - All assets self-hosted (bundled via Vite into `public/build` or placed in
   `public/`). Never load CSS/JS/fonts from external CDNs.
-- SEO is first-class: semantic HTML, one H1, per-page meta/canonical/OG/JSON-LD
-  through the shared SEO partial, clean URLs, alt text and image dimensions.
+- SEO is first-class: set page metadata with `seo()->title()->description()…`
+  in controllers; never hand-write `<title>`/`<meta>` in views. Semantic HTML,
+  one H1, clean URLs, alt text and image dimensions.
+- RTL comes from RTLCSS in the build; write SCSS in LTR terms or with logical
+  properties — no manual RTL overrides. Design tokens live in
+  `resources/scss/abstracts/_variables.scss`; values marked `TODO(figma)` are
+  placeholders — do not invent brand values.
+- Vue widgets mount only via `[data-vue-component]` (`resources/js/vue/mount.js`);
+  no router, no Pinia, no global app.
 - Custom admin panel under `/admin`; do not install admin packages.
 - MySQL with `utf8mb4` everywhere. Never `DROP DATABASE`.
 - Public controllers in `App\Http\Controllers\Site`, admin in `...\Admin`,

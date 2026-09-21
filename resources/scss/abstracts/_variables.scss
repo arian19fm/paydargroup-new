@@ -1,0 +1,131 @@
+// ============================================================================
+// Design tokens (SCSS) + Bootstrap variable overrides
+//
+// This file is the SINGLE SOURCE OF TRUTH for visual tokens. Every value
+// flows from here into (a) Bootstrap's SCSS variables and (b) the `--pg-*`
+// CSS custom properties emitted in base/_root.scss.
+//
+// ⚠ PENDING FIGMA MAPPING
+// The Paydar Group Figma design has not been mapped yet. Colours, radii,
+// shadows and type scale below are deliberately NEUTRAL PLACEHOLDERS so the
+// build compiles; they are NOT brand decisions. Replace each value marked
+// `// TODO(figma)` with the exact Figma value in a later phase.
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// Colour tokens                                              TODO(figma)
+// Neutral greys (Bootstrap's own grey scale) until Figma colours are mapped.
+// ----------------------------------------------------------------------------
+$pg-primary:     #212529 !default; // TODO(figma) brand primary
+$pg-secondary:   #6c757d !default; // TODO(figma) brand secondary
+$pg-accent:      #495057 !default; // TODO(figma) accent / call-to-action
+$pg-background:  #ffffff !default; // TODO(figma) page background
+$pg-surface:     #f8f9fa !default; // TODO(figma) cards / panels
+$pg-text:        #212529 !default; // TODO(figma) body text
+$pg-text-muted:  #6c757d !default; // TODO(figma) secondary text
+$pg-border:      #dee2e6 !default; // TODO(figma) borders / dividers
+
+// ----------------------------------------------------------------------------
+// Typography                                                 TODO(figma)
+// Vazir is the interim self-hosted family (see resources/fonts/README.md).
+// The stack falls back to system Persian-capable fonts, then generic sans.
+// ----------------------------------------------------------------------------
+$pg-font-family-base: 'Vazir', 'Vazirmatn', 'Segoe UI', Tahoma, system-ui, -apple-system, sans-serif !default;
+$pg-font-size-base:   1rem   !default; // TODO(figma) 16px reference
+$pg-line-height-base: 1.8    !default; // TODO(figma) Persian text needs generous leading
+$pg-font-weight-normal: 400 !default;
+$pg-font-weight-medium: 500 !default;
+$pg-font-weight-bold:   700 !default;
+$pg-headings-font-weight: $pg-font-weight-bold !default; // TODO(figma)
+$pg-headings-line-height: 1.4 !default;                  // TODO(figma)
+
+// ----------------------------------------------------------------------------
+// Shape                                                      TODO(figma)
+// ----------------------------------------------------------------------------
+$pg-radius-sm: .25rem !default; // TODO(figma)
+$pg-radius-md: .5rem  !default; // TODO(figma)
+$pg-radius-lg: 1rem   !default; // TODO(figma)
+
+$pg-shadow-sm: 0 .125rem .25rem rgba(0, 0, 0, .075) !default; // TODO(figma)
+$pg-shadow-md: 0 .5rem 1rem rgba(0, 0, 0, .15)      !default; // TODO(figma)
+
+// ----------------------------------------------------------------------------
+// Layout
+// ----------------------------------------------------------------------------
+$pg-container-max: 1320px !default; // TODO(figma) desktop content width
+
+// ============================================================================
+// Bootstrap overrides
+// Only variables that exist in bootstrap/scss/_variables.scss. Anything left
+// commented is intentionally deferred until the Figma value is known.
+// ============================================================================
+
+// Feature flags
+$enable-rfs:               true;
+$enable-dark-mode:         false;  // no dark theme in the design (yet) — smaller CSS
+$enable-negative-margins:  false;
+$enable-smooth-scroll:     true;   // respects prefers-reduced-motion internally
+$enable-shadows:           false;
+
+// Colours — mapped to tokens so nothing looks "Bootstrap blue" by accident.
+$primary:    $pg-primary;
+$secondary:  $pg-secondary;
+$body-bg:    $pg-background;
+$body-color: $pg-text;
+$body-secondary-color: $pg-text-muted;
+$border-color: $pg-border;
+// $success / $danger / $warning / $info: keep Bootstrap defaults until Figma
+// defines semantic colours.
+
+// Typography
+$font-family-sans-serif: $pg-font-family-base;
+$font-family-base:       $pg-font-family-base;
+$font-size-base:         $pg-font-size-base;
+$line-height-base:       $pg-line-height-base;
+$font-weight-medium:     $pg-font-weight-medium;
+$font-weight-bold:       $pg-font-weight-bold;
+$headings-font-weight:   $pg-headings-font-weight;
+$headings-line-height:   $pg-headings-line-height;
+// $h1-font-size … $h6-font-size, $display-font-sizes: TODO(figma) type scale
+
+// Containers — Bootstrap's own max widths, with the widest tier as our token.
+$container-max-widths: (
+    sm: 540px,
+    md: 720px,
+    lg: 960px,
+    xl: 1140px,
+    xxl: $pg-container-max,
+);
+// $grid-breakpoints: Bootstrap defaults (576/768/992/1200/1400) — change only
+// if the Figma layout grid demands it.
+
+// Border radius
+$border-radius-sm: $pg-radius-sm;
+$border-radius:    $pg-radius-md;
+$border-radius-lg: $pg-radius-lg;
+$border-radius-xl: $pg-radius-lg;
+
+// Shadows
+$box-shadow-sm: $pg-shadow-sm;
+$box-shadow:    $pg-shadow-md;
+
+// Buttons                                                    TODO(figma)
+$btn-font-weight:      $pg-font-weight-medium;
+$btn-border-radius:    $pg-radius-md;
+$btn-border-radius-sm: $pg-radius-sm;
+$btn-border-radius-lg: $pg-radius-lg;
+// $btn-padding-y / $btn-padding-x / $btn-font-size: TODO(figma)
+
+// Forms                                                      TODO(figma)
+$input-border-radius:    $pg-radius-md;
+$input-border-radius-sm: $pg-radius-sm;
+$input-border-radius-lg: $pg-radius-lg;
+$input-border-color:     $pg-border;
+// $input-padding-y / $input-padding-x / $form-label-font-weight: TODO(figma)
+
+// Components
+$card-border-radius:      $pg-radius-lg;
+$card-border-color:       $pg-border;
+$breadcrumb-divider:      quote("/"); // RTLCSS keeps text; direction handled by flex order
+$link-decoration:         none;
+$link-hover-decoration:   underline;

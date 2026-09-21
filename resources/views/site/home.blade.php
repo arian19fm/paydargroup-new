@@ -1,7 +1,14 @@
 @extends('layouts.site')
 
-@section('title', config('app.name'))
+{{--
+    Home page. No page title is set, so <x-seo.head> renders the site name
+    (plus tagline when configured). Other pages set their metadata in the
+    controller, e.g. seo()->title('...')->description('...'), or at the top
+    of the view inside an @php block — see docs/SEO.md.
+--}}
 
 @section('content')
-    <h1>{{ config('app.name') }}</h1>
+    <x-layout.section>
+        <h1>{{ config('site.name') }}</h1>
+    </x-layout.section>
 @endsection

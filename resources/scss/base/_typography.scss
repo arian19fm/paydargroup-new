@@ -1,0 +1,28 @@
+// Typography foundations. Bootstrap's reboot/type already apply the base
+// font, size scale and heading weights from our variables. Only Persian /
+// RTL-specific refinements live here.
+
+html {
+    // Persian text benefits from slightly larger tap/reading targets; keep
+    // the root at the token size and let RFS scale headings.
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    // Ensure bidi isolation for mixed Persian/Latin content.
+    unicode-bidi: plaintext;
+    text-rendering: optimizeLegibility;
+}
+
+// Latin/numeric snippets inside Persian text (phone numbers, codes) should be
+// rendered LTR in place without breaking the line direction.
+.pg-ltr {
+    direction: ltr;
+    unicode-bidi: isolate;
+}
+
+// Persian digits are a content decision; this helper renders proportional
+// numerals when a font supports them.
+.pg-nums-tabular {
+    font-variant-numeric: tabular-nums;
+}

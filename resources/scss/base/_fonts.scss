@@ -1,0 +1,30 @@
+// Self-hosted @font-face rules. Files live in resources/fonts and are
+// fingerprinted by Vite. WOFF2 only. `font-display: swap` shows fallback text
+// immediately and swaps when the font arrives (no invisible text, minimal CLS
+// because the fallback stack is metrically similar enough for body copy).
+//
+// Add a weight only when a Figma text style needs it.
+
+@font-face {
+    font-family: 'Vazir';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../../fonts/vazir/Vazir-Regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Vazir';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('../../fonts/vazir/Vazir-Medium.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Vazir';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../../fonts/vazir/Vazir-Bold.woff2') format('woff2');
+}

@@ -1,7 +1,9 @@
 # Paydar Group Website — Architecture
 
-Status: Phase 1 (foundation). This document records the decisions that later
-phases must build on. It is intentionally prescriptive.
+Status: Phase 2 (frontend foundation, RTL, SEO core). This document records
+the decisions that later phases must build on. It is intentionally
+prescriptive. Implementation details: [`FRONTEND.md`](FRONTEND.md),
+[`SEO.md`](SEO.md).
 
 ## 1. Purpose and scope
 
@@ -35,10 +37,10 @@ correctly with **zero requests to third-party hosts**.
 - Bootstrap, Popper, Vue (production build), Bootstrap Icons (if used) and
   every other library are installed via npm and bundled locally by Vite, or
   vendored into `public/`.
-- Fonts are stored in `resources/fonts` / `public/fonts` and declared with
-  `@font-face` in `resources/scss`. Persian font sources are available in
-  the team's font collection (Vazir, IRANYekan, Yekan) — check licensing
-  before shipping.
+- Fonts are stored in `resources/fonts` (WOFF2 only, licence alongside) and
+  declared with `@font-face` in `resources/scss/base/_fonts.scss`; Vite
+  fingerprints them into `public/build`. Interim family: Vazir (open
+  licence). See `resources/fonts/README.md`.
 - Maps, video embeds, analytics or CAPTCHAs that require external services
   are optional enhancements: the page must degrade gracefully if they fail
   to load, and they must never be on the critical rendering path.
@@ -48,23 +50,32 @@ correctly with **zero requests to third-party hosts**.
 ## 4. Frontend structure
 
 ```
-resources/scss/app.scss      variable overrides → @import bootstrap → fonts → site styles
-resources/js/app.js          imports bootstrap (+Popper); mounts Vue widgets
+resources/scss/              abstracts (tokens + Bootstrap overrides) → bootstrap → base → layout → components → pages
+resources/js/app.js          selective Bootstrap modules, vanilla enhancements, isolated Vue mounting
+resources/js/vue/mount.js    [data-vue-component] registry — Vue loaded only when a target exists
 resources/js/components/     *.vue single-file components (widgets only)
-resources/views/layouts/     site.blade.php (public), admin.blade.php (later)
-resources/views/partials/    seo/head, nav, footer, breadcrumbs, pagination …
-resources/views/components/  Blade components (cards, sections, media, …)
+resources/fonts/             self-hosted WOFF2 fonts
+resources/views/layouts/     site.blade.php (public), admin.blade.php
+resources/views/components/  seo/, layout/, ui/ Blade components
+resources/views/partials/    site/header, navigation, mobile-navigation, footer
+resources/views/errors/      404 / 500 / 503
 ```
 
-- `vite.config.js` builds one CSS and one JS bundle; `@vite()` in the
-  layout resolves hashed filenames from `public/build/manifest.json`.
+- `vite.config.js` builds one CSS and one JS bundle (Vue in a lazy chunk);
+  `@vite()` in the layout resolves hashed filenames from
+  `public/build/manifest.json`.
 - Vue uses the **runtime-only** build (templates compiled at build time).
-- RTL: the default locale is Persian (`fa`), so the layout sets `dir="rtl"`
-  for `fa`/`ar`. Bootstrap's RTL output (via `rtlcss` in the build, or the
-  precompiled `bootstrap.rtl.css`) is introduced when the visual layer is
-  built. Keep the LTR/RTL decision in one place (the layout + build).
+- **RTL**: the compiled stylesheet is flipped by RTLCSS (`postcss.config.js`),
+  Bootstrap's official RTL method. `<html dir>` comes from
+  `App\Support\Localization\Direction` based on the locale. The site is
+  RTL-only; the LTR/RTL decision lives in the build + layout only.
+- **Design tokens**: `$pg-*` SCSS variables in `abstracts/_variables.scss`
+  drive both Bootstrap variables and `--pg-*` custom properties. All values
+  are neutral placeholders until mapped from Figma (`TODO(figma)`).
 - Icons: if Bootstrap Icons are needed, install `bootstrap-icons` via npm
-  and copy the font files locally; alternatively inline SVGs.
+  and bundle the font files locally; alternatively inline SVGs.
+
+Full details: [`FRONTEND.md`](FRONTEND.md).
 
 ## 5. SEO architecture (requirements for later phases)
 
@@ -80,10 +91,12 @@ SEO is designed in, not bolted on. The system **must** support:
 - Structured data / **JSON-LD** (`Organization`, `WebSite`, `WebPage`, `Article`/`NewsArticle`, `BreadcrumbList`, `Service`, `FAQPage` where relevant).
 - `hreflang` / alternate links if a second language is ever added.
 
-Implementation direction: a single `App\Support\Seo\SeoData` value object
-built by controllers (or from a model's SEO fields) and rendered by one
-`partials/seo/head.blade.php` partial included from the layout, so every
-page emits a complete, consistent head.
+Implemented (Phase 2): the request-scoped `App\Support\Seo\SeoManager`
+(`seo()` helper) is filled by controllers (or from a model's SEO fields)
+and rendered by `<x-seo.head />` from the site layout, so every page emits a
+complete, consistent head. `App\Support\Seo\JsonLd` builds structured
+data; `SetRobotsHeader` middleware, `/robots.txt` and `/sitemap.xml` are
+environment aware. Details: [`SEO.md`](SEO.md).
 
 ### 5.2 Managed-content SEO fields
 Every manageable content type (pages, articles/news, categories, services,
@@ -138,8 +151,13 @@ defaults in a settings table.
 - Production: `APP_DEBUG=false`, `APP_ENV=production`, `php artisan optimize`, `npm run build` output committed to the release artifact or built in CI — never built from a CDN.
 - Separate deployment configuration and server paths from Paydar Fund.
 
-## 9. Out of scope for Phase 1
+## 9. Phase status
 
-Visual pages, real content, admin authentication, SEO implementation,
-sitemap/redirect features and media handling are all **later phases**. Phase 1
-only establishes the foundation described above.
+- **Phase 1** — Laravel, MySQL, build pipeline, repository structure. Done.
+- **Phase 2** — Bootstrap RTL build, self-hosted fonts, SCSS/design-token
+  architecture, Blade layout system, SEO core (head, JSON-LD, robots,
+  sitemap, breadcrumbs), accessibility/performance foundations, error pages,
+  tests, documentation. Done — with all visual values pending Figma.
+- **Later** — Figma token mapping and visual pages, admin panel and
+  authentication, content models (pages, articles, media) with SEO fields,
+  redirects, media processing, full-page caching.

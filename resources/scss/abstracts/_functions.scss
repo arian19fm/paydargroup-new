@@ -1,0 +1,9 @@
+// Project SCSS functions. Bootstrap's functions (tint-color, shade-color,
+// rem/px helpers, map-get shortcuts) are available after Bootstrap loads;
+// only add project-specific helpers here.
+
+// Read a design token as a CSS custom property reference with a fallback,
+// e.g. `color: pg-token(primary)` → `var(--pg-primary)`.
+@function pg-token($name) {
+    @return var(--pg-#{$name});
+}

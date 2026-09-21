@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+{{-- Admin panel shell. Never indexable; no Open Graph / JSON-LD needed. --}}
+<html lang="{{ \App\Support\Localization\Direction::htmlLang() }}" dir="{{ \App\Support\Localization\Direction::for() }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>@yield('title', __('admin.title'))</title>
+    @vite(['resources/scss/app.scss', 'resources/js/app.js'])
+    @stack('head')
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <x-layout.skip-link />
+    <header class="pg-admin-header border-bottom">
+        <x-layout.container>
+            <a class="navbar-brand" href="{{ url('/admin') }}">{{ config('site.name') }} — @yield('title', __('admin.title'))</a>
+        </x-layout.container>
+    </header>
+
+    <main id="main" tabindex="-1" class="py-4">
+        <x-layout.container>
+            <x-ui.flash-messages />
+            @yield('content')
+        </x-layout.container>
+    </main>
+    @stack('scripts')
+</body>
+</html>

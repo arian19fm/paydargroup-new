@@ -1,0 +1,43 @@
+// Project-wide utilities and accessibility foundations.
+
+// Skip link: visually hidden until focused, then shown at the top.
+.pg-skip-link {
+    position: absolute;
+    top: 0;
+    inset-inline-start: 0;
+    z-index: $zindex-fixed + 1;
+    padding: .5rem 1rem;
+    background: var(--pg-background);
+    color: var(--pg-text);
+    transform: translateY(-100%);
+
+    &:focus {
+        transform: translateY(0);
+        @include pg-focus-ring;
+    }
+}
+
+// Visible keyboard focus everywhere (mouse clicks do not show it).
+:focus-visible {
+    @include pg-focus-ring;
+}
+
+// Reduced motion: disable non-essential animation and smooth scrolling.
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+// Media: images never overflow and reserve space via width/height attributes
+// (set in markup) — avoids layout shift.
+img,
+video {
+    max-width: 100%;
+    height: auto;
+}

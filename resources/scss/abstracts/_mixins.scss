@@ -1,0 +1,29 @@
+// Project SCSS mixins. Bootstrap's mixins (media-breakpoint-up, etc.) are
+// available after Bootstrap loads.
+
+// Visually hidden but readable by assistive technology (same rules as
+// Bootstrap's .visually-hidden, usable inside our own selectors).
+@mixin pg-visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+// Consistent visible focus ring for keyboard users.
+@mixin pg-focus-ring {
+    outline: 2px solid var(--pg-primary);
+    outline-offset: 2px;
+}
+
+// Apply rules only when the user has not requested reduced motion.
+@mixin pg-motion-safe {
+    @media (prefers-reduced-motion: no-preference) {
+        @content;
+    }
+}

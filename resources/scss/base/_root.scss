@@ -1,0 +1,30 @@
+// CSS custom properties for the design tokens. Generated from the SCSS
+// tokens in abstracts/_variables.scss so SCSS (Bootstrap) and runtime CSS
+// (components, Vue widgets, inline styles) share one source of truth.
+//
+// Values are PENDING FIGMA MAPPING — see abstracts/_variables.scss.
+
+:root {
+    // Colour
+    --pg-primary:    #{$pg-primary};
+    --pg-secondary:  #{$pg-secondary};
+    --pg-accent:     #{$pg-accent};
+    --pg-background: #{$pg-background};
+    --pg-surface:    #{$pg-surface};
+    --pg-text:       #{$pg-text};
+    --pg-text-muted: #{$pg-text-muted};
+    --pg-border:     #{$pg-border};
+
+    // Shape
+    --pg-radius-sm: #{$pg-radius-sm};
+    --pg-radius-md: #{$pg-radius-md};
+    --pg-radius-lg: #{$pg-radius-lg};
+    --pg-shadow-sm: #{$pg-shadow-sm};
+    --pg-shadow-md: #{$pg-shadow-md};
+
+    // Layout
+    --pg-container-max: #{$pg-container-max};
+
+    // Typography
+    --pg-font-family-base: #{inspect($pg-font-family-base)};
+}
