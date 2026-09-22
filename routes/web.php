@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Site\ArticleController;
+use App\Http\Controllers\Site\ContactPageController;
 use App\Http\Controllers\Site\ContactRequestController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\PageController;
@@ -20,8 +21,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 
-// Home page contact form. Rate limited per IP (see AppServiceProvider);
-// the form itself is rendered by the home page.
+// Contact page + the form it shares with the home page. Submissions are
+// rate limited per IP (see AppServiceProvider).
+Route::get('/contact', ContactPageController::class)->name('contact');
 Route::post('/contact', [ContactRequestController::class, 'store'])
     ->middleware('throttle:contact-form')
     ->name('contact.store');

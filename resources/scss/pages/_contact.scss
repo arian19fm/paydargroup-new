@@ -1,0 +1,323 @@
+// Contact page (Figma 258:460 desktop 1440 / 258:622 mobile 375).
+//
+// Desktop: 80px gutters (1280 content); photo 628×570 at the end (left),
+// form column 628 at the start; then the "ways" block: eyebrow / h2 32/48
+// / text, three channels (48px sand icon tile at the start, 20px bold
+// value, 16px label) spread across the row, and a 1216×516 map inside a
+// 32px inset. Mobile: photo full-bleed 340px, form 337 wide, channels
+// stacked with 40px tiles above the text, map 339×278.
+
+.pg-contact-page {
+    padding-top: 0;
+
+    @include media-breakpoint-up(lg) {
+        padding-top: 32px;
+    }
+
+    .pg-container {
+        @include media-breakpoint-up(lg) {
+            --pg-gutter: 80px;
+        }
+    }
+}
+
+// ---- Photo + form ---------------------------------------------------------
+.pg-contact-page__hero {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-bottom: 64px;
+
+    @include media-breakpoint-down(md) {
+        // Mobile frame: the photo bleeds edge to edge, the form keeps 19px insets.
+        padding-inline: 0;
+    }
+
+    @include media-breakpoint-up(md) {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: start;
+    }
+
+    @include media-breakpoint-up(lg) {
+        grid-template-columns: 628px 628px;
+        justify-content: space-between;
+        gap: 24px;
+        padding-bottom: 100px;
+    }
+}
+
+.pg-contact-page__photo {
+    margin: 0;
+    aspect-ratio: 375 / 340;
+    overflow: hidden;
+    background: var(--pg-surface);
+
+    @include media-breakpoint-up(md) {
+        order: 2; // end (left) column
+        aspect-ratio: 628 / 570;
+    }
+
+    picture {
+        display: block;
+        height: 100%;
+    }
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        // The frame shows the photo mirrored (same flip as the home section),
+        // cropped to the people at the far end of the picture (both frames).
+        /* rtl:ignore */
+        object-position: 93% 50%;
+        /* rtl:ignore */
+        transform: scaleX(-1);
+    }
+}
+
+.pg-contact-page__form {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding-inline: 19px;
+
+    @include media-breakpoint-up(md) {
+        padding-inline: 0;
+    }
+}
+
+.pg-contact-page__intro,
+.pg-contact-page__ways-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pg-contact-page__eyebrow {
+    margin: 0;
+    font-family: var(--pg-font-family-fn);
+    font-size: .875rem;
+    line-height: 22px;
+    letter-spacing: .015em;
+    color: var(--pg-text-muted);
+
+    @include media-breakpoint-down(md) {
+        .pg-contact-page__ways & {
+            font-size: .75rem;
+            line-height: 18px;
+        }
+    }
+}
+
+.pg-contact-page__title {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 36px;
+    letter-spacing: .015em;
+    color: var(--pg-text-strong);
+
+    @include media-breakpoint-up(lg) {
+        font-size: 2rem;
+        line-height: 48px;
+    }
+
+    .pg-contact-page__ways & {
+        @include media-breakpoint-down(lg) {
+            font-size: 1.1875rem;
+            font-weight: 500;
+            line-height: 29px;
+        }
+    }
+}
+
+.pg-contact-page__text {
+    margin: 0;
+    font-family: var(--pg-font-family-fn);
+    font-size: .875rem;
+    line-height: 24px;
+    color: var(--pg-ink-70);
+
+    @include media-breakpoint-up(lg) {
+        font-size: .90625rem; // 14.5px
+    }
+}
+
+// Fields sit 64px apart with no card; the textarea keeps its taller line.
+.pg-contact-page__fields {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+
+    @include media-breakpoint-up(lg) {
+        gap: 52px;
+    }
+
+    .pg-field--inset {
+        padding-inline-start: 0;
+    }
+}
+
+.pg-contact-page__submit {
+    width: 100%;
+}
+
+// ---- Ways to reach us -------------------------------------------------------
+.pg-contact-page__ways {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 32px var(--pg-gutter) 32px;
+
+    @include media-breakpoint-up(lg) {
+        gap: 40px;
+        padding-bottom: 32px;
+    }
+}
+
+.pg-contact-page__channels {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include media-breakpoint-up(md) {
+        display: grid;
+        grid-template-columns: repeat(3, auto);
+        justify-content: space-between;
+        gap: 24px;
+    }
+}
+
+.pg-channel {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+
+    @include media-breakpoint-up(md) {
+        flex-direction: row;
+        gap: 16px;
+    }
+}
+
+.pg-channel__icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--pg-sand);
+
+    @include media-breakpoint-up(md) {
+        width: 48px;
+        height: 48px;
+    }
+
+    img {
+        width: 20px;
+        height: 20px;
+
+        @include media-breakpoint-up(md) {
+            width: 24px;
+            height: 24px;
+        }
+    }
+}
+
+.pg-channel__body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+
+    @include media-breakpoint-up(md) {
+        padding-top: 10px;
+    }
+}
+
+.pg-channel__value {
+    font-family: var(--pg-font-family-fn);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 30px;
+    color: var(--pg-text-strong);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+
+    @include media-breakpoint-up(lg) {
+        font-size: 1.25rem;
+    }
+
+    &[dir="ltr"] {
+        display: inline-block;
+        text-align: start;
+    }
+
+    &:is(a):hover,
+    &:is(a):focus-visible {
+        color: var(--pg-primary);
+    }
+}
+
+.pg-channel__label {
+    font-family: var(--pg-font-family-fn);
+    font-size: .875rem;
+    line-height: 24px;
+    color: #475467;
+
+    @include media-breakpoint-up(lg) {
+        font-size: 1rem;
+    }
+}
+
+.pg-channel__hint {
+    color: var(--pg-text-muted);
+}
+
+// ---- Map --------------------------------------------------------------------
+.pg-contact-page__map {
+    position: relative;
+    aspect-ratio: 339 / 278;
+    overflow: hidden;
+    background: var(--pg-surface);
+
+    @include media-breakpoint-up(md) {
+        aspect-ratio: 1216 / 516;
+        margin-inline: 32px;
+        margin-bottom: 51px;
+    }
+
+    a {
+        display: block;
+        height: 100%;
+    }
+
+    img:first-child {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.pg-contact-page__pin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24px;
+    height: 32px;
+    transform: translate(-50%, -100%);
+    pointer-events: none;
+}
+
+[data-bs-theme="dark"] {
+    .pg-channel__label {
+        color: var(--pg-text-body);
+    }
+}

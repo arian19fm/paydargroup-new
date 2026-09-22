@@ -26,6 +26,7 @@ return [
         'stat_years' => 'Stat: years of experience',
         'stat_companies' => 'Stat: subsidiary companies',
     ],
-    'contact' => ['email' => 'E-mail', 'phone' => 'Phone', 'address' => 'Address', 'working_hours' => 'Working hours'],
+    'contact' => ['email' => 'E-mail', 'phone' => 'Phone', 'address' => 'Address', 'working_hours' => 'Working hours',
+        'map_image' => 'Contact page map image (media ID; blank = no map)', 'map_url' => 'Map link (e.g. a Google Maps / Neshan URL)'],
     'social' => ['instagram' => 'Instagram', 'linkedin' => 'LinkedIn', 'telegram' => 'Telegram', 'x' => 'X (Twitter)', 'aparat' => 'Aparat', 'youtube' => 'YouTube'],
 ];

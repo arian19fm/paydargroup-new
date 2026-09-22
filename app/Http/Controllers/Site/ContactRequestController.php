@@ -23,6 +23,10 @@ class ContactRequestController extends Controller
             'user_agent' => mb_substr((string) $request->userAgent(), 0, 255),
         ]);
 
-        return redirect()->to(route('home').'#contact')->with('contact_sent', true);
+        // Back to whichever page carried the form (home section or /contact),
+        // landing on the form itself.
+        $back = url()->previous() ?: route('home');
+
+        return redirect()->to(strtok($back, '#').'#contact')->with('contact_sent', true);
     }
 }

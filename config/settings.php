@@ -75,6 +75,9 @@ return [
                 'phone' => ['type' => 'string', 'public' => true, 'label' => 'settings.contact.phone'],
                 'address' => ['type' => 'text', 'public' => true, 'label' => 'settings.contact.address'],
                 'working_hours' => ['type' => 'string', 'public' => true, 'label' => 'settings.contact.working_hours'],
+                // Contact page map: a static map image from the media library, optionally linking to a maps URL.
+                'map_image_media_id' => ['type' => 'media', 'public' => true, 'label' => 'settings.contact.map_image'],
+                'map_url' => ['type' => 'url', 'public' => true, 'label' => 'settings.contact.map_url'],
             ],
         ],
 

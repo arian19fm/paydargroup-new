@@ -47,7 +47,7 @@ class SeoIntegrationTest extends TestCase
 
     public function test_explicit_overrides_win_and_render(): void
     {
-        $page = Page::factory()->published()->create(['slug' => 'contact', 'title' => 'تماس', 'excerpt' => 'خلاصه']);
+        $page = Page::factory()->published()->create(['slug' => 'legal-notice', 'title' => 'تماس', 'excerpt' => 'خلاصه']);
         $page->seo()->create([
             'title' => 'عنوان سئو',
             'description' => 'توضیح سئو',
@@ -56,7 +56,7 @@ class SeoIntegrationTest extends TestCase
             'og_title' => 'عنوان OG',
         ]);
 
-        $this->get('/contact')
+        $this->get('/legal-notice')
             ->assertOk()
             ->assertSee('<title>عنوان سئو | Paydar Group</title>', false)
             ->assertSee('<meta name="description" content="توضیح سئو">', false)

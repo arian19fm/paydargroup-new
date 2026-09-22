@@ -75,7 +75,7 @@
                             @if ($contact['phone'])
                                 <div>
                                     <dt>{{ __('home.footer.phone') }}</dt>
-                                    <dd><a href="tel:{{ \App\Support\Localization\PersianNumbers::toLatin($contact['phone']) }}" dir="ltr">{{ fa_digits($contact['phone']) }}</a></dd>
+                                    <dd><a href="tel:{{ preg_replace('/[^\d+]/', '', \App\Support\Localization\PersianNumbers::toLatin($contact['phone'])) }}" dir="ltr">{{ fa_digits($contact['phone']) }}</a></dd>
                                 </div>
                             @endif
                             @if ($contact['hours'])

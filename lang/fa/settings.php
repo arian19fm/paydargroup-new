@@ -26,6 +26,7 @@ return [
         'stat_years' => 'آمار: سال سابقه',
         'stat_companies' => 'آمار: تعداد شرکت‌های زیرمجموعه',
     ],
-    'contact' => ['email' => 'ایمیل', 'phone' => 'تلفن', 'address' => 'نشانی', 'working_hours' => 'ساعات کاری'],
+    'contact' => ['email' => 'ایمیل', 'phone' => 'تلفن', 'address' => 'نشانی', 'working_hours' => 'ساعات کاری',
+        'map_image' => 'تصویر نقشهٔ صفحهٔ تماس (شناسهٔ رسانه؛ خالی = بدون نقشه)', 'map_url' => 'لینک نقشه (مثلاً آدرس Google Maps یا نشان)'],
     'social' => ['instagram' => 'اینستاگرام', 'linkedin' => 'لینکدین', 'telegram' => 'تلگرام', 'x' => 'X (توییتر)', 'aparat' => 'آپارات', 'youtube' => 'یوتیوب'],
 ];

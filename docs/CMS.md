@@ -197,3 +197,13 @@ uses `default` (`site/pages/show`).
 The page's own title, lead (`excerpt`) and body (`content`) are the CMS
 fields. Inner pages get the light header pill (`.pg-header--light`); only
 the home page floats the header over its hero.
+
+## Contact page
+
+`GET /contact` (`ContactPageController`, Figma 258:460 / 258:622) — a fixed
+route, so `contact` is a reserved page slug. It renders the same request
+form as the home page (`partials/site/contact-fields`, posting to
+`contact.store`, which returns to whichever page carried the form), the
+channels from Settings → contact (address, phone + working hours, e-mail —
+empty values are skipped) and an optional static map (`contact.map_image_media_id`,
+linked to `contact.map_url`). The page is listed in the sitemap.
