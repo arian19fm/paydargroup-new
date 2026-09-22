@@ -100,3 +100,50 @@
         background: rgba(255, 255, 255, .12);
     }
 }
+
+// Mobile: theme switch + hamburger sit together at the end of the pill.
+.pg-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+// Light/dark switch (components/ui/theme-toggle). Same footprint as the
+// hamburger; the moon shows in light mode, the sun in dark mode.
+.pg-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--pg-radius-pill);
+    background: transparent;
+    color: #fff;
+    line-height: 0;
+    transition: background-color .15s ease, opacity .15s ease;
+
+    &:hover,
+    &:focus-visible {
+        background: rgba(255, 255, 255, .12);
+    }
+
+    .pg-header__group--end & {
+        margin-inline-start: 8px;
+    }
+}
+
+.pg-theme-toggle__icon--sun {
+    display: none;
+}
+
+[data-bs-theme="dark"] .pg-theme-toggle {
+    .pg-theme-toggle__icon--moon {
+        display: none;
+    }
+
+    .pg-theme-toggle__icon--sun {
+        display: block;
+    }
+}

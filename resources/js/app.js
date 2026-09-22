@@ -7,7 +7,16 @@
 
 import './site/bootstrap';
 import './site/navigation';
+import './site/theme';
+import './site/drag-scroll';
+import './site/hero-video';
 import './admin/char-counter';
 import { mountVueComponents } from './vue/mount';
 
 mountVueComponents();
+
+// Scroll-driven motion (GSAP + ScrollTrigger) is a separate chunk fetched
+// only when the page opts in with [data-motion] elements (the home page).
+if (document.querySelector('[data-motion]')) {
+    import('./animations/index').then(({ initMotion }) => initMotion());
+}

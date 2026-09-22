@@ -171,3 +171,14 @@ admin listing is a later phase.
 Any location string is accepted by the admin; the three above are the ones
 the layout reads. Footer contact and social blocks come from the `contact.*`
 and `social.*` settings; the brand text from `general.footer_text`.
+
+## Home page hero media
+
+Settings → **صفحهٔ اصلی** (`home` group): `hero_video_media_id` (an MP4/WebM
+uploaded to the media library) and `hero_image_media_id` (optional
+replacement for the designed photo). With a video the hero renders a
+muted, looping, `playsinline` `<video>` over the photo; the photo stays as
+poster and as the fallback for reduced motion, no JavaScript, blocked
+autoplay or unsupported formats. The media library accepts `video/mp4` and
+`video/webm` up to 60 MB (images/PDF keep the 10 MB cap). IDs that do not
+resolve to the right media type are ignored, so the page always renders.

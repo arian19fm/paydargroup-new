@@ -3,6 +3,7 @@
 return [
     'articles' => 'Articles & news',
     'home' => 'Home',
+    'toggle_dark' => 'Toggle light/dark theme',
     'menu' => 'Menu',
     'open_menu' => 'Open menu',
     'close_menu' => 'Close menu',

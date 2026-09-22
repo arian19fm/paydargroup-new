@@ -17,8 +17,11 @@ class HomeController extends Controller
     {
         $pageUrls = $home->pageUrls($home->linkedSlugs());
         $links = collect(config('home.links', []))->map(fn (string $slug) => $pageUrls[$slug] ?? null)->all();
+        [$heroVideo, $heroImage] = $home->heroMedia();
 
         return view('site.home', [
+            'heroVideo' => $heroVideo,
+            'heroImage' => $heroImage,
             'products' => $home->products($pageUrls),
             'articles' => $home->latestArticles(),
             'links' => $links,

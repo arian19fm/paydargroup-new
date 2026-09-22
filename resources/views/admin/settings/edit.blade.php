@@ -24,8 +24,19 @@
                         <x-admin.form.checkbox :name="$name" :label="$label" :checked="(bool) $value" />
                         @break
                     @case('integer')
-                    @case('media')
                         <x-admin.form.input :name="$name" type="number" min="0" :label="$label" :value="$value" />
+                        @break
+                    @case('media')
+                        @php $medium = $value ? \App\Models\Media::find($value) : null; @endphp
+                        <x-admin.form.input :name="$name" type="number" min="0" :label="$label" :value="$value" />
+                        @if ($value && ! $medium)
+                            <p class="form-text text-danger mt-n2 mb-3">{{ __('admin.settings.media_missing') }}</p>
+                        @elseif ($medium)
+                            <p class="form-text mt-n2 mb-3">
+                                <a href="{{ route('admin.media.edit', $medium) }}">{{ $medium->original_filename }}</a>
+                                <span class="text-body-secondary" dir="ltr">({{ $medium->mime_type }}@if ($medium->width), {{ $medium->width }}×{{ $medium->height }}@endif)</span>
+                            </p>
+                        @endif
                         @break
                     @case('url')
                         <x-admin.form.input :name="$name" type="url" :label="$label" :value="$value" dir="ltr" />

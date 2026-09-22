@@ -40,6 +40,17 @@ return [
             ],
         ],
 
+        'home' => [
+            'label' => 'settings.groups.home',
+            'keys' => [
+                // Background video for the hero (MP4/WebM from the media library). When set,
+                // the image below (or the default photo) is its poster / no-motion fallback.
+                'hero_video_media_id' => ['type' => 'media', 'public' => true, 'label' => 'settings.home.hero_video'],
+                // Optional replacement for the designed hero photograph.
+                'hero_image_media_id' => ['type' => 'media', 'public' => true, 'label' => 'settings.home.hero_image'],
+            ],
+        ],
+
         'contact' => [
             'label' => 'settings.groups.contact',
             'keys' => [

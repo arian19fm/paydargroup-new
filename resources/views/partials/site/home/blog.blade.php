@@ -5,10 +5,10 @@
 --}}
 <section class="pg-blog" id="blog" aria-labelledby="blog-heading">
     <div class="pg-container">
-        <div class="pg-blog__header">
+        <div class="pg-blog__header" data-motion="reveal" data-motion-exit>
             <div class="pg-blog__intro">
                 <p class="pg-eyebrow pg-eyebrow--blog">{{ __('home.blog.eyebrow') }}</p>
-                <h2 id="blog-heading" class="pg-blog__title">
+                <h2 id="blog-heading" class="pg-blog__title" data-motion="reveal-heading">
                     <span class="pg-blog__title-rest">{{ __('home.blog.heading') }}</span>
                     <span class="pg-blog__title-highlight">{{ __('home.blog.heading_highlight') }}</span>
                 </h2>
@@ -25,13 +25,13 @@
         @if ($articles->isEmpty())
             <p class="pg-blog__empty">{{ __('home.blog.empty') }}</p>
         @else
-            <ul class="pg-blog__list">
+            <ul class="pg-blog__list" data-motion="reveal-group" data-motion-exit data-drag-scroll>
                 @foreach ($articles as $article)
                     <li class="pg-post">
                         <article class="pg-post__inner">
                             <a class="pg-post__cover" href="{{ route('articles.show', $article->slug) }}" tabindex="-1" aria-hidden="true">
                                 @if ($article->featuredImage)
-                                    <img src="{{ $article->featuredImage->url() }}" width="{{ $article->featuredImage->width ?: 389 }}" height="{{ $article->featuredImage->height ?: 250 }}" alt="" loading="lazy" decoding="async">
+                                    <img src="{{ $article->featuredImage->url() }}" width="{{ $article->featuredImage->width ?: 389 }}" height="{{ $article->featuredImage->height ?: 250 }}" alt="" loading="lazy" decoding="async" data-motion="parallax">
                                 @endif
                             </a>
                             <div class="pg-post__body">

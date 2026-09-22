@@ -10,7 +10,13 @@
 @section('body_class', 'pg-page-home')
 
 @push('head')
-    <link rel="preload" as="image" href="{{ asset('images/home/hero.webp') }}" type="image/webp" fetchpriority="high">
+    @if ($heroImage ?? null)
+        <link rel="preload" as="image" href="{{ $heroImage->url() }}" fetchpriority="high">
+    @else
+        <link rel="preload" as="image" href="{{ asset('images/home/hero.webp') }}" type="image/webp" fetchpriority="high">
+    @endif
+    {{-- Flags a scripted page so the hero load-in keyframes run (without JS the hero is simply static). --}}
+    <script>document.documentElement.classList.add('pg-js');</script>
 @endpush
 
 @section('hero')

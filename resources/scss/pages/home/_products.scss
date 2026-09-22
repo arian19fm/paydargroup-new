@@ -79,7 +79,7 @@
     font-weight: 500;
     line-height: 1.5;
     letter-spacing: -.02em;
-    color: rgba(31, 31, 31, .7);
+    color: var(--pg-heading-soft);
 
     @include media-breakpoint-up(md) {
         font-size: 2rem;
@@ -162,6 +162,33 @@
     }
 }
 
+// Scroll-driven card stack (resources/js/animations/products-stack.js).
+// Pure CSS does the structural part: every card is sticky at a slightly
+// larger offset than the one before it and gets a higher z-index, so as the
+// list scrolls each card slides up and settles over the previous ones,
+// while the list keeps its natural height (no extra scroll distance, no
+// absolute canvas). GSAP only interpolates scale/opacity on the card that
+// is being covered. Offsets: 16px + 8px per card on the 375 frame, 32px +
+// 12px per card from md up (32px is also the sticky offset of the intro
+// column, so the stack lines up with it on xl).
+.pg-products__list[data-motion="product-stack"] {
+    --pg-stack-top: 16px;
+    --pg-stack-step: 8px;
+    position: relative;
+
+    @include media-breakpoint-up(md) {
+        --pg-stack-top: 32px;
+        --pg-stack-step: 12px;
+    }
+
+    .pg-product {
+        position: sticky;
+        top: calc(var(--pg-stack-top) + var(--stack-index, 0) * var(--pg-stack-step));
+        z-index: calc(1 + var(--stack-index, 0));
+        transform-origin: 50% 0;
+    }
+}
+
 .pg-product {
     // Accent set per product (see $pg-products in abstracts/_variables).
     @each $key, $c in $pg-products {
@@ -172,6 +199,15 @@
 
             @include media-breakpoint-up(md) {
                 --pg-product-badge-bg: #{map-get($c, badge-bg)};
+            }
+
+            // Dark theme: the light tints disappear on dark cards, so the
+            // badge becomes a translucent wash of the accent and the accent
+            // itself is lifted for contrast.
+            [data-bs-theme="dark"] & {
+                --pg-product-accent: #{tint-color(map-get($c, accent), 35%)};
+                --pg-product-badge-text: #{tint-color(map-get($c, accent), 45%)};
+                --pg-product-badge-bg: #{rgba(tint-color(map-get($c, accent), 35%), .14)};
             }
         }
     }
@@ -198,6 +234,7 @@
 .pg-product__media {
     grid-area: media;
     height: 135px;
+    overflow: hidden; // clips the parallax drift of the picture inside
     background: var(--pg-surface);
 
     @include media-breakpoint-up(md) {

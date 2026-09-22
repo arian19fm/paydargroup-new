@@ -5,9 +5,9 @@
 --}}
 <section class="pg-products" id="products" aria-labelledby="products-heading">
     <div class="pg-container pg-products__inner">
-        <div class="pg-products__intro">
+        <div class="pg-products__intro" data-motion="reveal">
             <p class="pg-eyebrow">{{ __('home.products.eyebrow') }}</p>
-            <h2 id="products-heading" class="pg-products__title">
+            <h2 id="products-heading" class="pg-products__title" data-motion="reveal-heading">
                 <span class="pg-products__title-highlight">{{ __('home.products.heading_highlight') }}</span>
                 <span class="pg-products__title-rest">{{ __('home.products.heading') }}</span>
             </h2>
@@ -15,9 +15,10 @@
             <x-ui.cta class="btn pg-btn pg-btn--primary pg-products__cta" :href="$links['products'] ?? null">{{ __('home.products.cta') }}</x-ui.cta>
         </div>
 
-        <ol class="pg-products__list">
+        {{-- Each card carries its stack index; CSS makes the cards sticky and layered (no JS needed), GSAP adds the scale/opacity settle. --}}
+        <ol class="pg-products__list" data-motion="product-stack">
             @foreach ($products as $product)
-                <li class="pg-product pg-product--{{ $product['key'] }} @if ($loop->even) pg-product--flip @endif">
+                <li class="pg-product pg-product--{{ $product['key'] }} @if ($loop->even) pg-product--flip @endif" style="--stack-index: {{ $loop->index }}">
                     <div class="pg-product__body">
                         <div class="pg-product__content">
                             <span class="pg-product__number" aria-hidden="true">{{ fa_digits($product['number']) }}</span>
@@ -38,7 +39,7 @@
                         </x-ui.cta>
                     </div>
                     <div class="pg-product__media">
-                        <picture>
+                        <picture data-motion="parallax">
                             <source type="image/webp" srcset="{{ asset('images/home/'.$product['image'].'.webp') }}">
                             <img src="{{ asset('images/home/'.$product['image'].'.'.$product['image_type']) }}" width="1024" height="768" alt="{{ $product['image_alt'] }}" loading="lazy" decoding="async">
                         </picture>

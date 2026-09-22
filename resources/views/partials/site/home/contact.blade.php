@@ -9,14 +9,14 @@
     $hasErrors = $errors->hasAny(['name', 'phone', 'message', 'website']);
 @endphp
 <section class="pg-contact" id="contact" aria-labelledby="contact-heading">
-    <picture class="pg-contact__media">
+    <picture class="pg-contact__media" data-motion="parallax">
         <source type="image/webp" srcset="{{ asset('images/home/contact.webp') }}">
         <img src="{{ asset('images/home/contact.jpg') }}" width="1737" height="905" alt="" loading="lazy" decoding="async">
     </picture>
     <div class="pg-contact__overlay" aria-hidden="true"></div>
 
     <div class="pg-contact__inner">
-        <form class="pg-contact__card" method="post" action="{{ route('contact.store') }}" novalidate>
+        <form class="pg-contact__card" method="post" action="{{ route('contact.store') }}" novalidate data-motion="reveal">
             @csrf
             <div class="pg-contact__intro">
                 <p class="pg-contact__eyebrow">{{ __('home.contact.eyebrow') }}</p>

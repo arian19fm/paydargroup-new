@@ -10,16 +10,15 @@
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
     @stack('head')
 </head>
-<body class="pg-admin bg-body-tertiary">
+<body class="pg-admin">
     <x-layout.skip-link />
-    <div class="d-lg-flex">
+    <div class="pg-admin__shell">
         @include('admin.partials.sidebar')
 
-        <div class="flex-grow-1 min-vh-100 d-flex flex-column">
+        <div class="pg-admin__main">
             @include('admin.partials.topbar')
 
-            <main id="main" tabindex="-1" class="flex-grow-1 p-3 p-lg-4">
-                <x-admin.breadcrumb :items="$breadcrumbs ?? []" />
+            <main id="main" tabindex="-1" class="pg-admin__content">
                 <x-admin.page-header :title="$pageTitle ?? View::yieldContent('title', __('admin.dashboard'))">
                     @yield('actions')
                 </x-admin.page-header>

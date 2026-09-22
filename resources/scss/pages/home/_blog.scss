@@ -50,10 +50,10 @@
 
 .pg-eyebrow--blog {
     margin: 0;
-    color: rgba(0, 0, 0, .7);
+    color: var(--pg-eyebrow-soft);
 
     @include media-breakpoint-down(lg) {
-        color: rgba(0, 0, 0, .7);
+        color: var(--pg-eyebrow-soft);
     }
 }
 
@@ -63,7 +63,7 @@
     font-size: 1.5rem;
     font-weight: 500;
     line-height: 1.5;
-    color: rgba(31, 31, 31, .7);
+    color: var(--pg-heading-soft);
 
     @include media-breakpoint-up(lg) {
         font-size: 2.5rem;
@@ -160,7 +160,25 @@
         overscroll-behavior-x: contain;
         scroll-snap-type: x proximity;
         scroll-padding-inline: var(--pg-gutter);
-        scrollbar-width: thin;
+        // The row is dragged with the mouse (site/drag-scroll.js) or moved
+        // with a trackpad; the peeking fourth card is the affordance, so the
+        // bar itself is hidden.
+        scrollbar-width: none;
+        cursor: grab;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        &.is-dragging {
+            cursor: grabbing;
+            scroll-snap-type: none;
+            user-select: none;
+
+            a {
+                pointer-events: none;
+            }
+        }
     }
 }
 
@@ -308,7 +326,7 @@
 
     @include media-breakpoint-up(lg) {
         gap: 8px;
-        --pg-tag-bg: #fff2e9;
+        --pg-tag-bg: var(--pg-tag-warm);
     }
 
     .pg-tag {

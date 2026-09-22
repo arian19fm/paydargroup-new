@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Spatie\Permission\Models\Role;
 
 class UserRequest extends FormRequest
 {
@@ -31,9 +32,9 @@ class UserRequest extends FormRequest
     public function rules(): array
     {
         $target = $this->route('user');
-        $assignable = $this->user()->isSuperAdmin()
-            ? ['super_admin', 'admin', 'editor']
-            : ['admin', 'editor'];
+        $assignable = Role::query()->where('guard_name', 'web')
+            ->when(! $this->user()->isSuperAdmin(), fn ($q) => $q->where('name', '!=', User::ROLE_SUPER_ADMIN))
+            ->pluck('name')->all();
 
         return [
             'name' => ['required', 'string', 'max:255'],

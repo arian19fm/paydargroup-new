@@ -11,6 +11,7 @@
         "@vitejs/plugin-vue": "^6.0.9",
         "bootstrap": "^5.3.8",
         "concurrently": "^10.0.3",
+        "gsap": "^3.15.0",
         "laravel-vite-plugin": "^3.1",
         "rtlcss": "^4.3.0",
         "sass": "^1.104.1",

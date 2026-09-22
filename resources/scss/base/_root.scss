@@ -35,6 +35,11 @@
     --pg-required:       #{$pg-required};
     --pg-border:         #{$pg-border};
     --pg-divider:        #{$pg-divider};
+    --pg-divider-2:      #{$pg-divider-2};
+    --pg-heading-soft:   #{$pg-heading-soft};
+    --pg-eyebrow-soft:   #{$pg-eyebrow-soft};
+    --pg-card-bg:        #{$pg-card-bg};
+    --pg-tag-warm:       #{$pg-tag-warm};
 
     // Colour — semantic
     --pg-success: #{$pg-success};
@@ -85,4 +90,55 @@
     --pg-font-family-fn:      #{inspect($pg-font-family-fn)};
     --pg-font-family-display: #{inspect($pg-font-family-display)};
     --pg-font-family-vazir:   #{inspect($pg-font-family-vazir)};
+
+    color-scheme: light;
+}
+
+// Dark theme. The attribute is set before first paint by the inline script
+// in layouts/site.blade.php (stored choice, else the OS preference) and
+// toggled by site/theme.js. Only the tokens change; every component reads
+// them, and Bootstrap's own dark variables cover forms, dropdowns and the
+// offcanvas.
+[data-bs-theme="dark"] {
+    --pg-background:     #{$pg-dark-background};
+    --pg-background-alt: #{$pg-dark-background-alt};
+    --pg-surface:        #{$pg-dark-surface};
+    --pg-surface-2:      #{$pg-dark-surface-2};
+    --pg-surface-3:      #{$pg-dark-surface-3};
+    --pg-surface-warm:   #{$pg-dark-surface-warm};
+    --pg-footer-bg:      #{$pg-dark-footer-bg};
+    --pg-card-bg:        #{$pg-dark-card-bg};
+
+    --pg-text:           #{$pg-dark-text};
+    --pg-text-strong:    #{$pg-dark-text-strong};
+    --pg-text-body:      #{$pg-dark-text-body};
+    --pg-text-muted:     #{$pg-dark-text-muted};
+    --pg-text-subtle:    #{$pg-dark-text-muted};
+    --pg-text-label:     #{$pg-dark-text-label};
+    --pg-ink:            #{$pg-dark-ink};
+    --pg-ink-70:         #{rgba($pg-dark-ink, .7)};
+    --pg-ink-50:         #{rgba($pg-dark-ink, .5)};
+    --pg-border:         #{$pg-dark-border};
+    --pg-divider:        #{$pg-dark-divider};
+    --pg-divider-2:      #{$pg-dark-divider};
+    --pg-heading-soft:   #{$pg-dark-heading-soft};
+    --pg-eyebrow-soft:   #{$pg-dark-eyebrow-soft};
+    --pg-tag-warm:       #{$pg-dark-tag-warm};
+
+    --pg-highlight:      #{$pg-dark-highlight};
+    --pg-button-bg:      #{$pg-dark-button-bg};
+    --pg-shadow-md:      0 2px 6px rgba(0, 0, 0, .4);
+    --pg-shadow-lg:      0 16px 44px -10px rgba(0, 0, 0, .6);
+
+    color-scheme: dark;
+}
+
+// The exported line icons are drawn in black (Figma); in the dark theme
+// they are inverted so they stay legible on dark surfaces.
+[data-bs-theme="dark"] {
+    .pg-faq__icon img,
+    .pg-post__title img,
+    .pg-blog__more img {
+        filter: invert(1);
+    }
 }

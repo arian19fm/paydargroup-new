@@ -1,7 +1,7 @@
 @props(['title'])
-<div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
-    <h1 class="h3 mb-0">{{ $title }}</h1>
+<div class="pg-admin__page-header">
+    <h1 class="pg-admin__title">{{ $title }}</h1>
     @if (trim($slot))
-        <div class="d-flex gap-2">{{ $slot }}</div>
+        <div class="pg-admin__actions">{{ $slot }}</div>
     @endif
 </div>

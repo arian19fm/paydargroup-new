@@ -3,6 +3,7 @@
 namespace App\Support\Home;
 
 use App\Models\Article;
+use App\Models\Media;
 use App\Models\Page;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\QueryException;
@@ -78,6 +79,39 @@ class HomePage
         } catch (QueryException) {
             return [];
         }
+    }
+
+    /**
+     * Hero background media chosen in Settings → home: [video, image].
+     * Each is null unless the referenced media exists and has the right
+     * type, so a stale or mistyped ID silently falls back to the design.
+     *
+     * @return array{0: ?Media, 1: ?Media}
+     */
+    public function heroMedia(): array
+    {
+        $ids = array_filter([
+            'video' => (int) settings('home.hero_video_media_id'),
+            'image' => (int) settings('home.hero_image_media_id'),
+        ]);
+
+        if ($ids === []) {
+            return [null, null];
+        }
+
+        try {
+            $media = Media::query()->whereIn('id', $ids)->get()->keyBy('id');
+        } catch (QueryException) {
+            return [null, null];
+        }
+
+        $video = $media->get($ids['video'] ?? 0);
+        $image = $media->get($ids['image'] ?? 0);
+
+        return [
+            $video?->isVideo() ? $video : null,
+            $image?->isImage() ? $image : null,
+        ];
     }
 
     /** Every slug the home page may link to (products + section CTAs). */

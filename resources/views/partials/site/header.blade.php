@@ -42,13 +42,17 @@
                 </picture>
             </a>
 
-            <div class="pg-header__group pg-header__group--end d-none d-lg-block">
+            <div class="pg-header__group pg-header__group--end d-none d-lg-flex">
                 @include('partials.site.navigation', ['items' => $endItems, 'variant' => 'header'])
+                <x-ui.theme-toggle />
             </div>
 
-            <button class="pg-header__toggle d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#site-nav" aria-controls="site-nav" aria-expanded="false" aria-label="{{ __('nav.open_menu') }}">
-                <img src="{{ asset('images/icons/menu-01.svg') }}" width="24" height="24" alt="" aria-hidden="true">
-            </button>
+            <div class="pg-header__actions d-lg-none">
+                <x-ui.theme-toggle />
+                <button class="pg-header__toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#site-nav" aria-controls="site-nav" aria-expanded="false" aria-label="{{ __('nav.open_menu') }}">
+                    <img src="{{ asset('images/icons/menu-01.svg') }}" width="24" height="24" alt="" aria-hidden="true">
+                </button>
+            </div>
         </nav>
     </div>
 

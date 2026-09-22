@@ -30,7 +30,7 @@
 @endphp
 <footer class="pg-footer mt-auto">
     <div class="pg-footer__inner">
-        <div class="pg-footer__top">
+        <div class="pg-footer__top" data-motion="reveal">
             <div class="pg-footer__brand">
                 <a class="pg-footer__logo" href="{{ route('home') }}">
                     <img src="{{ asset('images/brand/paydar-logo-blue.png') }}" width="40" height="52" alt="{{ $siteName }}">

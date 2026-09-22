@@ -24,7 +24,7 @@
 .pg-tag {
     display: inline-block;
     padding: 6px 11px;
-    background: var(--pg-tag-bg, #fff2e9);
+    background: var(--pg-tag-bg, var(--pg-tag-warm));
     font-family: var(--pg-font-family-fn);
     font-size: .6875rem;
     font-weight: 500;

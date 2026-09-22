@@ -46,16 +46,31 @@ return [
         'settings' => 'تنظیمات',
         'system' => 'سیستم',
         'users' => 'کاربران',
+        'roles' => 'نقش‌ها و دسترسی‌ها',
     ],
 
     'auth' => [
         'login' => 'ورود به پنل مدیریت',
+        'intro' => 'با حساب کاربری سازمانی خود وارد شوید.',
         'email' => 'ایمیل',
         'password' => 'رمز عبور',
         'remember' => 'مرا به خاطر بسپار',
         'submit' => 'ورود',
     ],
 
+    'welcome' => 'خوش آمدید، :name',
+    'welcome_text' => 'از اینجا محتوای سایت، ساختار و کاربران را مدیریت کنید.',
+    'quick' => [
+        'new_article' => 'مقالهٔ جدید',
+        'new_page' => 'صفحهٔ جدید',
+        'upload_media' => 'بارگذاری رسانه',
+        'home_settings' => 'تنظیمات صفحهٔ اصلی',
+    ],
+    'recent' => [
+        'pages' => 'آخرین صفحات',
+        'articles' => 'آخرین مقالات',
+        'all' => 'مشاهدهٔ همه',
+    ],
     'dashboard_cards' => [
         'pages' => 'صفحات',
         'articles' => 'مقالات',
@@ -84,6 +99,10 @@ return [
         'password_confirmation' => 'تکرار رمز عبور',
         'password_help' => 'حداقل ۱۲ کاراکتر شامل حرف و عدد. برای عدم تغییر خالی بگذارید.',
         'roles' => 'نقش‌ها',
+        'role_name' => 'نام نقش',
+        'permissions' => 'دسترسی‌ها',
+        'current_password' => 'رمز عبور فعلی',
+        'new_password' => 'رمز عبور جدید',
         'description' => 'توضیحات',
         'sort_order' => 'ترتیب',
         'categories' => 'دسته‌بندی‌ها',
@@ -158,7 +177,42 @@ return [
     ],
 
     'settings' => [
+        'media_missing' => 'رسانه‌ای با این شناسه وجود ندارد.',
         'group' => 'گروه تنظیمات',
+    ],
+
+    'roles' => [
+        'create' => 'ایجاد نقش',
+        'system' => 'سیستمی',
+        'all_permissions' => 'همهٔ دسترسی‌ها',
+        'help' => 'نقش «مدیر کل» همیشه همهٔ دسترسی‌ها را دارد و قابل ویرایش نیست. نقشی که به کاربری اختصاص داده شده حذف نمی‌شود.',
+        'name_help' => 'یک نام کوتاه، مثلاً «مدیر محتوا». برای کاربران در فرم کاربر نمایش داده می‌شود.',
+        'permissions_help' => 'برای ورود به پنل، دسترسی «ورود به پنل مدیریت» لازم است.',
+        'names' => ['super_admin' => 'مدیر کل', 'admin' => 'مدیر', 'editor' => 'ویراستار'],
+    ],
+
+    'profile' => [
+        'title' => 'حساب من',
+        'change_password' => 'تغییر رمز عبور',
+        'current_password_help' => 'برای تغییر ایمیل یا رمز عبور، رمز فعلی لازم است.',
+    ],
+
+    'permissions' => [
+        'groups' => [
+            'admin' => 'پنل', 'pages' => 'صفحات', 'articles' => 'مقالات', 'categories' => 'دسته‌بندی‌ها', 'media' => 'رسانه',
+            'menus' => 'منوها', 'settings' => 'تنظیمات', 'redirects' => 'ریدایرکت‌ها', 'users' => 'کاربران', 'roles' => 'نقش‌ها', 'seo' => 'سئو',
+        ],
+        'admin_access' => 'ورود به پنل مدیریت',
+        'pages_view' => 'مشاهدهٔ صفحات', 'pages_create' => 'ایجاد صفحه', 'pages_update' => 'ویرایش صفحه', 'pages_delete' => 'حذف صفحه', 'pages_publish' => 'انتشار صفحه',
+        'articles_view' => 'مشاهدهٔ مقالات', 'articles_create' => 'ایجاد مقاله', 'articles_update' => 'ویرایش مقاله', 'articles_delete' => 'حذف مقاله', 'articles_publish' => 'انتشار مقاله',
+        'categories_view' => 'مشاهدهٔ دسته‌بندی‌ها', 'categories_manage' => 'مدیریت دسته‌بندی‌ها',
+        'media_view' => 'مشاهدهٔ رسانه', 'media_manage' => 'مدیریت رسانه',
+        'menus_view' => 'مشاهدهٔ منوها', 'menus_manage' => 'مدیریت منوها',
+        'settings_view' => 'مشاهدهٔ تنظیمات', 'settings_update' => 'ویرایش تنظیمات',
+        'redirects_view' => 'مشاهدهٔ ریدایرکت‌ها', 'redirects_manage' => 'مدیریت ریدایرکت‌ها',
+        'users_view' => 'مشاهدهٔ کاربران', 'users_manage' => 'مدیریت کاربران',
+        'roles_view' => 'مشاهدهٔ نقش‌ها', 'roles_manage' => 'مدیریت نقش‌ها و دسترسی‌ها',
+        'seo_manage' => 'مدیریت سئو',
     ],
 
     'users' => [

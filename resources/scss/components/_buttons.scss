@@ -42,15 +42,16 @@
         --bs-btn-border-radius: 0;
     }
 
-    // White button with a primary outline (hero CTA).
+    // White button with a primary outline (hero CTA). It sits on the photo
+    // in both themes, so its colours are fixed rather than theme tokens.
     &--light {
         --bs-btn-bg: #fff;
         --bs-btn-border-color: var(--pg-primary);
-        --bs-btn-color: var(--pg-text);
-        --bs-btn-hover-bg: var(--pg-surface);
+        --bs-btn-color: #{$pg-text};
+        --bs-btn-hover-bg: #{$pg-surface};
         --bs-btn-hover-border-color: var(--pg-primary);
         --bs-btn-hover-color: var(--pg-primary);
-        --bs-btn-active-bg: var(--pg-surface);
+        --bs-btn-active-bg: #{$pg-surface};
         --bs-btn-active-border-color: var(--pg-primary-dark);
         --bs-btn-active-color: var(--pg-primary-dark);
         font-weight: 700;

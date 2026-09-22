@@ -3,6 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    {{-- Theme before first paint: light by default; dark only when the visitor chose it with the header switch (site/theme.js). --}}
+    <script>(function(){var t=null;try{t=localStorage.getItem('pg-theme')}catch(e){}document.documentElement.setAttribute('data-bs-theme',t==='dark'?'dark':'light')})();</script>
     <x-seo.head />
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
     @stack('head')

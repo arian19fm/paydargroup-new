@@ -172,6 +172,18 @@ class HomePageTest extends TestCase
         $this->assertSame(count(__('home.faq.items')), substr_count($html, 'data-bs-toggle="collapse"'));
     }
 
+    public function test_theme_is_applied_before_paint_and_switchable(): void
+    {
+        $html = $this->get('/')->getContent();
+
+        $this->assertStringContainsString('<meta name="color-scheme" content="light">', $html);
+        $this->assertStringContainsString("localStorage.getItem('pg-theme')", $html);
+        $this->assertStringContainsString("setAttribute('data-bs-theme',t==='dark'?'dark':'light')", $html);
+        $this->assertStringNotContainsString('prefers-color-scheme', $html, 'Light is the default regardless of the OS.');
+        $this->assertSame(2, substr_count($html, 'data-theme-toggle aria-pressed="false"'));
+        $this->assertStringContainsString('aria-label="'.__('nav.toggle_dark').'"', $html);
+    }
+
     public function test_mobile_navigation_offcanvas_is_present_and_labelled(): void
     {
         $this->get('/')

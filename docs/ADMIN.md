@@ -79,6 +79,7 @@ menus.view      menus.manage
 settings.view   settings.update
 redirects.view  redirects.manage
 users.view      users.manage
+roles.view      roles.manage
 seo.manage
 ```
 
@@ -87,8 +88,25 @@ Roles:
 | Role | Permissions |
 |---|---|
 | `super_admin` | **all** — synced to the full permission list on every seed run. Policies still execute for super admins so safety rules (e.g. self-deactivation) apply. |
-| `admin` | everything except `users.manage` |
+| `admin` | everything except `users.manage` and `roles.manage` |
 | `editor` | `admin.access`, pages/articles view+create+update (no publish, no delete), categories.view, media.view+manage, menus.view |
+
+### Managing roles in the panel
+
+`/admin/roles` (`roles.view` to list, `roles.manage` to change): create a
+role with any name (Persian labels are fine), tick the permissions it
+grants (grouped by resource, labelled in `admin.permissions.*`), edit or
+delete it. Permissions themselves stay in code (the seeder); the panel only
+assigns them. `super_admin` is read-only there and always synced to the
+full list; a role with users cannot be deleted. New roles are immediately
+assignable in the user form (non-super-admins never see `super_admin`).
+
+### Own account
+
+`/admin/profile` (topbar → user name): any staff member changes their own
+name, e-mail and password; changing the e-mail or password requires the
+current password (`ProfileRequest`). Roles and the active flag are only
+editable through user management.
 
 Enforcement (no scattered `if ($user->role === …)`):
 
@@ -101,18 +119,21 @@ Enforcement (no scattered `if ($user->role === …)`):
 
 ## 4. Layout and screens
 
-`resources/views/layouts/admin.blade.php`: sidebar (offcanvas below `lg`,
-sticky on desktop, permission-filtered), topbar (view site, current user +
-roles, logout), breadcrumb (`<x-admin.breadcrumb>` from a `$breadcrumbs`
-array), page title (`@section('title')`), action slot (`@section('actions')`),
-flash messages and validation summary. Form fields use
+`resources/views/layouts/admin.blade.php`: navy sidebar (offcanvas below
+`lg`, sticky on desktop, permission-filtered, line icons from
+`<x-admin.icon>`, user card + logout at the bottom), sticky topbar
+(breadcrumb from a `$breadcrumbs` array, view-site link, user chip →
+profile), page title (`@section('title')`), action slot
+(`@section('actions')`), flash messages and validation summary. All styling
+lives in `resources/scss/layout/_admin.scss` on the brand tokens — no
+admin theme package. Form fields use
 `<x-admin.form.input|textarea|select|checkbox>`; content forms embed the
 reusable `<x-admin.seo-fields>` section (see `docs/SEO.md`). Lists paginate
 20 rows (`config('cms.per_page')`) with Bootstrap 5 pagination.
 
 | Screen | Route prefix | Notes |
 |---|---|---|
-| Dashboard | `/admin` | real counts only (pages, articles, media, redirects), filtered by permission |
+| Dashboard | `/admin` | welcome banner with quick actions, real counts (pages, articles, media, redirects) and the five most recently edited pages/articles — all filtered by permission |
 | Pages | `/admin/pages` | search, status filter, SEO section |
 | Articles | `/admin/articles` | categories (multi-select), author, featured image ID, SEO section |
 | Categories | `/admin/categories` | |

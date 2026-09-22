@@ -1,17 +1,12 @@
 <header class="pg-admin__topbar">
-    <div class="d-flex align-items-center gap-3 px-3 py-2">
-        <button class="btn btn-outline-secondary btn-sm d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#admin-sidebar" aria-controls="admin-sidebar" aria-label="{{ __('admin.toggle_sidebar') }}">☰</button>
-        <a class="small text-decoration-none" href="{{ route('home') }}" target="_blank" rel="noopener">{{ __('admin.view_site') }}</a>
-        <div class="ms-auto d-flex align-items-center gap-3">
-            <span class="small text-body-secondary">
-                <span class="visually-hidden">{{ __('admin.logged_in_as') }}</span>
-                {{ auth()->user()->name }}
-                <span class="text-body-tertiary">({{ auth()->user()->getRoleNames()->join(', ') }})</span>
-            </span>
-            <form method="POST" action="{{ route('admin.logout') }}">
-                @csrf
-                <button type="submit" class="btn btn-link btn-sm p-0">{{ __('admin.logout') }}</button>
-            </form>
-        </div>
+    <button class="pg-admin__menu-btn d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#admin-sidebar" aria-controls="admin-sidebar" aria-label="{{ __('admin.toggle_sidebar') }}"><x-admin.icon name="menu" /></button>
+    <x-admin.breadcrumb :items="$breadcrumbs ?? []" />
+    <div class="pg-admin__topbar-end">
+        <a class="btn btn-sm btn-outline-secondary pg-admin__site-link" href="{{ route('home') }}" target="_blank" rel="noopener"><x-admin.icon name="external" size="16" /><span>{{ __('admin.view_site') }}</span></a>
+        <a class="pg-admin__topbar-user" href="{{ route('admin.profile.edit') }}">
+            <span class="visually-hidden">{{ __('admin.logged_in_as') }}</span>
+            <span class="pg-admin__avatar pg-admin__avatar--sm" aria-hidden="true">{{ mb_substr(trim(auth()->user()->name), 0, 1) }}</span>
+            <span class="d-none d-md-inline">{{ auth()->user()->name }}</span>
+        </a>
     </div>
 </header>

@@ -16,11 +16,17 @@ class MediaService
 {
     public const ALLOWED_MIMES = [
         'image/jpeg', 'image/png', 'image/webp', 'image/gif', 'application/pdf',
+        'video/mp4', 'video/webm',
     ];
 
-    public const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'pdf'];
+    public const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'pdf', 'mp4', 'webm'];
 
+    public const VIDEO_EXTENSIONS = ['mp4', 'webm'];
+
+    /** Size caps: images/documents, and (larger) background videos. */
     public const MAX_KILOBYTES = 10240;
+
+    public const MAX_VIDEO_KILOBYTES = 61440;
 
     public function __construct(protected string $disk = 'public') {}
 

@@ -50,6 +50,41 @@ $pg-error:   #ff5630 !default;
 $pg-info:    #358afc !default;
 $pg-pink:    #bd1572 !default;
 
+// Soft text used by the section headings (Figma: 70% black / 70% #1f1f1f).
+$pg-heading-soft: rgba(31, 31, 31, .7) !default;
+$pg-eyebrow-soft: rgba(0, 0, 0, .7) !default;
+$pg-card-bg:      #ffffff !default; // white cards (Ask AI bar, contact form)
+$pg-tag-warm:     #fff2e9 !default; // blog tags (desktop)
+$pg-divider-2:    #e0e3e3 !default; // FAQ rows (mobile)
+
+// ----------------------------------------------------------------------------
+// Dark theme — not part of the Figma file. Every value is DERIVED from the
+// light tokens above (shades of grey/900 and the brand navy, the brand
+// blues as highlights) so the dark page stays inside the same palette.
+// Applied through <html data-bs-theme="dark"> (see base/_root.scss).
+// ----------------------------------------------------------------------------
+$pg-dark-background:     #0f1319 !default; // grey/900 shaded
+$pg-dark-background-alt: #12171e !default;
+$pg-dark-surface:        #1a2029 !default; // cards
+$pg-dark-surface-2:      #171d25 !default;
+$pg-dark-surface-3:      #1c232d !default;
+$pg-dark-surface-warm:   #14181d !default;
+$pg-dark-card-bg:        #1a2029 !default;
+$pg-dark-footer-bg:      #0a0d11 !default;
+$pg-dark-text:           #f4f6f8 !default; // grey/200 as text
+$pg-dark-text-strong:    #ffffff !default;
+$pg-dark-text-body:      #c4cdd5 !default; // grey/400
+$pg-dark-text-muted:     #8f9499 !default;
+$pg-dark-text-label:     #a9b0b8 !default;
+$pg-dark-ink:            #dbe3ea !default;
+$pg-dark-border:         #2a323d !default;
+$pg-dark-divider:        #2a323d !default;
+$pg-dark-heading-soft:   rgba(255, 255, 255, .72) !default;
+$pg-dark-eyebrow-soft:   rgba(255, 255, 255, .6) !default;
+$pg-dark-tag-warm:       rgba(255, 242, 233, .12) !default;
+$pg-dark-highlight:      #1c94e1 !default; // the mobile-frame blue reads best on dark
+$pg-dark-button-bg:      #1f43a4 !default;
+
 // Product accents: [text/link, dot, badge text, badge bg desktop, badge bg mobile]
 $pg-products: (
     fund:     (accent: #067647, dot: #616d61, badge-text: #2a412a, badge-bg: #f4f6f8, badge-bg-mobile: #e9f2ee),
@@ -115,7 +150,7 @@ $pg-gutter-lg:     56px   !default;
 
 // Feature flags
 $enable-rfs:               false;  // sizes are set per component from the Figma frames
-$enable-dark-mode:         false;  // no dark theme in the design (yet) — smaller CSS
+$enable-dark-mode:         true;   // <html data-bs-theme="dark">; tokens in base/_root.scss
 $enable-negative-margins:  false;
 $enable-smooth-scroll:     true;   // respects prefers-reduced-motion internally
 $enable-shadows:           false;
@@ -130,6 +165,10 @@ $success:    $pg-success;
 $danger:     $pg-error;
 $info:       $pg-info;
 $border-color: $pg-border;
+$body-bg-dark:    $pg-dark-background;
+$body-color-dark: $pg-dark-text;
+$body-secondary-color-dark: $pg-dark-text-muted;
+$border-color-dark: $pg-dark-border;
 
 // Typography
 $font-family-sans-serif: $pg-font-family-base;

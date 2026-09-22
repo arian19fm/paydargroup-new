@@ -7,16 +7,16 @@
 --}}
 <section class="pg-faq" id="faq" aria-labelledby="faq-heading">
     <div class="pg-container">
-        <div class="pg-faq__header">
+        <div class="pg-faq__header" data-motion="reveal">
             <p class="pg-eyebrow pg-eyebrow--faq">{{ __('home.faq.eyebrow') }}</p>
-            <h2 id="faq-heading" class="pg-faq__title">
+            <h2 id="faq-heading" class="pg-faq__title" data-motion="reveal-heading">
                 <span class="pg-faq__title-highlight">{{ __('home.faq.heading_highlight') }}</span>
                 <span class="pg-faq__title-rest">{{ __('home.faq.heading') }}</span>
             </h2>
         </div>
 
         <div class="pg-faq__body">
-            <div class="pg-faq__main">
+            <div class="pg-faq__main" data-motion="reveal" data-motion-exit>
                 <div class="pg-ask" role="group" aria-labelledby="ask-ai-label">
                     <label id="ask-ai-label" class="visually-hidden" for="ask-ai-input">{{ __('home.faq.ask_label') }}</label>
                     <input id="ask-ai-input" class="pg-ask__input" type="text" placeholder="{{ __('home.faq.ask_placeholder') }}" aria-describedby="ask-ai-note" disabled>
@@ -50,7 +50,7 @@
                 </div>
             </div>
 
-            <aside class="pg-faq__card" aria-labelledby="faq-card-title">
+            <aside class="pg-faq__card" aria-labelledby="faq-card-title" data-motion="reveal" data-motion-exit>
                 <span class="pg-faq__card-icon" aria-hidden="true">؟</span>
                 <h3 id="faq-card-title" class="pg-faq__card-title">{{ __('home.faq.card_title') }}</h3>
                 <p class="pg-faq__card-text">{{ __('home.faq.card_text') }}</p>

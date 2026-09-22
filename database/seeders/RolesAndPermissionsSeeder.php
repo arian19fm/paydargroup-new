@@ -25,6 +25,7 @@ class RolesAndPermissionsSeeder extends Seeder
         'settings.view', 'settings.update',
         'redirects.view', 'redirects.manage',
         'users.view', 'users.manage',
+        'roles.view', 'roles.manage',
         'seo.manage',
     ];
 
@@ -40,6 +41,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'settings.view', 'settings.update',
             'redirects.view', 'redirects.manage',
             'users.view',
+            'roles.view',
             'seo.manage',
         ],
         // Content work only: no publishing, deleting, configuration or users.

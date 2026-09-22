@@ -102,8 +102,16 @@ Principles:
    never collide with Bootstrap.
 4. Runtime CSS (Vue widgets, inline styles) uses the `--pg-*` custom
    properties; SCSS uses the `$pg-*` variables. Both come from one file.
-5. Dark mode is disabled (`$enable-dark-mode: false`) until the design
-   defines one.
+5. Dark theme: Bootstrap's `data-bs-theme` mechanism (`$enable-dark-mode:
+   true`). The attribute is set on `<html>` before first paint by an inline
+   script in `layouts/site.blade.php` — light by default, dark only when
+   the visitor's stored choice (`localStorage` `pg-theme`) says so; the OS
+   preference is not consulted — toggled by the header switch
+   (`components/ui/theme-toggle`, `site/theme.js`). Only the `--pg-*`
+   tokens change, under `[data-bs-theme="dark"]` in `base/_root.scss`; the
+   dark values are derived from the light palette (`$pg-dark-*` in the
+   token file) because the Figma file has no dark design. The admin panel
+   stays light.
 
 ## 4. Design tokens
 
@@ -155,8 +163,39 @@ Product accents live in the `$pg-products` map and are exposed per card as
 - `site/navigation.js` — vanilla progressive enhancement for the header.
 - `vue/mount.js` — isolated Vue mounting (below).
 
+- `animations/` — scroll-driven motion on GSAP + ScrollTrigger
+  (`index.js` bootstraps `hero.js`, `products-stack.js`, `reveal.js`,
+  `parallax.js`). It is a separate Vite chunk that `app.js` imports lazily
+  only when the page contains a `[data-motion]` element (the home page);
+  other pages never download GSAP.
+
 Scripts are ES modules (`type="module"`), so they are deferred by the
 browser and never block rendering.
+
+### Motion layer rules
+
+- Blade stays the source of content; motion is progressive enhancement.
+  Nothing is hidden by CSS up front — GSAP sets initial states at run time,
+  and the hero load-in is a CSS keyframe gated on `<html class="pg-js">`
+  (set inline in the home page head), so without JavaScript every section
+  is static and visible.
+- Hooks are explicit: `data-motion="hero | product-stack | reveal |
+  reveal-group | reveal-heading | parallax"` plus the `data-motion-exit`
+  modifier. Do not animate arbitrary selectors.
+- Product stack: CSS does the structure (`position: sticky` per card at
+  `--pg-stack-top + --stack-index × --pg-stack-step`, rising `z-index`; the
+  list keeps its natural height), GSAP only scrubs scale/opacity of the
+  card being covered. `--stack-index` comes from the markup.
+- Only `transform` and `opacity` are animated; `will-change` is set by the
+  scripts on the few elements that scrub. Headings reveal as whole blocks
+  (clip-path + rise) — Persian text is never split.
+- `gsap.matchMedia()` contexts: desktop (≥992), tablet (768–991), mobile
+  (<768), each gated on `prefers-reduced-motion: no-preference`. With
+  reduced motion no tween or trigger is created; the sticky stack remains
+  (it is layout, not animation).
+- Native scrolling only: no wheel/touch listeners, no smooth-scroll
+  library, no pinning canvases. `ScrollTrigger.refresh()` is debounced
+  after fonts/`load` and Bootstrap collapse events.
 
 ## 7. Isolated Vue components
 

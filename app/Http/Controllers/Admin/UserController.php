@@ -69,10 +69,11 @@ class UserController extends Controller
         return back()->with('success', __('admin.saved'));
     }
 
+    /** Every role, minus super_admin unless the current user is one. */
     protected function assignableRoles()
     {
-        $names = auth()->user()->isSuperAdmin() ? ['super_admin', 'admin', 'editor'] : ['admin', 'editor'];
-
-        return Role::query()->whereIn('name', $names)->orderBy('name')->get(['id', 'name']);
+        return Role::query()->where('guard_name', 'web')
+            ->when(! auth()->user()->isSuperAdmin(), fn ($q) => $q->where('name', '!=', User::ROLE_SUPER_ADMIN))
+            ->orderBy('name')->get(['id', 'name']);
     }
 }

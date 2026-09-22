@@ -46,16 +46,31 @@ return [
         'settings' => 'Settings',
         'system' => 'System',
         'users' => 'Users',
+        'roles' => 'Roles & permissions',
     ],
 
     'auth' => [
         'login' => 'Sign in to the admin panel',
+        'intro' => 'Sign in with your staff account.',
         'email' => 'E-mail',
         'password' => 'Password',
         'remember' => 'Remember me',
         'submit' => 'Sign in',
     ],
 
+    'welcome' => 'Welcome, :name',
+    'welcome_text' => 'Manage the site content, structure and staff from here.',
+    'quick' => [
+        'new_article' => 'New article',
+        'new_page' => 'New page',
+        'upload_media' => 'Upload media',
+        'home_settings' => 'Home page settings',
+    ],
+    'recent' => [
+        'pages' => 'Recent pages',
+        'articles' => 'Recent articles',
+        'all' => 'View all',
+    ],
     'dashboard_cards' => [
         'pages' => 'Pages',
         'articles' => 'Articles',
@@ -84,6 +99,10 @@ return [
         'password_confirmation' => 'Confirm password',
         'password_help' => 'At least 12 characters with letters and numbers. Leave empty to keep unchanged.',
         'roles' => 'Roles',
+        'role_name' => 'Role name',
+        'permissions' => 'Permissions',
+        'current_password' => 'Current password',
+        'new_password' => 'New password',
         'description' => 'Description',
         'sort_order' => 'Sort order',
         'categories' => 'Categories',
@@ -158,7 +177,42 @@ return [
     ],
 
     'settings' => [
+        'media_missing' => 'No media item has this ID.',
         'group' => 'Settings group',
+    ],
+
+    'roles' => [
+        'create' => 'Create role',
+        'system' => 'system',
+        'all_permissions' => 'all permissions',
+        'help' => 'The super admin role always has every permission and cannot be edited. A role that is assigned to users cannot be deleted.',
+        'name_help' => 'A short name, e.g. "Content manager"; shown in the user form.',
+        'permissions_help' => '"Access the admin panel" is required to sign in.',
+        'names' => ['super_admin' => 'Super admin', 'admin' => 'Admin', 'editor' => 'Editor'],
+    ],
+
+    'profile' => [
+        'title' => 'My account',
+        'change_password' => 'Change password',
+        'current_password_help' => 'Required to change the e-mail or the password.',
+    ],
+
+    'permissions' => [
+        'groups' => [
+            'admin' => 'Panel', 'pages' => 'Pages', 'articles' => 'Articles', 'categories' => 'Categories', 'media' => 'Media',
+            'menus' => 'Menus', 'settings' => 'Settings', 'redirects' => 'Redirects', 'users' => 'Users', 'roles' => 'Roles', 'seo' => 'SEO',
+        ],
+        'admin_access' => 'Access the admin panel',
+        'pages_view' => 'View pages', 'pages_create' => 'Create pages', 'pages_update' => 'Edit pages', 'pages_delete' => 'Delete pages', 'pages_publish' => 'Publish pages',
+        'articles_view' => 'View articles', 'articles_create' => 'Create articles', 'articles_update' => 'Edit articles', 'articles_delete' => 'Delete articles', 'articles_publish' => 'Publish articles',
+        'categories_view' => 'View categories', 'categories_manage' => 'Manage categories',
+        'media_view' => 'View media', 'media_manage' => 'Manage media',
+        'menus_view' => 'View menus', 'menus_manage' => 'Manage menus',
+        'settings_view' => 'View settings', 'settings_update' => 'Edit settings',
+        'redirects_view' => 'View redirects', 'redirects_manage' => 'Manage redirects',
+        'users_view' => 'View users', 'users_manage' => 'Manage users',
+        'roles_view' => 'View roles', 'roles_manage' => 'Manage roles and permissions',
+        'seo_manage' => 'Manage SEO',
     ],
 
     'users' => [
