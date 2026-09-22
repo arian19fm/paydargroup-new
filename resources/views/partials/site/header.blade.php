@@ -24,11 +24,11 @@
     $endItems = array_slice($items, $split);
     $siteName = \App\Support\Seo\SeoManager::siteName();
     $overlay = \Illuminate\Support\Facades\View::hasSection('hero');
-    // Navy emblem over the hero photo (desktop frame); the blue emblem on the
-    // mobile frame and on the solid band of undesigned pages.
-    $desktopLogo = $overlay ? 'paydar-logo-navy' : 'paydar-logo-blue';
+    // Navy emblem in both header variants (over the hero photo, and on the
+    // light pill of inner pages); the blue emblem on the mobile frame.
+    $desktopLogo = 'paydar-logo-navy';
 @endphp
-<header class="pg-header @if ($overlay) pg-header--overlay @endif">
+<header class="pg-header {{ $overlay ? 'pg-header--overlay' : 'pg-header--light' }}">
     <div class="pg-header__inner">
         <nav class="pg-header__bar" aria-label="{{ __('nav.main_navigation') }}">
             <div class="pg-header__group d-none d-lg-block">

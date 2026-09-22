@@ -51,6 +51,23 @@ return [
             ],
         ],
 
+        // "About" page template extras (the page itself — title, lead,
+        // body — is the CMS page that uses the template).
+        'about' => [
+            'label' => 'settings.groups.about',
+            'keys' => [
+                'image_1_media_id' => ['type' => 'media', 'public' => true, 'label' => 'settings.about.image_1'],
+                'image_2_media_id' => ['type' => 'media', 'public' => true, 'label' => 'settings.about.image_2'],
+                'partner_media_ids' => ['type' => 'string', 'public' => true, 'label' => 'settings.about.partner_media_ids'],
+                'history_title' => ['type' => 'string', 'public' => true, 'label' => 'settings.about.history_title'],
+                'history_text' => ['type' => 'text', 'public' => true, 'label' => 'settings.about.history_text'],
+                'history_image_media_id' => ['type' => 'media', 'public' => true, 'label' => 'settings.about.history_image'],
+                'stat_clients' => ['type' => 'integer', 'public' => true, 'label' => 'settings.about.stat_clients'],
+                'stat_years' => ['type' => 'integer', 'public' => true, 'label' => 'settings.about.stat_years'],
+                'stat_companies' => ['type' => 'integer', 'public' => true, 'label' => 'settings.about.stat_companies'],
+            ],
+        ],
+
         'contact' => [
             'label' => 'settings.groups.contact',
             'keys' => [

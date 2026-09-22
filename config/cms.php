@@ -16,10 +16,11 @@ return [
         'sitemap.xml', 'storage', 'up', 'vendor',
     ],
 
-    // Page templates selectable in the admin (Blade view suffix). Only
-    // 'default' exists until the visual layer is built.
+    // Page templates selectable in the admin: key => public Blade view that
+    // renders the page. A page without a template uses 'default'.
     'page_templates' => [
-        'default' => 'admin.pages.templates.default',
+        'default' => 'site.pages.show',
+        'about' => 'site.pages.templates.about',
     ],
 
     // schema.org types offered in the SEO form.

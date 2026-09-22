@@ -182,3 +182,18 @@ poster and as the fallback for reduced motion, no JavaScript, blocked
 autoplay or unsupported formats. The media library accepts `video/mp4` and
 `video/webm` up to 60 MB (images/PDF keep the 10 MB cap). IDs that do not
 resolve to the right media type are ignored, so the page always renders.
+
+## Page templates
+
+`config/cms.php → page_templates` maps a template key (chosen in the page
+form) to the public Blade view that renders it; a page without a template
+uses `default` (`site/pages/show`).
+
+| Template | View | Extras |
+|---|---|---|
+| `default` | `site.pages.show` | — |
+| `about` | `site.pages.templates.about` (Figma 249:1038 / 258:33) | Settings → **صفحهٔ درباره ما**: two intro photos, partner logos (comma-separated media IDs), history title/text/photo, three statistics — read by `App\Support\Pages\AboutPage`; anything empty is not rendered and photo slots show the design's grey placeholder |
+
+The page's own title, lead (`excerpt`) and body (`content`) are the CMS
+fields. Inner pages get the light header pill (`.pg-header--light`); only
+the home page floats the header over its hero.

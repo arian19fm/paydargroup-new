@@ -1,0 +1,399 @@
+// "About" page template (Figma 249:1038 desktop 1440 / 258:33 mobile 375).
+//
+// Desktop: 1292 content (74px gutters); intro (eyebrow 14, h1 32/48 Doran
+// Bold, lead 18/28 Doran Medium in the start 1073px); two 281px photos
+// 25px apart; body 18/40 IRANYekanFN Medium; grey partner strip (60px
+// padding); history row = eyebrow column (381) at the start, content
+// column (856) at the end with the photo (856×364) and a 3-up stat row.
+// Mobile: 16px gutters, intro on #fbfbfa, photos stacked (193px), body
+// 16/24, partner logos in two columns, history stacked, stats 2 + 1.
+
+.pg-about {
+    padding-top: 26px;
+    background: var(--pg-background);
+
+    @include media-breakpoint-up(lg) {
+        padding-top: 26px;
+    }
+
+    .pg-container {
+        @include media-breakpoint-up(lg) {
+            --pg-gutter: 74px;
+        }
+    }
+}
+
+.pg-about__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 8px 0 32px;
+
+    @include media-breakpoint-up(lg) {
+        padding: 0 0 34px;
+    }
+}
+
+.pg-about__eyebrow {
+    margin: 0;
+    font-family: var(--pg-font-family-fn);
+    font-size: .875rem;
+    line-height: 22px;
+    letter-spacing: .015em;
+    color: var(--pg-text-muted);
+}
+
+.pg-about__title {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: 1.1875rem; // 19px
+    font-weight: 500;
+    line-height: 29px;
+    letter-spacing: .015em;
+    color: #2a412a;
+
+    @include media-breakpoint-up(md) {
+        font-size: 1.625rem;
+        line-height: 1.5;
+    }
+
+    @include media-breakpoint-up(lg) {
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 48px;
+    }
+}
+
+.pg-about__lead {
+    max-width: 1073px;
+    margin: 0;
+    font-family: var(--pg-font-family-fn);
+    font-size: .875rem;
+    font-weight: 500;
+    line-height: 22px;
+    letter-spacing: .015em;
+    color: var(--pg-text-body);
+
+    @include media-breakpoint-up(lg) {
+        font-family: var(--pg-font-family-display);
+        font-size: 1.125rem;
+        line-height: 28px;
+    }
+}
+
+// Two photos: 632/635 × 281 on desktop, stacked 343 × 193 on mobile. The
+// grey box is the design's own placeholder until a photo is set.
+.pg-about__photos {
+    display: grid;
+    gap: 24px;
+
+    @include media-breakpoint-up(md) {
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+    }
+}
+
+.pg-about__photo {
+    margin: 0;
+    aspect-ratio: 343 / 193;
+    overflow: hidden;
+    background: #cfcfcf;
+
+    @include media-breakpoint-up(md) {
+        aspect-ratio: 632 / 281;
+    }
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* rtl:ignore */
+        object-position: 50% 50%;
+    }
+
+    // Desktop frame: photo 1 sits at the end (left) and photo 2 at the
+    // start (right); the mobile frame stacks photo 1 first. Same DOM,
+    // swapped columns.
+    &--1 {
+        @include media-breakpoint-up(md) {
+            order: 2;
+        }
+    }
+
+    // Figma crops: photo 1 shows its middle band, photo 2 its upper part.
+    &--1 img {
+        /* rtl:ignore */
+        object-position: 50% 46%;
+    }
+
+    &--2 img {
+        /* rtl:ignore */
+        object-position: 50% 18%;
+    }
+}
+
+.pg-about__body {
+    padding: 32px 0 56px;
+    font-family: var(--pg-font-family-fn);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: .015em;
+    color: var(--pg-text-strong);
+
+    @include media-breakpoint-up(lg) {
+        padding: 40px 0 25px;
+        font-size: 1.125rem;
+        line-height: 40px;
+    }
+
+    p {
+        margin: 0 0 16px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+// Partner logos.
+.pg-about__partners {
+    padding: 40px 0;
+    background: var(--pg-surface);
+
+    @include media-breakpoint-up(lg) {
+        padding: 60px 0;
+    }
+}
+
+.pg-about__partners-text {
+    margin: 0 0 32px;
+    font-family: var(--pg-font-family-fn);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 24px;
+    text-align: center;
+    color: #475467;
+}
+
+.pg-about__logos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: center;
+    justify-items: center;
+    gap: 24px 48px;
+    max-width: 301px;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+
+    @include media-breakpoint-up(md) {
+        max-width: none;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    @include media-breakpoint-up(lg) {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        padding-inline: 32px;
+    }
+
+    li {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    img {
+        width: auto;
+        max-width: 123px;
+        height: 34px;
+
+        @include media-breakpoint-up(lg) {
+            max-width: 200px;
+            height: 48px;
+        }
+    }
+
+    [data-bs-theme="dark"] & img {
+        filter: brightness(0) invert(1);
+    }
+}
+
+// History + statistics.
+.pg-about__history {
+    padding: 32px 0;
+
+    @include media-breakpoint-up(lg) {
+        padding: 56px 0 81px;
+    }
+}
+
+.pg-about__history-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    @include media-breakpoint-up(lg) {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 59px;
+        --pg-gutter: 72px;
+    }
+}
+
+.pg-about__history-eyebrow {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: .875rem;
+    line-height: 26px;
+    color: var(--pg-text-body);
+    opacity: .85;
+
+    @include media-breakpoint-up(lg) {
+        flex: 0 0 381px;
+        font-size: 1rem;
+    }
+}
+
+.pg-about__history-main {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+
+    @include media-breakpoint-up(lg) {
+        flex: 0 1 856px;
+        gap: 32px;
+    }
+}
+
+.pg-about__history-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    @include media-breakpoint-up(lg) {
+        gap: 20px;
+    }
+}
+
+.pg-about__history-title {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: 1.1875rem;
+    font-weight: 500;
+    line-height: 29px;
+    letter-spacing: .015em;
+    color: #2a412a;
+
+    @include media-breakpoint-up(lg) {
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 48px;
+    }
+}
+
+.pg-about__history-text {
+    font-family: var(--pg-font-family-fn);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: .015em;
+    color: var(--pg-text-body);
+
+    @include media-breakpoint-up(lg) {
+        font-size: 1.125rem;
+        line-height: 38px;
+    }
+
+    p {
+        margin: 0 0 12px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.pg-about__history-photo {
+    margin: 0;
+    aspect-ratio: 856 / 364;
+    overflow: hidden;
+    background: #cfcfcf;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* rtl:ignore */
+        object-position: 50% 32%;
+    }
+}
+
+.pg-about__stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 24px;
+    margin: 0;
+
+    @include media-breakpoint-up(md) {
+        grid-template-columns: repeat(3, auto);
+        justify-content: space-between;
+    }
+
+    // Mobile frame: clients + years side by side, companies centred below.
+    .pg-about__stat--companies {
+        grid-column: 1 / -1;
+        text-align: center;
+
+        @include media-breakpoint-up(md) {
+            grid-column: auto;
+            text-align: start;
+        }
+    }
+
+    dt {
+        font-family: var(--pg-font-family-fn);
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 38px;
+        letter-spacing: .015em;
+        color: var(--pg-text-body);
+
+        @include media-breakpoint-up(lg) {
+            font-size: 1.125rem;
+        }
+    }
+
+    dd {
+        margin: 4px 0 0;
+        font-family: var(--pg-font-family-display);
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 36px;
+        letter-spacing: .015em;
+        color: var(--pg-text-strong);
+
+        @include media-breakpoint-up(lg) {
+            margin-top: 9px;
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 48px;
+        }
+    }
+}
+
+// The dark theme keeps the intro heading readable.
+[data-bs-theme="dark"] {
+    .pg-about__title,
+    .pg-about__history-title {
+        color: var(--pg-text-strong);
+    }
+
+    .pg-about__partners-text {
+        color: var(--pg-text-body);
+    }
+}

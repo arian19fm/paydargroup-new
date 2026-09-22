@@ -3,14 +3,14 @@
 // the top, 26px side insets, padding 8px 24px.
 //
 // On the home page (.pg-header--overlay) the header floats over the hero;
-// on other pages it sits on a solid brand band (no design exists for them
-// yet, so the band only reuses tokens).
+// on inner pages (.pg-header--light, Figma 249:1071) the same pill sits on
+// the page background with dark text.
 
 .pg-header {
     position: relative;
     z-index: $zindex-sticky;
     padding-block: 23px;
-    background: var(--pg-primary-dark);
+    background: transparent;
 
     @include media-breakpoint-up(lg) {
         padding-block: 32px;
@@ -20,7 +20,69 @@
         position: absolute;
         inset-inline: 0;
         top: 0;
-        background: transparent;
+    }
+
+    &--light {
+        --pg-glass-bg: rgba(255, 255, 255, .12);
+        --pg-glass-border: rgba(0, 0, 0, .04);
+        --pg-glass-highlight: rgba(255, 255, 255, .6);
+        --pg-glass-shadow: 0 10px 32px rgba(0, 0, 0, .1);
+
+        .pg-nav__link {
+            color: var(--pg-text);
+
+            &:hover,
+            &:focus-visible {
+                color: var(--pg-primary);
+                opacity: 1;
+            }
+
+            &.is-active {
+                background: var(--pg-surface);
+                color: var(--pg-primary);
+            }
+        }
+
+        .pg-nav__chevron,
+        .pg-header__toggle img,
+        .pg-theme-toggle {
+            filter: invert(1) brightness(.15);
+        }
+
+        .pg-header__toggle:hover,
+        .pg-header__toggle:focus-visible,
+        .pg-theme-toggle:hover,
+        .pg-theme-toggle:focus-visible {
+            background: rgba(0, 0, 0, .06);
+        }
+
+        .pg-header__bar {
+            @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+                background: #fff;
+            }
+        }
+
+        [data-bs-theme="dark"] & {
+            // The navy emblem disappears on the dark page; lift it to white.
+            .pg-header__brand img {
+                filter: brightness(0) invert(1);
+            }
+
+            .pg-nav__link {
+                color: #fff;
+
+                &.is-active {
+                    background: rgba(255, 255, 255, .12);
+                    color: #fff;
+                }
+            }
+
+            .pg-nav__chevron,
+            .pg-header__toggle img,
+            .pg-theme-toggle {
+                filter: none;
+            }
+        }
     }
 }
 
