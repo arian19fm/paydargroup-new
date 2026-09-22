@@ -39,6 +39,18 @@ class Article extends Model implements Seoable
         return $this->belongsToMany(ArticleCategory::class, 'article_category');
     }
 
+    /**
+     * Estimated reading time in whole minutes, derived from the plain-text
+     * word count at the configured reading speed (never below one minute).
+     */
+    public function readingTimeMinutes(): int
+    {
+        $words = preg_split('/\s+/u', trim(strip_tags((string) $this->content)), -1, PREG_SPLIT_NO_EMPTY);
+        $perMinute = max(1, (int) config('home.reading_words_per_minute', 200));
+
+        return max(1, (int) ceil(count($words) / $perMinute));
+    }
+
     // ---------------------------------------------------------------- Seoable
 
     public function seoDefaultTitle(): string

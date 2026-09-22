@@ -1,10 +1,82 @@
 // Self-hosted @font-face rules. Files live in resources/fonts and are
 // fingerprinted by Vite. WOFF2 only. `font-display: swap` shows fallback text
-// immediately and swaps when the font arrives (no invisible text, minimal CLS
-// because the fallback stack is metrically similar enough for body copy).
+// immediately and swaps when the font arrives.
 //
-// Add a weight only when a Figma text style needs it.
+// Families and weights are exactly those used by the Figma homepage frames:
+//   Doran        400 / 500 / 700 / 800   display (headings, eyebrows, buttons)
+//   IRANYekan    400 / 500               UI + body (Latin digits)
+//   IRANYekanFN  400 / 500               UI + body (Persian digits)
+//   Vazir        400 / 500 / 700         stand-in for "Vazirmatn" (not available locally)
+// See resources/fonts/README.md for sources and licences.
 
+// ---- Doran -----------------------------------------------------------------
+@font-face {
+    font-family: 'Doran';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../../fonts/doran/Doran-Regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Doran';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('../../fonts/doran/Doran-Medium.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Doran';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../../fonts/doran/Doran-Bold.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Doran';
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+    src: url('../../fonts/doran/Doran-ExtraBold.woff2') format('woff2');
+}
+
+// ---- IRANYekan (Latin digits) ---------------------------------------------
+@font-face {
+    font-family: 'IRANYekan';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../../fonts/iranyekan/IRANYekan-Regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'IRANYekan';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('../../fonts/iranyekan/IRANYekan-Medium.woff2') format('woff2');
+}
+
+// ---- IRANYekanFN (Persian digits) ------------------------------------------
+@font-face {
+    font-family: 'IRANYekanFN';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../../fonts/iranyekan/IRANYekanFN-Regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'IRANYekanFN';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('../../fonts/iranyekan/IRANYekanFN-Medium.woff2') format('woff2');
+}
+
+// ---- Vazir (interim stand-in for Vazirmatn) --------------------------------
 @font-face {
     font-family: 'Vazir';
     font-style: normal;

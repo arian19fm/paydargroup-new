@@ -1,0 +1,8 @@
+// Home page (Figma 110:262 desktop / 172:289 mobile). One partial per
+// section; shared header/footer rules live in layout/, buttons/badges/forms
+// in components/.
+@import 'home/hero';
+@import 'home/products';
+@import 'home/blog';
+@import 'home/faq';
+@import 'home/contact';

@@ -2,29 +2,87 @@
 // tokens in abstracts/_variables.scss so SCSS (Bootstrap) and runtime CSS
 // (components, Vue widgets, inline styles) share one source of truth.
 //
-// Values are PENDING FIGMA MAPPING — see abstracts/_variables.scss.
+// Values are mapped from the Figma homepage frames — see the token file.
 
 :root {
-    // Colour
-    --pg-primary:    #{$pg-primary};
-    --pg-secondary:  #{$pg-secondary};
-    --pg-accent:     #{$pg-accent};
-    --pg-background: #{$pg-background};
-    --pg-surface:    #{$pg-surface};
-    --pg-text:       #{$pg-text};
-    --pg-text-muted: #{$pg-text-muted};
-    --pg-border:     #{$pg-border};
+    // Colour — brand
+    --pg-primary:        #{$pg-primary};
+    --pg-primary-dark:   #{$pg-primary-dark};
+    --pg-primary-deep:   #{$pg-primary-deep};
+    --pg-secondary:      #{$pg-secondary};
+    --pg-accent:         #{$pg-accent};
+    --pg-ink:            #{$pg-ink};
+    --pg-ink-70:         #{rgba($pg-ink, .7)};
+    --pg-ink-50:         #{rgba($pg-ink, .5)};
+
+    // Colour — surfaces
+    --pg-background:     #{$pg-background};
+    --pg-background-alt: #{$pg-background-alt};
+    --pg-surface:        #{$pg-surface};
+    --pg-surface-2:      #{$pg-surface-2};
+    --pg-surface-3:      #{$pg-surface-3};
+    --pg-surface-warm:   #{$pg-surface-warm};
+    --pg-footer-bg:      #{$pg-footer-bg};
+
+    // Colour — text
+    --pg-text:           #{$pg-text};
+    --pg-text-strong:    #{$pg-text-strong};
+    --pg-text-body:      #{$pg-text-body};
+    --pg-text-muted:     #{$pg-text-muted};
+    --pg-text-subtle:    #{$pg-text-subtle};
+    --pg-text-label:     #{$pg-text-label};
+    --pg-text-on-dark:   #{$pg-text-on-dark};
+    --pg-required:       #{$pg-required};
+    --pg-border:         #{$pg-border};
+    --pg-divider:        #{$pg-divider};
+
+    // Colour — semantic
+    --pg-success: #{$pg-success};
+    --pg-error:   #{$pg-error};
+    --pg-info:    #{$pg-info};
+
+    // Heading highlight + solid button colour. Desktop uses the deep navy,
+    // the 375 frame uses the blue pair; sections switch these per breakpoint.
+    --pg-highlight:  #{$pg-primary-deep};
+    --pg-button-bg:  #{$pg-primary-deep};
+
+    @include media-breakpoint-down(lg) {
+        --pg-highlight: #{$pg-accent};
+        --pg-button-bg: #{$pg-secondary};
+    }
+
+    // Glass header
+    --pg-glass-bg:        #{$pg-glass-bg};
+    --pg-glass-border:    #{$pg-glass-border};
+    --pg-glass-highlight: #{$pg-glass-highlight};
+    --pg-glass-blur:      #{$pg-glass-blur};
+    --pg-glass-shadow:    #{$pg-glass-shadow};
 
     // Shape
-    --pg-radius-sm: #{$pg-radius-sm};
-    --pg-radius-md: #{$pg-radius-md};
-    --pg-radius-lg: #{$pg-radius-lg};
-    --pg-shadow-sm: #{$pg-shadow-sm};
-    --pg-shadow-md: #{$pg-shadow-md};
+    --pg-radius-sm:   #{$pg-radius-sm};
+    --pg-radius-md:   #{$pg-radius-md};
+    --pg-radius-lg:   #{$pg-radius-lg};
+    --pg-radius-xl:   #{$pg-radius-xl};
+    --pg-radius-pill: #{$pg-radius-pill};
+    --pg-shadow-sm:   #{$pg-shadow-sm};
+    --pg-shadow-md:   #{$pg-shadow-md};
+    --pg-shadow-lg:   #{$pg-shadow-lg};
 
     // Layout
     --pg-container-max: #{$pg-container-max};
+    --pg-gutter:        #{$pg-gutter};
+
+    @include media-breakpoint-up(md) {
+        --pg-gutter: 32px;
+    }
+
+    @include media-breakpoint-up(xl) {
+        --pg-gutter: #{$pg-gutter-lg};
+    }
 
     // Typography
-    --pg-font-family-base: #{inspect($pg-font-family-base)};
+    --pg-font-family-base:    #{inspect($pg-font-family-base)};
+    --pg-font-family-fn:      #{inspect($pg-font-family-fn)};
+    --pg-font-family-display: #{inspect($pg-font-family-display)};
+    --pg-font-family-vazir:   #{inspect($pg-font-family-vazir)};
 }

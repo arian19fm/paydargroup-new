@@ -1,2 +1,75 @@
-// forms — structural styles only. Visual design pending Figma (TODO(figma)).
-// Prefer Bootstrap variables in abstracts/_variables.scss over overrides here.
+// Underlined field (contact form): a 13px Doran label above the control,
+// a 1px hairline below, no box. Errors sit under the line in the required
+// colour. `--inset` reproduces the slight start offset of the first two
+// fields in the design.
+
+.pg-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    &--inset {
+        @include media-breakpoint-up(md) {
+            padding-inline-start: 20px;
+        }
+    }
+}
+
+.pg-field__label {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: .8125rem;
+    font-weight: 400;
+    line-height: 20px;
+    color: var(--pg-text-label);
+}
+
+.pg-field__required {
+    font-size: .75rem;
+    font-weight: 500;
+    color: var(--pg-required);
+}
+
+.pg-field__control {
+    display: block;
+    width: 100%;
+    padding: 0 0 6px;
+    border: 0;
+    border-bottom: 1px solid var(--pg-border);
+    border-radius: 0;
+    background: transparent;
+    font-family: var(--pg-font-family-fn);
+    font-size: .9375rem;
+    line-height: 1.4;
+    color: var(--pg-text);
+    transition: border-color .15s ease;
+
+    &:focus {
+        outline: none;
+        border-bottom-color: var(--pg-primary);
+    }
+
+    &:focus-visible {
+        outline: none;
+    }
+
+    &.is-invalid {
+        border-bottom-color: var(--pg-required);
+    }
+}
+
+textarea.pg-field__control {
+    min-height: 4.75rem;
+    resize: vertical;
+}
+
+.pg-field--textarea .pg-field__control {
+    padding-bottom: 12px;
+}
+
+.pg-field__error {
+    font-family: var(--pg-font-family-fn);
+    font-size: .75rem;
+    line-height: 1.5;
+    color: var(--pg-required);
+}

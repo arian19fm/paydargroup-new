@@ -5,9 +5,22 @@ Fonts or any font CDN. Files here are referenced from
 `resources/scss/base/_fonts.scss`; Vite copies them into `public/build/assets`
 with a content hash at build time.
 
-| Family | Files | Weights | Format | License |
+| Family (CSS name) | Files | Weights | Used for | Source / licence |
 |---|---|---|---|---|
-| Vazir | `vazir/Vazir-{Regular,Medium,Bold}.woff2` | 400 / 500 / 700 | WOFF2 only | Public domain / Apache 2.0 (see `vazir/LICENSE`) |
+| `Doran` | `doran/Doran-{Regular,Medium,Bold,ExtraBold}.woff2` | 400 / 500 / 700 / 800 | Display: headings, eyebrows, buttons, product names (Figma `Doran_FaNum`) | Supplied by the client as `public/fonts/Doran` (no licence file was included — confirm web-embedding rights) |
+| `IRANYekan` | `iranyekan/IRANYekan-{Regular,Medium}.woff2` | 400 / 500 | UI + body copy with Latin digits | FontIran, converted from the client's `IRANYekan/WebFonts` TTFs; `iranyekan/LICENSE.txt` (fill in the licence code) |
+| `IRANYekanFN` | `iranyekan/IRANYekanFN-{Regular,Medium}.woff2` | 400 / 500 | UI + body copy with Persian digits (dates, read time, meta) | same package, `Farsi_numerals/WebFonts` |
+| `Vazir` | `vazir/Vazir-{Regular,Medium,Bold}.woff2` | 400 / 500 / 700 | Stand-in for the Figma `Vazirmatn` styles (footer tagline, services list, "؟" tile) | Public domain / Apache 2.0 (`vazir/LICENSE`) |
+
+Known gaps against the Figma file (see `docs/FRONTEND.md`):
+
+- `Doran_FaNum` is referenced by the design; the supplied files are the plain
+  `Doran` cut. Persian digit *characters* render correctly; only ASCII digits
+  would show Latin shapes, so digits are converted with `fa_digits()` before
+  rendering.
+- `Doran_Classic_Dots_FaNum` (FAQ eyebrow only) is not available; Doran
+  Regular is used.
+- `Vazirmatn` is not available; the older Vazir family is used.
 
 Rules:
 
@@ -15,9 +28,5 @@ Rules:
   are dead weight.
 - **Only the weights the design system uses.** Add a weight only when a Figma
   text style requires it, and add the matching `@font-face` rule.
-- The interim family is Vazir because it is open-licensed and available. If
-  the Figma design specifies IRANYekan (commercial license) or another family,
-  swap the files, update `_fonts.scss` and `$pg-font-family-base` in
-  `abstracts/_variables.scss`. The license must permit web embedding.
-- Farsi-digit (`FD`) variants are intentionally not used: digit shaping is a
-  content/typography decision to be confirmed against the design.
+- The licence must permit web embedding; keep the licence file next to the
+  fonts.

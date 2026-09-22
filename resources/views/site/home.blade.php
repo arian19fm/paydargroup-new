@@ -1,14 +1,25 @@
 @extends('layouts.site')
 
 {{--
-    Home page. No page title is set, so <x-seo.head> renders the site name
-    (plus tagline when configured). Other pages set their metadata in the
-    controller, e.g. seo()->title('...')->description('...'), or at the top
-    of the view inside an @php block — see docs/SEO.md.
+    Home page (Figma 110:262 desktop / 172:289 mobile). No page title is
+    set, so <x-seo.head> renders the site name (plus tagline when
+    configured). The hero is yielded separately so the layout can float the
+    glass header over it; the remaining sections follow the Figma order.
 --}}
 
+@section('body_class', 'pg-page-home')
+
+@push('head')
+    <link rel="preload" as="image" href="{{ asset('images/home/hero.webp') }}" type="image/webp" fetchpriority="high">
+@endpush
+
+@section('hero')
+    @include('partials.site.home.hero')
+@endsection
+
 @section('content')
-    <x-layout.section>
-        <h1>{{ \App\Support\Seo\SeoManager::siteName() }}</h1>
-    </x-layout.section>
+    @include('partials.site.home.products')
+    @include('partials.site.home.blog')
+    @include('partials.site.home.faq')
+    @include('partials.site.home.contact')
 @endsection

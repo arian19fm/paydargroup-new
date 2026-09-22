@@ -1,0 +1,321 @@
+// Latest posts (Figma 169:289 desktop / 178:353 mobile).
+//
+// Desktop: white, 90px 56px; header row = intro (803, start) + "see more"
+// link (end, vertically centred); then a row of 389-wide cards, 32px apart,
+// flowing past the end edge (the frame shows three cards and the edge of a
+// fourth) — rendered as a scroll-snap track. Mobile: 32px 16px, cards
+// stacked full width, "see more" centred under them.
+
+.pg-blog {
+    padding: 32px 0;
+    background: var(--pg-background);
+
+    @include media-breakpoint-up(lg) {
+        padding: 90px 0;
+    }
+
+    .pg-container {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+
+        @include media-breakpoint-up(lg) {
+            gap: 40px;
+        }
+    }
+}
+
+.pg-blog__header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    @include media-breakpoint-up(lg) {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 32px;
+    }
+}
+
+.pg-blog__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    @include media-breakpoint-up(lg) {
+        max-width: 803px;
+    }
+}
+
+.pg-eyebrow--blog {
+    margin: 0;
+    color: rgba(0, 0, 0, .7);
+
+    @include media-breakpoint-down(lg) {
+        color: rgba(0, 0, 0, .7);
+    }
+}
+
+.pg-blog__title {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: rgba(31, 31, 31, .7);
+
+    @include media-breakpoint-up(lg) {
+        font-size: 2.5rem;
+        line-height: 64px;
+    }
+}
+
+.pg-blog__title-highlight {
+    font-weight: 800;
+    color: var(--pg-highlight);
+}
+
+.pg-blog__text {
+    margin: 0;
+    font-family: var(--pg-font-family-fn);
+    font-size: .8125rem;
+    line-height: 22px;
+    color: var(--pg-ink);
+
+    @include media-breakpoint-up(lg) {
+        font-size: .9375rem;
+        line-height: 26px;
+    }
+}
+
+.pg-blog__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--pg-font-family-fn);
+    font-size: 1.03125rem; // 16.5px
+    line-height: 25px;
+    color: var(--pg-text-strong);
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+        color: var(--pg-primary);
+        text-decoration: underline;
+    }
+
+    img {
+        width: 16px;
+        height: 16px;
+    }
+
+    &--header {
+        display: none;
+        flex: 0 0 auto;
+
+        @include media-breakpoint-up(lg) {
+            display: inline-flex;
+        }
+    }
+
+    &--footer {
+        align-self: center;
+
+        @include media-breakpoint-up(lg) {
+            display: none;
+        }
+    }
+}
+
+.pg-blog__empty {
+    margin: 0;
+    padding: 32px 0;
+    font-family: var(--pg-font-family-fn);
+    color: var(--pg-text-muted);
+}
+
+// Card track.
+.pg-blog__list {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include media-breakpoint-up(md) {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 32px;
+    }
+
+    @include media-breakpoint-up(lg) {
+        display: flex;
+        flex-direction: row;
+        gap: 32px;
+        margin-inline: calc(-1 * var(--pg-gutter));
+        padding-inline: var(--pg-gutter);
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x proximity;
+        scroll-padding-inline: var(--pg-gutter);
+        scrollbar-width: thin;
+    }
+}
+
+.pg-post {
+    min-width: 0;
+
+    // The 375 frame shows three posts; the fourth only peeks in on desktop.
+    &:nth-child(n + 4) {
+        @include media-breakpoint-down(lg) {
+            display: none;
+        }
+    }
+
+    @include media-breakpoint-up(lg) {
+        flex: 0 0 389px;
+        scroll-snap-align: start;
+    }
+}
+
+.pg-post__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    @include media-breakpoint-up(lg) {
+        gap: 16px;
+    }
+}
+
+.pg-post__cover {
+    display: block;
+    aspect-ratio: 343 / 220;
+    overflow: hidden;
+    border-radius: 10.58px;
+    background: var(--pg-surface-2);
+
+    @include media-breakpoint-up(lg) {
+        aspect-ratio: 389 / 250;
+        border-radius: var(--pg-radius-lg);
+    }
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.pg-post__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+
+    @include media-breakpoint-up(lg) {
+        gap: 12px;
+    }
+}
+
+.pg-post__meta {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0;
+    font-family: var(--pg-font-family-fn);
+    font-size: .6875rem; // 11px (10.58 in the scaled export)
+    line-height: 1.5;
+    color: var(--pg-text-muted);
+
+    @include media-breakpoint-up(lg) {
+        gap: 8px;
+        font-size: .75rem;
+        line-height: 18px;
+    }
+}
+
+.pg-post__title {
+    width: 100%;
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: .9375rem; // 15px (14.55 in the scaled export)
+    font-weight: 500;
+    line-height: 22px;
+
+    @include media-breakpoint-up(lg) {
+        font-size: 1.03125rem; // 16.5px
+        line-height: 25px;
+    }
+
+    a {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        color: var(--pg-text-strong);
+        text-decoration: none;
+
+        &:hover,
+        &:focus-visible {
+            color: var(--pg-primary);
+        }
+
+        @include media-breakpoint-up(lg) {
+            gap: 14px;
+        }
+    }
+
+    img {
+        flex: 0 0 auto;
+        width: 14px;
+        height: 14px;
+
+        @include media-breakpoint-up(lg) {
+            width: 16px;
+            height: 16px;
+        }
+    }
+}
+
+.pg-post__excerpt {
+    display: -webkit-box;
+    margin: 0;
+    overflow: hidden;
+    font-family: var(--pg-font-family-fn);
+    font-size: .75rem; // 12px (11.46 in the scaled export)
+    line-height: 20px;
+    color: var(--pg-ink-70);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+
+    @include media-breakpoint-up(lg) {
+        font-size: .8125rem;
+        line-height: 22px;
+    }
+}
+
+.pg-post__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    --pg-tag-bg: var(--pg-surface-2);
+
+    @include media-breakpoint-up(lg) {
+        gap: 8px;
+        --pg-tag-bg: #fff2e9;
+    }
+
+    .pg-tag {
+        @include media-breakpoint-down(lg) {
+            padding: 5px 10px;
+            font-size: .6875rem; // 11px (9.7 in the scaled export)
+            line-height: 14px;
+        }
+    }
+}

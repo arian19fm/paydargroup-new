@@ -26,3 +26,31 @@ body {
 .pg-nums-tabular {
     font-variant-numeric: tabular-nums;
 }
+
+// Display face for headings (Bootstrap already applies it to h1–h6 through
+// $headings-font-family); these helpers cover the Figma text styles that
+// are not headings.
+.pg-display {
+    font-family: var(--pg-font-family-display);
+}
+
+.pg-fn {
+    font-family: var(--pg-font-family-fn);
+}
+
+// Section eyebrow: Doran Regular 16/normal, 85% opacity, above headings.
+.pg-eyebrow {
+    margin-bottom: .5rem;
+    font-family: var(--pg-font-family-display);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--pg-text-body);
+    opacity: .85;
+
+    @include media-breakpoint-down(lg) {
+        font-size: .75rem;
+        line-height: 1.5;
+        color: var(--pg-text-muted);
+    }
+}

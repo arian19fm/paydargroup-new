@@ -1,2 +1,34 @@
-// badges — structural styles only. Visual design pending Figma (TODO(figma)).
-// Prefer Bootstrap variables in abstracts/_variables.scss over overrides here.
+// Feature badge (product cards): 13px IRANYekan Regular, padding 4px 10px,
+// a coloured 8px dot at the start. Colours are set per product through the
+// --pg-product-* custom properties on .pg-product.
+.pg-feature {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: var(--pg-product-badge-bg);
+    font-family: var(--pg-font-family-base);
+    font-size: .8125rem;
+    line-height: 20px;
+    color: var(--pg-product-badge-text);
+    white-space: nowrap;
+}
+
+.pg-feature__dot {
+    flex: 0 0 auto;
+    width: 8px;
+    height: 8px;
+}
+
+// Post tag (blog cards): 11px IRANYekanFN Medium on a warm tint.
+.pg-tag {
+    display: inline-block;
+    padding: 6px 11px;
+    background: var(--pg-tag-bg, #fff2e9);
+    font-family: var(--pg-font-family-fn);
+    font-size: .6875rem;
+    font-weight: 500;
+    line-height: 16px;
+    color: var(--pg-ink);
+    white-space: nowrap;
+}

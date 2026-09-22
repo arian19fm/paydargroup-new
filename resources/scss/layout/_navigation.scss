@@ -1,2 +1,151 @@
-// navigation — structural styles only. Visual design pending Figma (TODO(figma)).
-// Prefer Bootstrap variables in abstracts/_variables.scss over overrides here.
+// Primary navigation (Figma "Navigation" / "Button" items). Items: IRANYekan
+// Medium 16/24 white, 32px apart, in a group padded 8px 16px. The current
+// page is a white pill (padding 4px 14px, primary text, soft shadow).
+
+.pg-nav {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    margin: 0;
+    padding: 8px 16px;
+    list-style: none;
+
+    @include media-breakpoint-between(lg, xl) {
+        gap: 20px;
+        padding-inline: 8px;
+    }
+}
+
+.pg-nav__item {
+    position: relative;
+}
+
+.pg-nav__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    border-radius: var(--pg-radius-pill);
+    font-family: var(--pg-font-family-base);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #fff;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: color .15s ease, background-color .15s ease;
+
+    &:hover,
+    &:focus-visible {
+        color: #fff;
+        text-decoration: none;
+        opacity: .85;
+    }
+
+    &.is-active {
+        padding-inline: 14px;
+        background: #fff;
+        color: var(--pg-primary);
+        box-shadow: var(--pg-shadow-md);
+        opacity: 1;
+    }
+
+    // Dropdown parents are Regular weight in the design; Bootstrap's caret
+    // is replaced by the exported chevron.
+    &.dropdown-toggle {
+        font-weight: 400;
+
+        &::after {
+            display: none;
+        }
+    }
+}
+
+.pg-nav__chevron {
+    width: 20px;
+    height: 20px;
+}
+
+.pg-nav__dropdown {
+    min-width: 12rem;
+    margin-top: .5rem;
+    padding: .5rem 0;
+    border: 1px solid rgba($pg-primary-dark, .08);
+    border-radius: var(--pg-radius-lg);
+    box-shadow: var(--pg-shadow-lg);
+
+    .dropdown-item {
+        padding: .5rem 1rem;
+        font-size: .9375rem;
+        color: var(--pg-text);
+
+        &:hover,
+        &:focus-visible {
+            background: var(--pg-surface);
+            color: var(--pg-primary);
+        }
+    }
+}
+
+// Offcanvas (mobile) — same list stacked, dark text on white.
+.pg-offcanvas {
+    --bs-offcanvas-width: min(320px, 85vw);
+
+    .offcanvas-header {
+        padding: 20px 24px;
+    }
+}
+
+.pg-offcanvas__brand {
+    line-height: 0;
+
+    img {
+        width: 32px;
+        height: auto;
+    }
+}
+
+.pg-nav--offcanvas {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    padding: 0 8px;
+
+    .pg-nav__link {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 16px;
+        border-radius: var(--pg-radius-md);
+        color: var(--pg-text);
+        white-space: normal;
+
+        &:hover,
+        &:focus-visible {
+            background: var(--pg-surface);
+            color: var(--pg-primary);
+            opacity: 1;
+        }
+
+        &.is-active {
+            background: var(--pg-surface);
+            box-shadow: none;
+        }
+    }
+
+    .pg-nav__chevron {
+        filter: invert(1) brightness(.2);
+    }
+
+    .pg-nav__dropdown {
+        position: static;
+        float: none;
+        margin: 0 0 4px;
+        border: 0;
+        box-shadow: none;
+        background: transparent;
+
+        .dropdown-item {
+            padding-inline-start: 2rem;
+        }
+    }
+}

@@ -149,3 +149,25 @@ page or article is saved/deleted.
 `php artisan db:seed` runs `RolesAndPermissionsSeeder`, `MenusSeeder`
 (locations only) and `SettingsSeeder` (blank keys). No users, no content, no
 company data — ever.
+
+## Contact requests (home page form)
+
+`contact_requests` stores submissions of the public contact form
+(`POST /contact`, `App\Http\Controllers\Site\ContactRequestController`):
+`name` (optional), `phone` (normalised to ASCII digits), `message`, `ip`,
+`user_agent`, `handled_at`. Protection: CSRF, `StoreContactRequest`
+validation, a hidden honeypot field (`website` must stay empty) and the
+`contact-form` rate limiter (5 per minute per IP). Nothing is e-mailed; an
+admin listing is a later phase.
+
+## Menus used by the public layout
+
+| Location | Rendered in |
+|---|---|
+| `main` | header navigation (split in two groups around the logo on desktop; offcanvas on mobile) |
+| `footer` | footer "صفحات" column |
+| `legal` | footer bottom row (privacy / terms links) |
+
+Any location string is accepted by the admin; the three above are the ones
+the layout reads. Footer contact and social blocks come from the `contact.*`
+and `social.*` settings; the brand text from `general.footer_text`.

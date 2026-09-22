@@ -1,0 +1,384 @@
+// Products / services (Figma 110:279 desktop / 176:847 mobile).
+//
+// Desktop (≥xl): intro column (404) at the start, five 860×501 rows at the
+// end, 24px apart; rows alternate body|image and image|body. Body card:
+// grey/200, padding 81px 28px, number → name → description → feature
+// badges, "learn more" link pinned to the bottom end corner.
+// Mobile (<md): white section, 48px 24px; intro stacked; each product is
+// a 135px-tall image over a body card (#ecece7, padding 8px 24px).
+
+.pg-products {
+    padding: 48px 0;
+    background: var(--pg-background);
+
+    @include media-breakpoint-up(md) {
+        padding: 64px 0;
+        background: var(--pg-background-alt);
+    }
+
+    @include media-breakpoint-up(lg) {
+        padding: 90px 0;
+    }
+
+    // The 375 frame uses 24px gutters here (16px elsewhere).
+    .pg-container {
+        @include media-breakpoint-down(md) {
+            padding-inline: 24px;
+        }
+    }
+}
+
+.pg-products__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+
+    @include media-breakpoint-up(md) {
+        gap: 40px;
+    }
+
+    @include media-breakpoint-up(xl) {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 64px;
+    }
+}
+
+// Intro (eyebrow, heading, paragraph, CTA). Sticky on wide screens so the
+// heading stays in view while the five rows scroll past.
+.pg-products__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    max-width: 316px;
+
+    @include media-breakpoint-up(md) {
+        max-width: 560px;
+    }
+
+    @include media-breakpoint-up(xl) {
+        position: sticky;
+        top: 32px;
+        flex: 0 0 404px;
+        align-items: flex-start;
+        gap: 29px;
+        max-width: 404px;
+    }
+
+    .pg-eyebrow {
+        margin: 0;
+    }
+}
+
+.pg-products__title {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: 1.375rem; // 22px
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: -.02em;
+    color: rgba(31, 31, 31, .7);
+
+    @include media-breakpoint-up(md) {
+        font-size: 2rem;
+        line-height: 1.6;
+        color: var(--pg-text-body);
+    }
+
+    @include media-breakpoint-up(xl) {
+        font-size: 2.5rem; // 40px
+        line-height: 64px;
+    }
+}
+
+.pg-products__title-highlight {
+    display: block;
+    font-weight: 800;
+    color: var(--pg-accent);
+
+    @include media-breakpoint-up(md) {
+        display: inline;
+        color: var(--pg-primary);
+    }
+}
+
+.pg-products__title-rest {
+    @include media-breakpoint-up(md) {
+        display: inline;
+    }
+}
+
+.pg-products__text {
+    margin: 0;
+    font-family: var(--pg-font-family-fn);
+    font-size: .8125rem;
+    line-height: 22px;
+    color: var(--pg-ink);
+
+    @include media-breakpoint-up(md) {
+        font-family: var(--pg-font-family-base);
+        font-size: 1.1875rem; // 19px
+        line-height: 1.5;
+        color: var(--pg-text-body);
+    }
+}
+
+.pg-products__cta {
+    --bs-btn-bg: var(--pg-secondary);
+    --bs-btn-border-color: var(--pg-secondary);
+    --bs-btn-border-radius: var(--pg-radius-md);
+    --bs-btn-padding-y: .5rem;
+    width: 100%;
+
+    @include media-breakpoint-up(md) {
+        --bs-btn-bg: var(--pg-primary-dark);
+        --bs-btn-border-color: var(--pg-primary-dark);
+        --bs-btn-border-radius: 0;
+        --bs-btn-padding-y: .625rem;
+        width: auto;
+        min-width: 175px;
+    }
+}
+
+// Rows.
+.pg-products__list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include media-breakpoint-up(md) {
+        gap: 24px;
+    }
+
+    @include media-breakpoint-up(xl) {
+        flex: 0 1 860px;
+        width: 860px;
+        max-width: 100%;
+    }
+}
+
+.pg-product {
+    // Accent set per product (see $pg-products in abstracts/_variables).
+    @each $key, $c in $pg-products {
+        &--#{$key} {
+            --pg-product-accent: #{map-get($c, accent)};
+            --pg-product-badge-text: #{map-get($c, badge-text)};
+            --pg-product-badge-bg: #{map-get($c, badge-bg-mobile)};
+
+            @include media-breakpoint-up(md) {
+                --pg-product-badge-bg: #{map-get($c, badge-bg)};
+            }
+        }
+    }
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas: 'media' 'body';
+    overflow: hidden;
+
+    @include media-breakpoint-up(md) {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: 'media body';
+        min-height: 501px;
+    }
+
+    // Even rows: body at the start (right), image at the end (left).
+    &--flip {
+        @include media-breakpoint-up(md) {
+            grid-template-areas: 'body media';
+        }
+    }
+}
+
+.pg-product__media {
+    grid-area: media;
+    height: 135px;
+    background: var(--pg-surface);
+
+    @include media-breakpoint-up(md) {
+        height: auto;
+        min-height: 100%;
+    }
+
+    picture,
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    img {
+        object-fit: cover;
+        /* rtl:ignore */
+        object-position: 50% 50%;
+    }
+}
+
+// Per-product crops measured from the Figma image fills (LTR canvas
+// coordinates — the pictures themselves are not mirrored).
+@include media-breakpoint-up(md) {
+    .pg-product--exchange .pg-product__media img {
+        /* rtl:ignore */
+        object-position: 38% 50%;
+    }
+
+    .pg-product--broker .pg-product__media img {
+        /* rtl:ignore */
+        object-position: 52% 48%;
+    }
+
+    .pg-product--ai .pg-product__media img {
+        /* rtl:ignore */
+        object-position: 38% 50%;
+    }
+}
+
+.pg-product__body {
+    grid-area: body;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 12px 24px 16px;
+    background: var(--pg-surface-3);
+
+    @include media-breakpoint-up(md) {
+        gap: 24px;
+        padding: 56px 28px 24px;
+        background: var(--pg-surface);
+    }
+
+    @include media-breakpoint-up(xl) {
+        padding: 81px 28px 23px;
+    }
+}
+
+.pg-product__content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    @include media-breakpoint-up(md) {
+        gap: 16px;
+    }
+}
+
+.pg-product__number {
+    align-self: flex-start;
+    padding-block: 4px;
+    font-family: var(--pg-font-family-fn);
+    font-size: .6875rem;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--pg-product-accent);
+
+    @include media-breakpoint-up(md) {
+        font-size: .875rem;
+        line-height: 20px;
+    }
+}
+
+.pg-product__name {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 22px;
+    color: var(--pg-text-strong);
+
+    @include media-breakpoint-up(md) {
+        font-size: 1.625rem; // 26px
+        line-height: 36px;
+    }
+}
+
+.pg-product__desc {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: .75rem;
+    font-weight: 400;
+    line-height: 18px;
+    color: var(--pg-ink-70);
+
+    @include media-breakpoint-up(md) {
+        font-size: 1rem;
+        line-height: 28px;
+    }
+}
+
+.pg-product__features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include media-breakpoint-up(md) {
+        gap: 8px;
+    }
+
+    // Mobile badges are proportionally smaller (readable, not the 5px of
+    // the scaled export).
+    .pg-feature {
+        @include media-breakpoint-down(md) {
+            gap: 4px;
+            padding: 3px 8px;
+            font-size: .6875rem;
+            line-height: 16px;
+        }
+    }
+
+    .pg-feature__dot {
+        @include media-breakpoint-down(md) {
+            width: 5px;
+            height: 5px;
+        }
+    }
+}
+
+// "Learn more": Doran Bold 16 underlined in the accent colour with the
+// exported arrow rotated 24.32° (as in the frame), pinned to the end edge.
+.pg-product__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-end;
+    font-family: var(--pg-font-family-display);
+    font-size: .75rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--pg-product-accent);
+    text-decoration: underline;
+    text-underline-position: from-font;
+
+    @include media-breakpoint-up(md) {
+        gap: 0;
+        font-size: 1rem;
+        line-height: 19px;
+    }
+
+    &:hover,
+    &:focus-visible {
+        color: var(--pg-product-accent);
+        opacity: .8;
+    }
+}
+
+.pg-product__arrow {
+    width: 12px;
+    height: 12px;
+    /* rtl:ignore */
+    transform: rotate(24.32deg);
+
+    @include media-breakpoint-up(md) {
+        width: 20px;
+        height: 20px;
+        margin-inline-end: 6px;
+    }
+}

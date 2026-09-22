@@ -1,7 +1,216 @@
-// Site footer — structural styles only. Visual design pending Figma.
+// Footer (Figma 159:290 desktop / 178:449 mobile).
+// Desktop: 1240 content, 64px top; brand block (320) at the start, then
+// pages / services / contact / follow columns; divider; copyright + legal.
+// Mobile: brand stacked at the start edge, a 2-column grid of the link
+// columns, centred copyright and legal links.
 
 .pg-footer {
-    background: var(--pg-surface);
-    border-top: 1px solid var(--pg-border);
-    color: var(--pg-text-muted);
+    background: var(--pg-footer-bg);
+    color: var(--pg-text-subtle);
+    font-family: var(--pg-font-family-fn);
+
+    a {
+        color: #fff;
+        text-decoration: none;
+
+        &:hover,
+        &:focus-visible {
+            color: #fff;
+            text-decoration: underline;
+        }
+    }
+}
+
+.pg-footer__inner {
+    max-width: calc(1240px + 2 * var(--pg-gutter));
+    margin-inline: auto;
+    padding: 40px var(--pg-gutter) 25px;
+
+    @include media-breakpoint-up(lg) {
+        padding-top: 64px;
+        padding-bottom: 33px;
+    }
+}
+
+.pg-footer__top {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(255, 255, 255, .12);
+
+    @include media-breakpoint-up(lg) {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 104px;
+        padding-bottom: 85px;
+        border-bottom-color: rgba(255, 255, 255, .1);
+    }
+}
+
+// Brand block: logo, tagline, trust badge — all aligned to the start edge.
+.pg-footer__brand {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    width: 100%;
+    max-width: 320px;
+}
+
+.pg-footer__logo {
+    line-height: 0;
+
+    img {
+        width: 26px;
+        height: auto;
+
+        @include media-breakpoint-up(lg) {
+            width: 40px;
+        }
+    }
+}
+
+.pg-footer__tagline {
+    margin: 0;
+    font-family: var(--pg-font-family-vazir);
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--pg-text-subtle);
+}
+
+.pg-footer__trust {
+    width: 60px;
+    height: 60px;
+}
+
+// Link columns.
+.pg-footer__columns {
+    display: grid;
+    grid-template-columns: 183px 1fr;
+    gap: 30px 0;
+
+    @include media-breakpoint-up(md) {
+        grid-template-columns: repeat(4, auto);
+        justify-content: space-between;
+        gap: 40px;
+    }
+
+    @include media-breakpoint-up(lg) {
+        display: flex;
+        flex: 1 1 auto;
+        justify-content: space-between;
+        gap: 40px;
+    }
+
+    @include media-breakpoint-up(xl) {
+        gap: 103px;
+    }
+}
+
+.pg-footer__col {
+    min-width: 0;
+}
+
+.pg-footer__heading {
+    margin: 0 0 18px;
+    font-family: var(--pg-font-family-display);
+    font-size: .875rem;
+    font-weight: 700;
+    line-height: 18px;
+    letter-spacing: .02em;
+    color: var(--pg-text-subtle);
+}
+
+.pg-footer__list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: .84375rem; // 13.5px
+    line-height: 21px;
+    color: #fff;
+
+    &--services {
+        font-family: var(--pg-font-family-vazir);
+    }
+}
+
+.pg-footer__contact {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0;
+
+    dt {
+        margin-bottom: 4px;
+        font-size: .65625rem; // 10.5px
+        font-weight: 400;
+        line-height: 16px;
+        color: var(--pg-text-subtle);
+    }
+
+    dd {
+        margin: 0;
+        font-size: .84375rem;
+        line-height: 21px;
+        color: #fff;
+    }
+
+    [dir="ltr"] {
+        display: inline-block;
+        text-align: start;
+    }
+}
+
+.pg-footer__social {
+    a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    img {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+// Bottom row.
+.pg-footer__bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 17px;
+    padding-top: 18px;
+    font-size: .71875rem; // 11.5px
+    line-height: 17px;
+
+    @include media-breakpoint-up(lg) {
+        flex-direction: row;
+        justify-content: space-between;
+        padding-top: 11px;
+    }
+}
+
+.pg-footer__copyright {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    color: var(--pg-text-subtle);
+}
+
+.pg-footer__legal {
+    ul {
+        display: flex;
+        gap: 28px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    a {
+        color: var(--pg-text-subtle);
+    }
 }

@@ -1,2 +1,64 @@
-// buttons — structural styles only. Visual design pending Figma (TODO(figma)).
-// Prefer Bootstrap variables in abstracts/_variables.scss over overrides here.
+// Buttons (Figma "Buttons/Button → _Button base"): 48px tall, padding
+// 10px 18px, Doran Medium 16/24, radius 8, Shadow/xs. Variants map to the
+// solid colours the sections use; Bootstrap's .btn provides the reset.
+
+.pg-btn {
+    --bs-btn-padding-y: .625rem;
+    --bs-btn-padding-x: 1.125rem;
+    --bs-btn-font-size: 1rem;
+    --bs-btn-line-height: 1.5;
+    --bs-btn-border-radius: var(--pg-radius-md);
+    --bs-btn-box-shadow: var(--pg-shadow-sm);
+    --bs-btn-focus-box-shadow: none;
+    font-family: var(--pg-font-family-display);
+    font-weight: 500;
+    box-shadow: var(--bs-btn-box-shadow);
+    transition: background-color .15s ease, color .15s ease, border-color .15s ease, opacity .15s ease;
+
+    // Solid: heading-highlight colour (navy on desktop, blue on the mobile frame).
+    &--solid {
+        --bs-btn-bg: var(--pg-button-bg);
+        --bs-btn-border-color: var(--pg-button-bg);
+        --bs-btn-color: #fff;
+        --bs-btn-hover-bg: var(--pg-primary);
+        --bs-btn-hover-border-color: var(--pg-primary);
+        --bs-btn-hover-color: #fff;
+        --bs-btn-active-bg: var(--pg-primary-dark);
+        --bs-btn-active-border-color: var(--pg-primary-dark);
+        --bs-btn-active-color: #fff;
+    }
+
+    // Primary/dark square button (products section CTA).
+    &--primary {
+        --bs-btn-bg: var(--pg-primary-dark);
+        --bs-btn-border-color: var(--pg-primary-dark);
+        --bs-btn-color: #fff;
+        --bs-btn-hover-bg: var(--pg-primary);
+        --bs-btn-hover-border-color: var(--pg-primary);
+        --bs-btn-hover-color: #fff;
+        --bs-btn-active-bg: var(--pg-primary-deep);
+        --bs-btn-active-border-color: var(--pg-primary-deep);
+        --bs-btn-active-color: #fff;
+        --bs-btn-border-radius: 0;
+    }
+
+    // White button with a primary outline (hero CTA).
+    &--light {
+        --bs-btn-bg: #fff;
+        --bs-btn-border-color: var(--pg-primary);
+        --bs-btn-color: var(--pg-text);
+        --bs-btn-hover-bg: var(--pg-surface);
+        --bs-btn-hover-border-color: var(--pg-primary);
+        --bs-btn-hover-color: var(--pg-primary);
+        --bs-btn-active-bg: var(--pg-surface);
+        --bs-btn-active-border-color: var(--pg-primary-dark);
+        --bs-btn-active-color: var(--pg-primary-dark);
+        font-weight: 700;
+    }
+}
+
+// A CTA rendered as <span> (destination not published yet) keeps the look
+// but is inert; keep the cursor honest.
+span.pg-btn {
+    cursor: default;
+}

@@ -1,5 +1,6 @@
 <?php
 
+use App\Support\Localization\PersianNumbers;
 use App\Support\Seo\SeoManager;
 use App\Support\Settings\Settings;
 
@@ -23,5 +24,15 @@ if (! function_exists('settings')) {
         $settings = app(Settings::class);
 
         return $key === null ? $settings : $settings->get($key, $default);
+    }
+}
+
+if (! function_exists('fa_digits')) {
+    /**
+     * Render a number or numeric string with Persian digits (display only).
+     */
+    function fa_digits(string|int|float $value): string
+    {
+        return PersianNumbers::toPersian($value);
     }
 }

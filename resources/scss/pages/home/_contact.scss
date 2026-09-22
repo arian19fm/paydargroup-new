@@ -1,0 +1,180 @@
+// Contact (Figma 142:289 desktop 1440×750 / 178:424 mobile 375×520).
+//
+// Photo cover + two stacked black overlays (10% + 20%); a white square
+// card. Desktop: 470 wide, 74px from the start edge, 117px from the top,
+// padding 32px 31px, gap 40. Mobile: full width with 16px insets, 33px
+// from the top, padding ~23px, gap 29.
+
+.pg-contact {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    background: var(--pg-surface-warm);
+
+    @include media-breakpoint-up(lg) {
+        min-height: 750px;
+    }
+}
+
+.pg-contact__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+
+    // Mobile frame: the photo covers 375×520 from its top centre.
+    img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* rtl:ignore */
+        object-position: 50% 0;
+    }
+
+    // Desktop frame: the same photo is shown mirrored (the Figma layer is
+    // flipped) with the pair left of centre. The frame's field of view is a
+    // little wider than the export Figma hands out, so the closest match is
+    // the mirrored export covering the box from its top-left corner.
+    // Physical values on purpose: the picture must not be re-flipped by
+    // RTLCSS.
+    @include media-breakpoint-up(lg) {
+        img {
+            /* rtl:ignore */
+            object-position: 0 0;
+            /* rtl:ignore */
+            transform: scaleX(-1);
+        }
+    }
+}
+
+.pg-contact__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(90deg, rgba(0, 0, 0, .1), rgba(0, 0, 0, .1)), linear-gradient(90deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2));
+}
+
+.pg-contact__inner {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: var(--pg-container-max);
+    margin-inline: auto;
+    padding: 33px var(--pg-gutter);
+
+    @include media-breakpoint-up(lg) {
+        padding: 117px 74px 77px;
+    }
+}
+
+.pg-contact__card {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    max-width: 470px;
+    padding: 23px;
+    background: #fff;
+    box-shadow: 0 11.7px 32px -7.3px rgba(0, 0, 0, .18);
+
+    @include media-breakpoint-up(md) {
+        gap: 26px;
+        padding: 32px 31px;
+        box-shadow: var(--pg-shadow-lg);
+    }
+}
+
+.pg-contact__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    @include media-breakpoint-up(md) {
+        gap: 8px;
+    }
+}
+
+.pg-contact__eyebrow {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: .75rem; // 9.5 in the scaled export
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--pg-text-label);
+    white-space: pre-wrap;
+
+    @include media-breakpoint-up(md) {
+        font-size: .8125rem;
+        line-height: 20px;
+    }
+}
+
+.pg-contact__title {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: 1.64rem; // 26.3px
+    font-weight: 700;
+    line-height: 36.5px;
+    color: var(--pg-text-strong);
+
+    @include media-breakpoint-up(md) {
+        font-size: 2.25rem;
+        line-height: 50px;
+    }
+}
+
+.pg-contact__text {
+    margin: 0;
+    font-family: var(--pg-font-family-fn);
+    font-size: .75rem; // 10.6 in the scaled export
+    line-height: 1.65;
+    color: var(--pg-ink-70);
+
+    @include media-breakpoint-up(md) {
+        font-size: .90625rem; // 14.5px
+        line-height: 24px;
+    }
+}
+
+.pg-contact__status {
+    margin: 0;
+    padding: 12px 16px;
+    border-radius: var(--pg-radius-md);
+    font-family: var(--pg-font-family-fn);
+    font-size: .875rem;
+    line-height: 1.6;
+
+    &--ok {
+        background: rgba($pg-success, .1);
+        color: $pg-success;
+    }
+
+    &--error {
+        background: rgba($pg-required, .08);
+        color: $pg-required;
+    }
+}
+
+// Honeypot: removed from the visual and tab order, still in the DOM.
+.pg-contact__hp {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+.pg-contact__submit {
+    width: 100%;
+    margin-top: 5px;
+    font-size: .875rem;
+
+    @include media-breakpoint-up(md) {
+        margin-top: 7px;
+        font-size: 1rem;
+    }
+}

@@ -1,7 +1,102 @@
-// Site header — structural styles only. Visual design pending Figma.
-// Prefer Bootstrap variables in abstracts/_variables.scss over overrides here.
+// Glass header (Figma "Header / Inner Layer"). Desktop: 1040 × 88 pill,
+// 32px from the top, padding 14px 48px. Mobile: 329 × 58 pill, 23px from
+// the top, 26px side insets, padding 8px 24px.
+//
+// On the home page (.pg-header--overlay) the header floats over the hero;
+// on other pages it sits on a solid brand band (no design exists for them
+// yet, so the band only reuses tokens).
 
 .pg-header {
-    background: var(--pg-background);
-    border-bottom: 1px solid var(--pg-border);
+    position: relative;
+    z-index: $zindex-sticky;
+    padding-block: 23px;
+    background: var(--pg-primary-dark);
+
+    @include media-breakpoint-up(lg) {
+        padding-block: 32px;
+    }
+
+    &--overlay {
+        position: absolute;
+        inset-inline: 0;
+        top: 0;
+        background: transparent;
+    }
+}
+
+.pg-header__inner {
+    max-width: var(--pg-container-max);
+    margin-inline: auto;
+    padding-inline: 26px;
+
+    @include media-breakpoint-up(lg) {
+        padding-inline: var(--pg-gutter);
+    }
+}
+
+.pg-header__bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1040px;
+    margin-inline: auto;
+    padding: 8px 24px;
+    border: 1px solid var(--pg-glass-border);
+    border-radius: var(--pg-radius-pill);
+    background: var(--pg-glass-bg);
+    box-shadow: var(--pg-glass-shadow), inset 0 1px 0 0 var(--pg-glass-highlight);
+    backdrop-filter: blur(var(--pg-glass-blur));
+    -webkit-backdrop-filter: blur(var(--pg-glass-blur));
+
+    @include media-breakpoint-up(lg) {
+        padding: 14px 48px;
+    }
+
+    // Without backdrop-filter the 12% white is unreadable over photos.
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+        background: rgba($pg-primary-dark, .72);
+    }
+}
+
+.pg-header__group {
+    flex: 1 1 0;
+    min-width: 0;
+
+    &--end {
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
+.pg-header__brand {
+    display: inline-flex;
+    flex: 0 0 auto;
+    line-height: 0;
+    border-radius: var(--pg-radius-sm);
+
+    img {
+        width: 32px;
+        height: auto;
+
+        @include media-breakpoint-up(lg) {
+            width: 45px;
+        }
+    }
+}
+
+.pg-header__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border: 0;
+    border-radius: var(--pg-radius-md);
+    background: transparent;
+    line-height: 0;
+
+    &:hover,
+    &:focus-visible {
+        background: rgba(255, 255, 255, .12);
+    }
 }

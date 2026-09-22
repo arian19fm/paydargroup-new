@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Site\ArticleController;
+use App\Http\Controllers\Site\ContactRequestController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\PageController;
 use App\Http\Controllers\Site\RobotsController;
@@ -18,6 +19,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', HomeController::class)->name('home');
+
+// Home page contact form. Rate limited per IP (see AppServiceProvider);
+// the form itself is rendered by the home page.
+Route::post('/contact', [ContactRequestController::class, 'store'])
+    ->middleware('throttle:contact-form')
+    ->name('contact.store');
 
 // SEO endpoints (environment aware — see config/seo.php).
 Route::get('/robots.txt', RobotsController::class)->name('robots');

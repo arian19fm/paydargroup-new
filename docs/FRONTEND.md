@@ -49,7 +49,17 @@ SCSS normally (LTR) and flip the *entire* stylesheet with
   value: `/* rtl:remove */`, `/* rtl:raw: … */`.
 - `<html dir>` is set from the locale by `App\Support\Localization\Direction`
   (`config/site.php → rtl_locales`).
-- Latin snippets inside Persian text use `.pg-ltr` (`direction: ltr; unicode-bidi: isolate`).
+- Latin snippets inside Persian text use `.pg-ltr` (`direction: ltr; unicode-bidi: isolate`)
+  or `dir="ltr"` on the element (e-mail addresses, phone numbers).
+- RTLCSS does **not** flip flex/grid alignment: under `dir="rtl"`
+  `flex-start`/column 1 already mean the right edge, so write those values
+  for the RTL result directly. It *does* negate `transform: rotate()` and
+  flip `left/right`; an intentional rotation (the product arrows, the FAQ
+  toggle) or a physical crop (`object-position`, the mirrored contact
+  photo) carries `/* rtl:ignore */`. Asymmetric insets use
+  `padding-inline: <start> <end>`.
+- Never `flex-direction: row-reverse` to "fix" RTL — the document direction
+  already reverses the row.
 
 Verify after a build:
 
@@ -76,9 +86,9 @@ resources/scss/
     _root.scss             :root { --pg-* } custom properties generated from the tokens
     _typography.scss       Persian/RTL text refinements
     _utilities.scss        skip link, focus-visible, reduced motion, media defaults
-  layout/                  _header, _navigation, _footer
-  components/              _buttons, _forms, _cards, _badges (structural only)
-  pages/                   page-specific styles (rare)
+  layout/                  _header (glass pill), _navigation, _footer
+  components/              _buttons (.pg-btn variants), _forms (.pg-field), _cards, _badges (.pg-feature, .pg-tag)
+  pages/_home.scss         home page; one partial per section in pages/home/
 ```
 
 Principles:
@@ -111,26 +121,29 @@ variables in the same file.
 | `$pg-container-max` | `--pg-container-max` | `$container-max-widths.xxl` |
 | `$pg-font-family-base`, sizes, weights, line heights | `--pg-font-family-base` | `$font-family-base`, `$font-size-base`, `$line-height-base`, `$headings-*` |
 
-**All current values are neutral placeholders marked `TODO(figma)`.** When
-the Figma file is mapped, change the token values only; Bootstrap and the
-`--pg-*` properties update automatically.
+Values are mapped from the Figma homepage frames (desktop `110:262`, mobile
+`172:289`) and named by semantic role. Where the two frames disagree (heading
+highlight and solid buttons are navy `#182c4f` on desktop, blue
+`#1c94e1`/`#1f43a4` on mobile) the desktop value is the token and
+`base/_root.scss` switches `--pg-highlight` / `--pg-button-bg` below `lg`.
+Product accents live in the `$pg-products` map and are exposed per card as
+`--pg-product-*` custom properties.
 
 ## 5. Self-hosted fonts
 
-- Source files: `resources/fonts/<family>/*.woff2` (+ `LICENSE`), documented in
+- Source files: `resources/fonts/<family>/*.woff2` (+ licence), documented in
   `resources/fonts/README.md`. WOFF2 only, and only the weights in use.
 - `@font-face` rules: `resources/scss/base/_fonts.scss`, `font-display: swap`.
 - Vite fingerprints the files into `public/build/assets/` and rewrites the
   CSS `url()`s; nothing points outside the site.
-- Interim family: **Vazir** 400/500/700 (open licence). The font stack in
-  `$pg-font-family-base` falls back to `Vazirmatn`, `Segoe UI`, `Tahoma`,
-  `system-ui`, `sans-serif`.
-- Swapping the family (e.g. to IRANYekan once the design and licence are
-  confirmed): add the WOFF2 files, update `_fonts.scss` and
-  `$pg-font-family-base`, rebuild.
+- Families (from the Figma homepage frames): **Doran** 400/500/700/800 for
+  display text (`--pg-font-family-display`), **IRANYekan** 400/500 for UI and
+  body copy (`--pg-font-family-base`), **IRANYekanFN** 400/500 where Persian
+  digits are required (`--pg-font-family-fn`), and **Vazir** as the stand-in
+  for the design's Vazirmatn styles (`--pg-font-family-vazir`). Gaps against
+  the design are listed in the fonts README.
 - Optional later optimisation: `<link rel="preload" as="font">` for the
-  above-the-fold weight via `Vite::asset('resources/fonts/…')` (the fonts are
-  already listed in the manifest).
+  above-the-fold weight via `Vite::asset('resources/fonts/…')`.
 
 ## 6. JavaScript
 
@@ -189,16 +202,26 @@ resources/views/
   components/layout/section      <section> + optional H2–H6 heading + container
   components/ui/breadcrumb       <nav aria-label> + <ol class="breadcrumb"> from seo()->breadcrumbs()
   components/ui/flash-messages   session flash → dismissible alerts in a live region
-  partials/site/header           brand + navbar
-  partials/site/navigation       <ul class="navbar-nav"> from config/site.php
-  partials/site/mobile-navigation offcanvas wrapper (one DOM copy of the nav)
-  partials/site/footer
+  partials/site/header           glass header: menu split around the logo (desktop), logo + hamburger (mobile)
+  partials/site/navigation       <ul class="pg-nav"> from the managed "main" menu (config/site.php fallback)
+  partials/site/mobile-navigation offcanvas panel (opens from the end edge — left in RTL)
+  partials/site/footer           brand + pages ("footer" menu) + services + contact/social (settings) + legal ("legal" menu)
+  partials/site/home/*           hero, products, blog, faq, contact sections of the home page
+  components/ui/cta              <a> when a destination exists, <span> otherwise (unpublished CMS pages)
   errors/{layout,404,500,503}    branded error pages (noindex)
   site/                          public pages (@extends('layouts.site'))
 ```
 
 Stacks: `@push('head')` for page-specific `<link>`/`<meta>`, `@push('scripts')`
-for page-specific `<script type="module">`.
+for page-specific `<script type="module">`. A page that yields a `hero`
+section (the home page) gets the header floated over it; other pages get the
+header on a solid brand band.
+
+Home page content: articles, menus and settings come from the CMS; the
+product line-up and section copy are centralised in `config/home.php` and
+`lang/{fa,en}/home.php` and assembled by `App\Support\Home\HomePage`.
+Calls to action point at CMS page slugs and render as links only when that
+page is published.
 
 ## 9. Semantic HTML & accessibility checklist
 

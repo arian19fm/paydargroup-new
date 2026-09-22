@@ -7,12 +7,16 @@
     @vite(['resources/scss/app.scss', 'resources/js/app.js'])
     @stack('head')
 </head>
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex flex-column min-vh-100 @yield('body_class')">
     <x-layout.skip-link />
     @include('partials.site.header')
 
     <main id="main" tabindex="-1">
-        <x-ui.flash-messages class="container mt-3" />
+        @hasSection('hero')
+            @yield('hero')
+        @else
+            <x-ui.flash-messages class="container mt-3" />
+        @endif
         @yield('content')
     </main>
 

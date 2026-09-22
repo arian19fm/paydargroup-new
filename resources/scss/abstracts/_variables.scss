@@ -5,54 +5,107 @@
 // flows from here into (a) Bootstrap's SCSS variables and (b) the `--pg-*`
 // CSS custom properties emitted in base/_root.scss.
 //
-// ⚠ PENDING FIGMA MAPPING
-// The Paydar Group Figma design has not been mapped yet. Colours, radii,
-// shadows and type scale below are deliberately NEUTRAL PLACEHOLDERS so the
-// build compiles; they are NOT brand decisions. Replace each value marked
-// `// TODO(figma)` with the exact Figma value in a later phase.
+// Values come from the Paydar Group Figma file (aTY9bVhcUme1kIii39GS7e),
+// homepage nodes 110:262 (desktop, 1440) and 172:289 (mobile, 375). Each
+// token is named after its semantic role in those frames, not after a hex.
+// Where desktop and mobile disagree the desktop value is the token and the
+// mobile value is applied in the section stylesheet under the breakpoint.
 // ============================================================================
 
 // ----------------------------------------------------------------------------
-// Colour tokens                                              TODO(figma)
-// Neutral greys (Bootstrap's own grey scale) until Figma colours are mapped.
+// Colour tokens
 // ----------------------------------------------------------------------------
-$pg-primary:     #212529 !default; // TODO(figma) brand primary
-$pg-secondary:   #6c757d !default; // TODO(figma) brand secondary
-$pg-accent:      #495057 !default; // TODO(figma) accent / call-to-action
-$pg-background:  #ffffff !default; // TODO(figma) page background
-$pg-surface:     #f8f9fa !default; // TODO(figma) cards / panels
-$pg-text:        #212529 !default; // TODO(figma) body text
-$pg-text-muted:  #6c757d !default; // TODO(figma) secondary text
-$pg-border:      #dee2e6 !default; // TODO(figma) borders / dividers
+// Brand
+$pg-primary:        #2a4676 !default; // primary/main — nav active pill text, products heading, hero CTA border
+$pg-primary-dark:   #041a40 !default; // primary/dark — products CTA, FAQ icon tile
+$pg-primary-deep:   #182c4f !default; // heading highlight + solid buttons (desktop: blog/FAQ/contact)
+$pg-secondary:      #1f43a4 !default; // solid buttons + FAQ tile on the mobile frame
+$pg-accent:         #1c94e1 !default; // heading highlight on the mobile frame
+$pg-ink:            #19363f !default; // body copy on light sections (descriptions, answers, tags)
+
+// Surfaces
+$pg-background:     #ffffff !default; // page / blog section
+$pg-background-alt: #fbfbf9 !default; // products + FAQ sections
+$pg-surface:        #f4f6f8 !default; // grey/200 — product cards (desktop)
+$pg-surface-2:      #f4f5f6 !default; // FAQ contact card, blog cover placeholder, mobile tags
+$pg-surface-3:      #ecece7 !default; // product card body (mobile)
+$pg-surface-warm:   #ededeb !default; // contact section base
+$pg-footer-bg:      #2c2c2c !default;
+
+// Text
+$pg-text:           #141a21 !default; // grey/900
+$pg-text-strong:    #000000 !default; // headings in cards
+$pg-text-body:      #454f5b !default; // grey/700 — section eyebrow / paragraph
+$pg-text-muted:     #737a82 !default; // meta text (dates, read time, mobile eyebrow)
+$pg-text-subtle:    #8f9499 !default; // footer secondary
+$pg-text-label:     #6b7078 !default; // form labels
+$pg-text-on-dark:   #c4cdd5 !default; // grey/400 — hero eyebrow / paragraph
+$pg-required:       #b82626 !default; // "(الزامی)" marker
+$pg-border:         #ededea !default; // form underline
+$pg-divider:        #d8d8d8 !default; // FAQ rows (desktop); #e0e3e3 on mobile
+
+// Semantic (Figma "Success/700", "Error/main")
+$pg-success: #067647 !default;
+$pg-error:   #ff5630 !default;
+$pg-info:    #358afc !default;
+$pg-pink:    #bd1572 !default;
+
+// Product accents: [text/link, dot, badge text, badge bg desktop, badge bg mobile]
+$pg-products: (
+    fund:     (accent: #067647, dot: #616d61, badge-text: #2a412a, badge-bg: #f4f6f8, badge-bg-mobile: #e9f2ee),
+    exchange: (accent: #bd1572, dot: #e945b9, badge-text: #bd1572, badge-bg: #ffffff, badge-bg-mobile: #f8eef6),
+    broker:   (accent: #358afc, dot: #3c8afd, badge-text: #3c8afd, badge-bg: #e4e7ed, badge-bg-mobile: #e4e7ed),
+    ai:       (accent: #ff5630, dot: #ff5630, badge-text: #ff5630, badge-bg: #fdefe8, badge-bg-mobile: #fdefe8),
+    bot:      (accent: #313e3e, dot: #2d3b3b, badge-text: #2d3b3b, badge-bg: #c4cdd5, badge-bg-mobile: #c4cdd5),
+) !default;
+
+// Glass header
+$pg-glass-bg:        rgba(255, 255, 255, .12) !default;
+$pg-glass-border:    rgba(255, 255, 255, .22) !default;
+$pg-glass-highlight: rgba(255, 255, 255, .18) !default;
+$pg-glass-blur:      12px !default;
+$pg-glass-shadow:    0 10px 32px rgba(0, 0, 0, .22) !default;
 
 // ----------------------------------------------------------------------------
-// Typography                                                 TODO(figma)
-// Vazir is the interim self-hosted family (see resources/fonts/README.md).
-// The stack falls back to system Persian-capable fonts, then generic sans.
+// Typography
+// Doran (display: headings, eyebrows, buttons, product names) and IRANYekan
+// (UI/body; the FN cut has Persian digits) are the Figma families, both
+// self-hosted from resources/fonts. Vazir stands in for Vazirmatn and Doran
+// Regular for Doran Classic Dots — see resources/fonts/README.md.
 // ----------------------------------------------------------------------------
-$pg-font-family-base: 'Vazir', 'Vazirmatn', 'Segoe UI', Tahoma, system-ui, -apple-system, sans-serif !default;
-$pg-font-size-base:   1rem   !default; // TODO(figma) 16px reference
-$pg-line-height-base: 1.8    !default; // TODO(figma) Persian text needs generous leading
+$pg-font-family-base:    'IRANYekan', 'Vazir', 'Segoe UI', Tahoma, system-ui, -apple-system, sans-serif !default;
+$pg-font-family-fn:      'IRANYekanFN', 'IRANYekan', 'Vazir', 'Segoe UI', Tahoma, system-ui, sans-serif !default;
+$pg-font-family-display: 'Doran', 'IRANYekan', 'Vazir', 'Segoe UI', Tahoma, system-ui, sans-serif !default;
+$pg-font-family-vazir:   'Vazir', 'IRANYekan', 'Segoe UI', Tahoma, system-ui, sans-serif !default;
+$pg-font-size-base:   1rem   !default; // 16px reference (nav, body)
+$pg-line-height-base: 1.75   !default; // 16/28 body copy in Figma
 $pg-font-weight-normal: 400 !default;
 $pg-font-weight-medium: 500 !default;
 $pg-font-weight-bold:   700 !default;
-$pg-headings-font-weight: $pg-font-weight-bold !default; // TODO(figma)
-$pg-headings-line-height: 1.4 !default;                  // TODO(figma)
+$pg-font-weight-black:  800 !default;
+$pg-headings-font-weight: $pg-font-weight-black !default;
+$pg-headings-line-height: 1.6 !default; // 40/64 section headings
 
 // ----------------------------------------------------------------------------
-// Shape                                                      TODO(figma)
+// Shape
 // ----------------------------------------------------------------------------
-$pg-radius-sm: .25rem !default; // TODO(figma)
-$pg-radius-md: .5rem  !default; // TODO(figma)
-$pg-radius-lg: 1rem   !default; // TODO(figma)
+$pg-radius-sm: .25rem  !default; // 4px
+$pg-radius-md: .5rem   !default; // 8px — buttons, form fields
+$pg-radius-lg: .75rem  !default; // 12px — blog covers, Ask AI (mobile)
+$pg-radius-xl: 1.25rem !default; // 20px — FAQ icon tile
+$pg-radius-pill: 100px !default; // glass header
 
-$pg-shadow-sm: 0 .125rem .25rem rgba(0, 0, 0, .075) !default; // TODO(figma)
-$pg-shadow-md: 0 .5rem 1rem rgba(0, 0, 0, .15)      !default; // TODO(figma)
+$pg-shadow-sm: 0 1px 2px rgba(0, 0, 0, .05) !default;   // Shadow/xs (buttons)
+$pg-shadow-md: 0 2px 6px rgba(0, 0, 0, .12) !default;   // nav active pill
+$pg-shadow-lg: 0 16px 44px -10px rgba(0, 0, 0, .18) !default; // contact card
 
 // ----------------------------------------------------------------------------
-// Layout
+// Layout — 1440 reference: 56px gutters (1328 content), header inner 1040,
+// footer 1240. 375 reference: 16px gutters (343 content), products 24px.
 // ----------------------------------------------------------------------------
-$pg-container-max: 1320px !default; // TODO(figma) desktop content width
+$pg-container-max: 1440px !default;
+$pg-gutter:        16px   !default;
+$pg-gutter-lg:     56px   !default;
 
 // ============================================================================
 // Bootstrap overrides
@@ -61,7 +114,7 @@ $pg-container-max: 1320px !default; // TODO(figma) desktop content width
 // ============================================================================
 
 // Feature flags
-$enable-rfs:               true;
+$enable-rfs:               false;  // sizes are set per component from the Figma frames
 $enable-dark-mode:         false;  // no dark theme in the design (yet) — smaller CSS
 $enable-negative-margins:  false;
 $enable-smooth-scroll:     true;   // respects prefers-reduced-motion internally
@@ -73,9 +126,10 @@ $secondary:  $pg-secondary;
 $body-bg:    $pg-background;
 $body-color: $pg-text;
 $body-secondary-color: $pg-text-muted;
+$success:    $pg-success;
+$danger:     $pg-error;
+$info:       $pg-info;
 $border-color: $pg-border;
-// $success / $danger / $warning / $info: keep Bootstrap defaults until Figma
-// defines semantic colours.
 
 // Typography
 $font-family-sans-serif: $pg-font-family-base;
@@ -86,7 +140,7 @@ $font-weight-medium:     $pg-font-weight-medium;
 $font-weight-bold:       $pg-font-weight-bold;
 $headings-font-weight:   $pg-headings-font-weight;
 $headings-line-height:   $pg-headings-line-height;
-// $h1-font-size … $h6-font-size, $display-font-sizes: TODO(figma) type scale
+$headings-font-family:   $pg-font-family-display;
 
 // Containers — Bootstrap's own max widths, with the widest tier as our token.
 $container-max-widths: (
@@ -94,7 +148,7 @@ $container-max-widths: (
     md: 720px,
     lg: 960px,
     xl: 1140px,
-    xxl: $pg-container-max,
+    xxl: 1352px, // 1328px content + 2 × 12px padding = the 1440 frame with 56px gutters
 );
 // $grid-breakpoints: Bootstrap defaults (576/768/992/1200/1400) — change only
 // if the Figma layout grid demands it.
@@ -103,25 +157,31 @@ $container-max-widths: (
 $border-radius-sm: $pg-radius-sm;
 $border-radius:    $pg-radius-md;
 $border-radius-lg: $pg-radius-lg;
-$border-radius-xl: $pg-radius-lg;
+$border-radius-xl: $pg-radius-xl;
 
 // Shadows
 $box-shadow-sm: $pg-shadow-sm;
 $box-shadow:    $pg-shadow-md;
+$box-shadow-lg: $pg-shadow-lg;
 
-// Buttons                                                    TODO(figma)
+// Buttons — Figma "_Button base": 48px tall, 10px 18px padding, 16px text
+$btn-font-family:      $pg-font-family-display;
 $btn-font-weight:      $pg-font-weight-medium;
+$btn-padding-y:        .625rem;
+$btn-padding-x:        1.125rem;
+$btn-line-height:      1.5;
 $btn-border-radius:    $pg-radius-md;
 $btn-border-radius-sm: $pg-radius-sm;
 $btn-border-radius-lg: $pg-radius-lg;
-// $btn-padding-y / $btn-padding-x / $btn-font-size: TODO(figma)
 
-// Forms                                                      TODO(figma)
+// Forms
 $input-border-radius:    $pg-radius-md;
 $input-border-radius-sm: $pg-radius-sm;
 $input-border-radius-lg: $pg-radius-lg;
 $input-border-color:     $pg-border;
-// $input-padding-y / $input-padding-x / $form-label-font-weight: TODO(figma)
+$input-focus-border-color: $pg-primary;
+$input-focus-box-shadow:   none;
+$form-label-color:       $pg-text-label;
 
 // Components
 $card-border-radius:      $pg-radius-lg;

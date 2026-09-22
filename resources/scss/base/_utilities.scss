@@ -41,3 +41,18 @@ video {
     max-width: 100%;
     height: auto;
 }
+
+// Page-width wrapper for the designed sections: fluid up to the 1440 frame
+// with the frame's gutters (16px at 375, 56px at 1440). Bootstrap's stepped
+// .container stays available for undesigned pages.
+.pg-container {
+    width: 100%;
+    max-width: var(--pg-container-max);
+    margin-inline: auto;
+    padding-inline: var(--pg-gutter);
+}
+
+// Latin-only strings (e-mail, phone) inside RTL copy keep their own order.
+[dir="ltr"] {
+    unicode-bidi: isolate;
+}

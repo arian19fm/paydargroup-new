@@ -1,0 +1,373 @@
+// FAQ (Figma 133:400 desktop / 180:349 mobile).
+//
+// Desktop: #fbfbf9, 90px 56px 120px; heading block at the start; body row =
+// list (875, start) + contact card (404, end, stretched), 49px apart.
+// List: "Ask AI" bar (72px, hairline border) then rows padded 22px 24px
+// separated by #d8d8d8 lines, 32px circular toggles at the end edge, the
+// first row open. Mobile: 16px gutters, 12px-radius "Ask AI" card, 23px
+// toggles, #e0e3e3 lines, the contact card stacked below.
+
+.pg-faq {
+    padding: 36px 0 16px;
+    background: var(--pg-background-alt);
+
+    @include media-breakpoint-up(md) {
+        padding: 64px 0;
+    }
+
+    @include media-breakpoint-up(lg) {
+        padding: 90px 0 120px;
+    }
+
+    .pg-container {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+
+        @include media-breakpoint-up(lg) {
+            gap: 40px;
+        }
+    }
+}
+
+.pg-faq__header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    @include media-breakpoint-up(lg) {
+        gap: 12px;
+    }
+}
+
+.pg-eyebrow--faq {
+    margin: 0;
+    font-size: .8rem;
+    line-height: 1.75;
+    color: rgba(0, 0, 0, .7);
+    opacity: 1;
+
+    @include media-breakpoint-up(lg) {
+        font-size: 1rem;
+        line-height: 28px;
+    }
+}
+
+.pg-faq__title {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: 1.325rem; // 21.2px
+    font-weight: 500;
+    line-height: 1.6;
+    color: rgba(31, 31, 31, .7);
+
+    @include media-breakpoint-up(lg) {
+        font-size: 2.5rem;
+        line-height: 64px;
+    }
+}
+
+.pg-faq__title-highlight {
+    font-weight: 800;
+    color: var(--pg-highlight);
+}
+
+.pg-faq__body {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+
+    @include media-breakpoint-up(lg) {
+        flex-direction: row;
+        align-items: stretch;
+        gap: 49px;
+    }
+}
+
+.pg-faq__main {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 22px;
+    min-width: 0;
+
+    @include media-breakpoint-up(lg) {
+        gap: 16px;
+    }
+}
+
+// "Ask AI" bar — visual only (disabled until an assistant backend exists).
+.pg-ask {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 52px;
+    padding-block: 7px;
+    padding-inline: 24px 9px; // text side (start) / button side (end)
+    border-radius: var(--pg-radius-lg);
+    background: #fff;
+    box-shadow: inset 0 0 4px rgba($pg-ink, .04);
+
+    @include media-breakpoint-up(lg) {
+        min-height: 72px;
+        padding-block: 16px;
+        padding-inline: 20px 16px;
+        border: 1px solid rgba($pg-ink, .08);
+        border-radius: 0;
+    }
+}
+
+.pg-ask__input {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-family: var(--pg-font-family-fn);
+    font-size: .765rem; // 12.24px
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--pg-ink);
+
+    @include media-breakpoint-up(lg) {
+        font-size: 1.0625rem; // 17px
+        line-height: 24px;
+    }
+
+    &::placeholder {
+        color: var(--pg-ink-50);
+        opacity: 1;
+    }
+
+    &:disabled {
+        background: transparent;
+        opacity: 1;
+    }
+}
+
+// The exported button includes its own drop shadows (46×54 canvas around
+// a 38px circle), so the box is sized to the visible circle and the image
+// bleeds over it.
+.pg-ask__send {
+    position: relative;
+    flex: 0 0 auto;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+
+    img {
+        position: absolute;
+        top: 0;
+        inset-inline-start: -4px;
+        width: 46px;
+        height: 54px;
+        max-width: none;
+    }
+
+    &:disabled {
+        cursor: default;
+    }
+}
+
+// Accordion.
+.pg-faq__list {
+    display: flex;
+    flex-direction: column;
+}
+
+.pg-faq__item {
+    padding: 18px 0;
+    border-bottom: 1px solid #e0e3e3;
+
+    @include media-breakpoint-up(lg) {
+        padding: 30px 24px; // 22px row padding + the 8px the frame spreads between rows
+        border-bottom-color: var(--pg-divider);
+    }
+
+    &:last-child {
+        border-bottom: 0;
+    }
+}
+
+.pg-faq__question {
+    margin: 0;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.pg-faq__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    text-align: start;
+    color: var(--pg-text-strong);
+
+    &:hover .pg-faq__question-text,
+    &:focus-visible .pg-faq__question-text {
+        color: var(--pg-primary);
+    }
+}
+
+.pg-faq__question-text {
+    font-family: var(--pg-font-family-display);
+    font-size: .81rem; // 12.96px
+    font-weight: 500;
+    line-height: 20px;
+    transition: color .15s ease;
+
+    @include media-breakpoint-up(lg) {
+        font-size: 1.125rem;
+        line-height: 28px;
+    }
+
+    // The open question is Bold in the frame.
+    [aria-expanded="true"] & {
+        font-weight: 700;
+    }
+}
+
+.pg-faq__icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    background: rgba($pg-ink, .04);
+    box-shadow: inset 0 0 4px rgba($pg-ink, .04);
+    transition: background-color .15s ease;
+
+    @include media-breakpoint-up(lg) {
+        width: 32px;
+        height: 32px;
+    }
+
+    img {
+        width: 11.5px;
+        height: 11.5px;
+        transition: transform .2s ease;
+
+        @include media-breakpoint-up(lg) {
+            width: 16px;
+            height: 16px;
+        }
+    }
+
+    // Open: tinted circle, plus rotated 45° into a cross.
+    [aria-expanded="true"] & {
+        background: rgba($pg-secondary, .15);
+
+        img {
+            /* rtl:ignore */
+            transform: rotate(45deg);
+        }
+    }
+}
+
+.pg-faq__answer {
+    margin: 14px 0 0;
+    padding-inline-end: 0;
+    font-family: var(--pg-font-family-fn);
+    font-size: .75rem;
+    line-height: 20px;
+    color: var(--pg-ink);
+
+    @include media-breakpoint-up(lg) {
+        font-family: var(--pg-font-family-base);
+        font-size: 1rem;
+        line-height: 30px;
+        color: var(--pg-ink-70);
+    }
+}
+
+// Contact card.
+.pg-faq__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 34px;
+    background: var(--pg-surface-2);
+    text-align: center;
+
+    @include media-breakpoint-up(lg) {
+        flex: 0 0 404px;
+        gap: 16px;
+        padding: 40px;
+    }
+}
+
+.pg-faq__card-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 61px;
+    height: 61px;
+    margin-bottom: 7px;
+    border-radius: 17px;
+    background: var(--pg-button-bg);
+    box-shadow: 0 8.5px 20px -5px rgba($pg-secondary, .25);
+    font-family: var(--pg-font-family-vazir);
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+
+    @include media-breakpoint-up(lg) {
+        width: 72px;
+        height: 72px;
+        margin-bottom: 8px;
+        border-radius: var(--pg-radius-xl);
+        background: #041a41;
+        box-shadow: 0 10px 24px -6px rgba($pg-secondary, .25);
+        font-size: 2.25rem;
+    }
+}
+
+.pg-faq__card-title {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: 1.275rem; // 20.4px
+    font-weight: 800;
+    line-height: 1.5;
+    color: var(--pg-text-strong);
+
+    @include media-breakpoint-up(lg) {
+        font-size: 1.5rem;
+        line-height: 36px;
+    }
+}
+
+.pg-faq__card-text {
+    margin: 0;
+    font-family: var(--pg-font-family-fn);
+    font-size: .85rem; // 13.6px
+    line-height: 1.875;
+    color: var(--pg-ink-70);
+
+    @include media-breakpoint-up(lg) {
+        font-size: 1rem;
+        line-height: 30px;
+    }
+}
+
+.pg-faq__card-cta {
+    width: 100%;
+    margin-top: auto;
+    font-size: .8125rem; // 13px (11.5 in the scaled export)
+    line-height: 1.5;
+
+    @include media-breakpoint-up(lg) {
+        font-size: 1rem;
+    }
+}

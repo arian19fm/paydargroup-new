@@ -1,0 +1,173 @@
+// Hero (Figma 110:267 desktop 1440×885 / 172:294 mobile 375×609).
+//
+// Desktop: photo with the darkening baked into the export, content pinned
+// to the bottom with 75px insets — headline block (513) at the start,
+// paragraph + CTA block (440) at the end. Mobile: the same photo cropped
+// to its centre with a top→bottom overlay, content stacked near the bottom
+// with a full-width CTA. The glass header floats above (layout/_header).
+
+.pg-hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 609px;
+    overflow: hidden;
+    background: var(--pg-primary-dark);
+    color: #fff;
+
+    @include media-breakpoint-up(md) {
+        min-height: clamp(609px, 61.5vw, 885px);
+    }
+
+    @include media-breakpoint-up(lg) {
+        min-height: 885px;
+    }
+}
+
+.pg-hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* rtl:ignore */
+        object-position: 50% 0;
+
+        @include media-breakpoint-up(lg) {
+            /* rtl:ignore */
+            object-position: 50% 50%;
+        }
+    }
+}
+
+// Mobile-only gradient (Figma "overlay": 5% → 55% black).
+.pg-hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(180deg, rgba(0, 0, 0, .05) 0%, rgba(0, 0, 0, .55) 100%);
+
+    @include media-breakpoint-up(lg) {
+        display: none;
+    }
+}
+
+.pg-hero__inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    max-width: var(--pg-container-max);
+    margin-inline: auto;
+    padding: 120px 23px 24px;
+
+    @include media-breakpoint-up(md) {
+        padding-inline: var(--pg-gutter);
+    }
+
+    @include media-breakpoint-up(lg) {
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 48px;
+        padding: 200px clamp(32px, 5.2vw, 75px) clamp(48px, 5.2vw, 75px); // 75px at the 1440 frame
+    }
+}
+
+.pg-hero__text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    @include media-breakpoint-up(lg) {
+        flex: 0 1 513px;
+        order: 1;
+    }
+}
+
+.pg-hero__eyebrow {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: .8125rem;
+    font-weight: 400;
+    line-height: 20px;
+    color: #fff;
+
+    @include media-breakpoint-up(lg) {
+        font-size: 1.125rem;
+        line-height: 1.5;
+        color: var(--pg-text-on-dark);
+        opacity: .85;
+    }
+}
+
+.pg-hero__title {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 42px;
+    color: #fff;
+
+    @include media-breakpoint-up(md) {
+        font-size: 2.25rem;
+        line-height: 1.5;
+    }
+
+    @include media-breakpoint-up(lg) {
+        font-size: clamp(2.5rem, 3.75vw, 3.375rem); // 54px at the 1440 frame
+        font-weight: 800;
+        line-height: 1.48; // 80px at 54px
+        letter-spacing: -.02em;
+    }
+}
+
+.pg-hero__aside {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    @include media-breakpoint-up(lg) {
+        flex: 0 1 440px;
+        // Column cross-axis start = the right edge under dir="rtl": the CTA
+        // hugs the block's start edge as in the frame.
+        align-items: flex-start;
+        order: 2;
+        gap: 27px;
+    }
+}
+
+.pg-hero__lead {
+    margin: 0;
+    font-family: var(--pg-font-family-fn);
+    font-size: .75rem;
+    line-height: 1.75;
+    color: rgba(255, 255, 255, .7);
+    opacity: .9;
+
+    @include media-breakpoint-up(lg) {
+        font-size: 1rem;
+        line-height: 28px;
+        color: var(--pg-text-on-dark);
+        opacity: 1;
+    }
+}
+
+.pg-hero__cta {
+    --bs-btn-border-radius: 10px;
+    width: 100%;
+    font-size: .8125rem;
+    line-height: 20px;
+
+    @include media-breakpoint-up(lg) {
+        --bs-btn-border-radius: var(--pg-radius-md);
+        width: 199px;
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+}
