@@ -7,6 +7,9 @@
             ['route' => 'admin.articles.index', 'icon' => 'articles', 'label' => __('admin.nav.articles'), 'can' => 'articles.view', 'active' => 'admin.articles.*'],
             ['route' => 'admin.categories.index', 'icon' => 'categories', 'label' => __('admin.nav.categories'), 'can' => 'categories.view', 'active' => 'admin.categories.*'],
             ['route' => 'admin.media.index', 'icon' => 'media', 'label' => __('admin.nav.media'), 'can' => 'media.view', 'active' => 'admin.media.*'],
+            ['route' => 'admin.businesses.index', 'icon' => 'businesses', 'label' => __('admin.nav.businesses'), 'can' => 'businesses.view', 'active' => 'admin.businesses.*'],
+            ['route' => 'admin.jobs.index', 'icon' => 'jobs', 'label' => __('admin.nav.jobs'), 'can' => 'jobs.view', 'active' => 'admin.jobs.*'],
+            ['route' => 'admin.applications.index', 'icon' => 'inbox', 'label' => __('admin.nav.applications'), 'can' => 'applications.view', 'active' => 'admin.applications.*', 'badge' => \App\Models\JobApplication::unseenCount()],
             ['route' => 'admin.team.members.index', 'icon' => 'users', 'label' => __('admin.nav.team'), 'can' => 'team.view', 'active' => 'admin.team.*'],
         ],
         __('admin.nav.structure') => [
@@ -55,6 +58,9 @@
                             <li class="nav-item">
                                 <a class="nav-link @if ($active) active @endif" href="{{ route($item['route'], $item['params'] ?? []) }}" @if ($active) aria-current="page" @endif>
                                     <x-admin.icon :name="$item['icon']" /><span>{{ $item['label'] }}</span>
+                                    @if (! empty($item['badge']))
+                                        <span class="pg-admin__nav-badge" aria-label="{{ __('admin.applications.unseen_count', ['count' => fa_digits($item['badge'])]) }}">{{ fa_digits($item['badge']) }}</span>
+                                    @endif
                                 </a>
                             </li>
                         @endforeach

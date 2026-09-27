@@ -40,8 +40,10 @@
         align-items: start;
     }
 
+    // 628 + 24 + 628 only fits inside the 1440 frame; below that the two
+    // columns shrink together instead of overflowing the container.
     @include media-breakpoint-up(lg) {
-        grid-template-columns: 628px 628px;
+        grid-template-columns: minmax(0, 628px) minmax(0, 628px);
         justify-content: space-between;
         gap: 24px;
         padding-bottom: 100px;
@@ -303,6 +305,39 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
+    }
+
+    iframe {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+}
+
+// Embedded map: the "open in Google Maps" link sits in the bottom start
+// corner over the map, clear of Google's own controls at the end.
+.pg-contact-page__map--embed {
+    .pg-contact-page__map-link {
+        position: absolute;
+        bottom: 12px;
+        inset-inline-start: 12px;
+        display: inline-block;
+        height: auto;
+        padding: 6px 12px;
+        border-radius: var(--pg-radius-md);
+        background: var(--pg-surface);
+        box-shadow: var(--pg-shadow-md);
+        font-family: var(--pg-font-family-fn);
+        font-size: .8125rem;
+        line-height: 20px;
+        color: var(--pg-text);
+        text-decoration: none;
+
+        &:hover,
+        &:focus-visible {
+            color: var(--pg-primary);
+        }
     }
 }
 

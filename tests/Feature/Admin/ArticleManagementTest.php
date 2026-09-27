@@ -67,7 +67,8 @@ class ArticleManagementTest extends TestCase
 
         $this->get('/articles/big-news')
             ->assertOk()
-            ->assertSee('<h1>خبر مهم</h1>', false)
+            ->assertSee('class="pg-article__title"', false)
+            ->assertSee('خبر مهم')
             ->assertSee('"@type":"Article"', false)
             ->assertSee('<meta property="og:type" content="article">', false)
             ->assertSee('<link rel="canonical" href="https://paydargroup.test/articles/big-news">', false);

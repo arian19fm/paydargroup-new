@@ -810,3 +810,17 @@
         color: var(--pg-primary);
     }
 }
+
+// Unseen-count pill on a sidebar item (applications inbox).
+.pg-admin__nav-badge {
+    margin-inline-start: auto;
+    min-width: 1.4rem;
+    padding: .1rem .45rem;
+    border-radius: 999px;
+    background: var(--pg-accent);
+    font-size: .72rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #fff;
+    text-align: center;
+}

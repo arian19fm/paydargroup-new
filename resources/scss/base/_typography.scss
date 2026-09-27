@@ -6,12 +6,33 @@ html {
     // Persian text benefits from slightly larger tap/reading targets; keep
     // the root at the token size and let RFS scale headings.
     -webkit-text-size-adjust: 100%;
+    // The page never scrolls sideways: scroll-driven transforms (parallax
+    // scale, reveal rise) and the off-screen offcanvas must not widen the
+    // document on phones. `clip` does not create a scroll container, so
+    // position: sticky (product stack, intro column) keeps working.
+    overflow-x: clip;
 }
 
 body {
     // Ensure bidi isolation for mixed Persian/Latin content.
     unicode-bidi: plaintext;
     text-rendering: optimizeLegibility;
+    overflow-x: clip;
+    // Long unbroken strings (URLs, e-mails, codes) in CMS text wrap instead
+    // of pushing the layout wider than the viewport.
+    overflow-wrap: break-word;
+}
+
+@supports not (overflow: clip) {
+    html,
+    body {
+        overflow-x: hidden;
+    }
+}
+
+// Editor content can hold anything; break even mid-word before overflowing.
+.pg-content {
+    overflow-wrap: anywhere;
 }
 
 // Latin/numeric snippets inside Persian text (phone numbers, codes) should be

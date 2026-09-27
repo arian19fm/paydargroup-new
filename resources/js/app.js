@@ -10,6 +10,9 @@ import './site/navigation';
 import './site/theme';
 import './site/drag-scroll';
 import './site/hero-video';
+import './site/business-video';
+import './site/job-apply';
+import './site/share-link';
 import './admin/char-counter';
 import { mountVueComponents } from './vue/mount';
 

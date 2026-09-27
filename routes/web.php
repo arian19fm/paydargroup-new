@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\Site\ArticleController;
+use App\Http\Controllers\Site\BusinessController;
+use App\Http\Controllers\Site\CareersPageController;
 use App\Http\Controllers\Site\ContactPageController;
 use App\Http\Controllers\Site\ContactRequestController;
 use App\Http\Controllers\Site\HomeController;
+use App\Http\Controllers\Site\JobApplicationController;
 use App\Http\Controllers\Site\PageController;
 use App\Http\Controllers\Site\RobotsController;
 use App\Http\Controllers\Site\SitemapController;
@@ -26,6 +29,9 @@ Route::get('/', HomeController::class)->name('home');
 // rate limited per IP (see AppServiceProvider).
 Route::get('/contact', ContactPageController::class)->name('contact');
 Route::get('/team', TeamPageController::class)->name('team');
+Route::get('/careers', CareersPageController::class)->name('careers');
+Route::get('/careers/{job}', [CareersPageController::class, 'show'])->whereNumber('job')->name('careers.show');
+Route::post('/careers/{job}/apply', [JobApplicationController::class, 'store'])->whereNumber('job')->middleware('throttle:job-apply')->name('careers.apply');
 Route::post('/contact', [ContactRequestController::class, 'store'])
     ->middleware('throttle:contact-form')
     ->name('contact.store');
@@ -37,7 +43,9 @@ Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 // Managed content. Only published items resolve (see the controllers).
 $slug = '[a-z0-9]+(?:-[a-z0-9]+)*';
 
+Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
 Route::get('/articles/{slug}', [ArticleController::class, 'show'])->where('slug', $slug)->name('articles.show');
+Route::get('/businesses/{slug}', [BusinessController::class, 'show'])->where('slug', $slug)->name('businesses.show');
 
 // Single-segment page slugs. This is the ONLY catch-all and it stays last:
 // the negative lookahead excludes every reserved path (admin, build, storage,

@@ -3,6 +3,7 @@
 namespace App\Support\Home;
 
 use App\Models\Article;
+use App\Models\Business;
 use App\Models\Media;
 use App\Models\Page;
 use Illuminate\Database\Eloquent\Collection;
@@ -17,17 +18,40 @@ use Illuminate\Database\QueryException;
 class HomePage
 {
     /**
-     * Product cards in display order.
+     * Business cards for the "our products" section, in display order.
+     * Published businesses from the CMS come first; when none exists yet
+     * the designed line-up from config/home.php is rendered so the section
+     * never disappears. Every card has the same shape whichever source it
+     * came from: `media` (Media|null) or `image`/`image_type` (design asset).
      *
-     * @return list<array{key: string, number: string, image: string, image_type: string, url: ?string, name: string, plain_name: string, description: string, features: list<string>, image_alt: string}>
+     * @return list<array<string, mixed>>
      */
     public function products(array $pageUrls): array
     {
+        $businesses = $this->businesses();
+
+        if ($businesses->isNotEmpty()) {
+            return $businesses->values()->map(fn (Business $business, int $index) => [
+                'key' => $business->accentKey(),
+                'number' => str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT),
+                'media' => $business->image?->isImage() ? $business->image : null,
+                'image' => null,
+                'image_type' => null,
+                'url' => route('businesses.show', $business->slug),
+                'name' => $business->title,
+                'plain_name' => $business->title,
+                'description' => $business->tagline,
+                'features' => $business->featureList(),
+                'image_alt' => $business->image?->alt_text ?: $business->title,
+            ])->all();
+        }
+
         return array_map(function (array $product) use ($pageUrls) {
             $copy = __('home.products.items.'.$product['key']);
 
             return [
                 ...$product,
+                'media' => null,
                 'url' => $pageUrls[$product['slug']] ?? null,
                 'name' => $copy['name'],
                 'plain_name' => $copy['plain_name'],
@@ -36,6 +60,42 @@ class HomePage
                 'image_alt' => $copy['image_alt'],
             ];
         }, config('home.products', []));
+    }
+
+    /**
+     * Copy of the "our products" section: Settings → home overrides, the
+     * designed text otherwise. The CTA links to the configured URL, else
+     * to the `products` CMS page when it is published.
+     *
+     * @return array{eyebrow: string, heading_highlight: string, heading: string, text: string, cta: string, cta_url: ?string}
+     */
+    public function productsSection(array $links): array
+    {
+        $setting = fn (string $key, string $fallback) => trim((string) settings('home.'.$key)) ?: __($fallback);
+
+        return [
+            'eyebrow' => $setting('products_eyebrow', 'home.products.eyebrow'),
+            'heading_highlight' => $setting('products_title_highlight', 'home.products.heading_highlight'),
+            'heading' => $setting('products_title', 'home.products.heading'),
+            'text' => $setting('products_text', 'home.products.text'),
+            'cta' => $setting('products_cta_label', 'home.products.cta'),
+            'cta_url' => trim((string) settings('home.products_cta_url')) ?: ($links['products'] ?? null),
+        ];
+    }
+
+    /**
+     * Published businesses in display order (empty when the table does not
+     * exist yet, e.g. before migrations run).
+     *
+     * @return Collection<int, Business>
+     */
+    public function businesses(): Collection
+    {
+        try {
+            return Business::query()->published()->ordered()->with('image')->get();
+        } catch (QueryException) {
+            return new Collection;
+        }
     }
 
     /**

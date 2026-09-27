@@ -7,13 +7,14 @@ use App\Http\Requests\Admin\ArticleRequest;
 use App\Models\Article;
 use App\Models\ArticleCategory;
 use App\Models\User;
+use App\Support\Media\MediaService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
-    public function __construct()
+    public function __construct(protected MediaService $media)
     {
         $this->authorizeResource(Article::class, 'article');
     }
@@ -43,7 +44,7 @@ class ArticleController extends Controller
 
     public function store(ArticleRequest $request): RedirectResponse
     {
-        $article = Article::create($request->articleData());
+        $article = Article::create($this->withUploadedImage($request, $request->articleData()));
         $article->categories()->sync($request->categoryIds());
         $article->saveSeo($request->seoPayload());
 
@@ -52,14 +53,14 @@ class ArticleController extends Controller
 
     public function edit(Article $article): View
     {
-        $article->load(['seo', 'categories:id']);
+        $article->load(['seo', 'categories:id', 'featuredImage']);
 
         return view('admin.articles.form', ['article' => $article, ...$this->formOptions()]);
     }
 
     public function update(ArticleRequest $request, Article $article): RedirectResponse
     {
-        $article->update($request->articleData());
+        $article->update($this->withUploadedImage($request, $request->articleData()));
         $article->categories()->sync($request->categoryIds());
         $article->saveSeo($request->seoPayload());
 
@@ -71,6 +72,19 @@ class ArticleController extends Controller
         $article->delete();
 
         return redirect()->route('admin.articles.index')->with('success', __('admin.deleted'));
+    }
+
+    /** A cover uploaded from the form goes into the media library, named after the article. */
+    protected function withUploadedImage(ArticleRequest $request, array $data): array
+    {
+        if ($request->hasFile('featured_image')) {
+            $data['featured_image_id'] = $this->media->upload($request->file('featured_image'), $request->user(), [
+                'title' => $data['title'],
+                'alt_text' => $data['title'],
+            ])->id;
+        }
+
+        return $data;
     }
 
     protected function formOptions(): array

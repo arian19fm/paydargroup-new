@@ -1,6 +1,7 @@
 <?php
 
 use App\Support\Seo\Sitemap\ArticlesSource;
+use App\Support\Seo\Sitemap\BusinessesSource;
 use App\Support\Seo\Sitemap\PagesSource;
 use App\Support\Seo\Sitemap\StaticPagesSource;
 
@@ -79,6 +80,7 @@ return [
         StaticPagesSource::class,
         PagesSource::class,
         ArticlesSource::class,
+        BusinessesSource::class,
     ],
 
     'sitemap_cache_key' => 'seo.sitemap.xml',

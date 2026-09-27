@@ -66,6 +66,20 @@ class ContactPageTest extends TestCase
         ])->assertRedirect(url('/').'#contact');
     }
 
+    public function test_google_maps_link_is_embedded_as_a_live_map(): void
+    {
+        $settings = app(Settings::class);
+        $settings->set('contact.map_url', 'https://www.google.com/maps/place/Paydar/@35.7219,51.3347,17z/');
+        $settings->set('contact.map_image_media_id', Media::factory()->create()->id);
+
+        $html = $this->get('/contact')->assertOk()->getContent();
+
+        $this->assertStringContainsString('pg-contact-page__map--embed', $html);
+        $this->assertStringContainsString('<iframe src="https://www.google.com/maps?q=35.7219%2C51.3347&amp;hl=fa&amp;output=embed&amp;z=17"', $html);
+        $this->assertStringContainsString('href="https://www.google.com/maps/place/Paydar/@35.7219,51.3347,17z/" target="_blank" rel="noopener">'.__('contact.map_open').'</a>', $html);
+        $this->assertStringNotContainsString('pg-contact-page__pin', $html); // the image fallback is not rendered alongside
+    }
+
     public function test_contact_is_a_reserved_slug_and_in_the_sitemap(): void
     {
         $this->assertContains('contact', config('cms.reserved_slugs'));

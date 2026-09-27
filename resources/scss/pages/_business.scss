@@ -1,0 +1,540 @@
+// Business page (Figma 205:119 desktop 1440 / 220:5 mobile 375).
+//
+// Hero (white): centred eyebrow (Doran 16, grey/700 at 85%), name (Doran
+// ExtraBold 48/64 in the accent's deep tone), lead (IRANYekan 19), a row
+// of neutral tags (#ebedeb, 6×16, IRANYekanFN Medium 14/22), then the
+// 1294×366 image (73px gutters, top-cropped) with 60px below.
+// Intro (white, 60×98 padding, 32 gap): eyebrow (IRANYekanFN 14/22
+// #737a82), heading (Doran Bold 32/48 accent deep — name line + tagline
+// line, 16 apart), paragraphs (IRANYekanFN 16/24 #19363f, 19 apart) and
+// the 175×48 accent button pinned to the start edge.
+// Benefits (#fbfbf9, 60px padding, 90px gutters): heading column (453) at
+// the start — eyebrow (16/28 soft), heading (Doran ExtraBold 40/64 deep
+// navy), text (IRANYekanFN 14/22) — and the check-list at the end (items
+// 62 apart: 26px icon, 12 gap, title Doran Medium 18/28 primary-dark,
+// description 13.5/23 grey/700); the 1260×625 media 45px below with the
+// 90px play icon centred. Mobile: 16px gutters, everything stacked
+// (heading 27.84/37.12, tags 5.4×14.4 at 12.6/19.8, image 341×130; intro
+// 17.6/26.4 heading, 13/23 body; benefits 24/38.4 heading, items 17 apart,
+// media 343×169).
+
+.pg-business {
+    // Accent per business (see $pg-products in abstracts/_variables): the
+    // deep "badge text" tone carries the name, the intro heading and the
+    // button, as the fund frame's #2a412a does.
+    @each $key, $c in $pg-products {
+        &--#{$key} {
+            --pg-business-accent: #{map-get($c, badge-text)};
+
+            [data-bs-theme="dark"] & {
+                --pg-business-accent: #{tint-color(map-get($c, accent), 45%)};
+            }
+        }
+    }
+
+    background: var(--pg-background);
+}
+
+// ---------------------------------------------------------------- hero
+
+.pg-business-hero {
+    padding: 26px 0 14px;
+    background: var(--pg-background);
+
+    @include media-breakpoint-up(lg) {
+        padding: 28px 0 60px;
+    }
+}
+
+.pg-business-hero__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+
+    @include media-breakpoint-up(lg) {
+        --pg-gutter: 32px;
+        gap: 22px;
+    }
+}
+
+.pg-business-hero__eyebrow {
+    @extend .pg-eyebrow;
+
+    margin: 0;
+    width: 100%;
+    font-size: .8rem;
+    line-height: 1.5;
+    color: var(--pg-text-body);
+
+    @include media-breakpoint-up(lg) {
+        font-size: 1rem;
+        line-height: 26px;
+    }
+}
+
+.pg-business-hero__title {
+    margin: 0;
+    width: 100%;
+    font-family: var(--pg-font-family-display);
+    font-size: 1.74rem; // 27.84px
+    font-weight: 800;
+    line-height: 1.333; // 37.12px
+    letter-spacing: .0133em;
+    color: var(--pg-business-accent);
+
+    @include media-breakpoint-up(lg) {
+        font-size: 3rem; // 48px
+        line-height: 64px;
+    }
+}
+
+.pg-business-hero__text {
+    margin: 0;
+    max-width: 343px;
+    font-family: var(--pg-font-family-vazir);
+    font-size: .78125rem; // 12.5px
+    line-height: 21px;
+    color: var(--pg-ink);
+
+    @include media-breakpoint-up(lg) {
+        margin-top: 10px;
+        max-width: none;
+        font-family: var(--pg-font-family-base);
+        font-size: 1.1875rem; // 19px
+        line-height: 1.7;
+        color: var(--pg-text-body);
+    }
+}
+
+.pg-business-hero__tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 9px 8px;
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+
+    @include media-breakpoint-up(lg) {
+        margin-top: 10px;
+        gap: 8px;
+    }
+}
+
+.pg-business-tag {
+    padding: 5.4px 14.4px;
+    background: var(--pg-tag-neutral);
+    font-family: var(--pg-font-family-fn);
+    font-size: .7875rem; // 12.6px
+    font-weight: 500;
+    line-height: 19.8px;
+    letter-spacing: .0157em;
+    color: var(--pg-ink);
+    white-space: nowrap;
+
+    @include media-breakpoint-up(lg) {
+        padding: 6px 16px;
+        font-size: .875rem;
+        line-height: 22px;
+    }
+}
+
+// The exported image is taller than its slot: it is cropped to the slot
+// from the top, exactly as the frame does (1294×617 in a 1294×366 box).
+.pg-business-hero__media {
+    width: 100%;
+    max-width: 341px;
+    height: 130px;
+    margin-top: 30px;
+    overflow: hidden;
+    background: var(--pg-surface-3);
+
+    @include media-breakpoint-up(md) {
+        max-width: none;
+        height: auto;
+        aspect-ratio: 1294 / 366;
+    }
+
+    @include media-breakpoint-up(lg) {
+        margin-top: 42px;
+        margin-inline: 41px; // 73px gutters on the 1440 frame (32 + 41)
+        width: calc(100% - 82px);
+    }
+
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* rtl:ignore */
+        object-position: 50% 0;
+    }
+}
+
+// --------------------------------------------------------------- intro
+
+.pg-business-intro {
+    padding: 36px 0 40px;
+    background: var(--pg-background);
+
+    @include media-breakpoint-up(lg) {
+        padding: 60px 0;
+    }
+}
+
+.pg-business-intro__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    @include media-breakpoint-up(lg) {
+        --pg-gutter: 98px;
+        gap: 32px;
+    }
+}
+
+.pg-business-intro__head {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    @include media-breakpoint-up(lg) {
+        gap: 13px;
+    }
+}
+
+.pg-business-intro__eyebrow {
+    margin: 0;
+    font-family: var(--pg-font-family-fn);
+    font-size: .74375rem; // 11.9px
+    line-height: 18.7px;
+    letter-spacing: .0157em;
+    color: var(--pg-text-muted);
+
+    @include media-breakpoint-up(lg) {
+        font-size: .875rem;
+        line-height: 22px;
+    }
+}
+
+.pg-business-intro__title {
+    display: flex;
+    flex-direction: column;
+    gap: 8.8px;
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: 1.1rem; // 17.6px
+    font-weight: 700;
+    line-height: 1.5; // 26.4px
+    letter-spacing: .015em;
+    color: var(--pg-business-accent);
+
+    @include media-breakpoint-up(lg) {
+        gap: 16px;
+        font-size: 2rem; // 32px
+        line-height: 48px;
+    }
+}
+
+.pg-business-intro__body {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    font-family: var(--pg-font-family-vazir);
+    font-size: .8125rem; // 13px
+    line-height: 23px;
+    color: var(--pg-ink);
+
+    @include media-breakpoint-up(lg) {
+        gap: 19px;
+        font-family: var(--pg-font-family-fn);
+        font-size: 1rem;
+        line-height: 24px;
+        letter-spacing: .015em;
+    }
+
+    p {
+        margin: 0;
+    }
+}
+
+// "مشاهده سایت": 175×48 accent button with the exported chevron at the
+// end (forward in reading direction). Pinned to the start edge.
+.pg-business-intro__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    align-self: flex-start;
+    width: 175px;
+    height: 48px;
+    margin-top: 24px;
+    padding: 10px 18px;
+    border: 1px solid var(--pg-business-accent);
+    background: var(--pg-business-accent);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+    font-family: var(--pg-font-family-display);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 24px;
+    color: #fff;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity .15s ease;
+
+    @include media-breakpoint-up(lg) {
+        margin-top: 0;
+    }
+
+    &:hover,
+    &:focus-visible {
+        color: #fff;
+        opacity: .9;
+    }
+
+    img {
+        flex: 0 0 auto;
+    }
+
+    // Dark theme: the lifted accent is light, so the label and the white
+    // chevron flip to the page background colour.
+    [data-bs-theme="dark"] & {
+        color: var(--pg-background);
+
+        &:hover,
+        &:focus-visible {
+            color: var(--pg-background);
+        }
+
+        img {
+            filter: invert(1) brightness(.2);
+        }
+    }
+}
+
+// ------------------------------------------------------------ benefits
+
+.pg-business-benefits {
+    padding: 32px 0;
+    background: var(--pg-background-alt);
+
+    @include media-breakpoint-up(lg) {
+        padding: 60px 0;
+    }
+}
+
+.pg-business-benefits__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+
+    @include media-breakpoint-up(lg) {
+        --pg-gutter: 90px;
+        gap: 45px;
+    }
+}
+
+// Heading column at the start, check-list at the end; stacked on mobile.
+.pg-business-benefits__top {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+
+    @include media-breakpoint-up(lg) {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 40px;
+        padding-inline-end: 20px;
+    }
+}
+
+.pg-business-benefits__head {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+
+    @include media-breakpoint-up(lg) {
+        flex: 0 1 453px;
+        gap: 19px;
+    }
+}
+
+.pg-business-benefits__eyebrow {
+    margin: 0 0 -9px;
+    font-family: var(--pg-font-family-dots);
+    font-size: .85rem; // 13.6px
+    line-height: 23.8px;
+    color: var(--pg-eyebrow-soft);
+
+    @include media-breakpoint-up(lg) {
+        margin-bottom: -7px;
+        font-size: 1rem;
+        line-height: 28px;
+    }
+}
+
+.pg-business-benefits__title {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: 1.5rem; // 24px
+    font-weight: 800;
+    line-height: 1.6; // 38.4px
+    color: var(--pg-primary-deep);
+
+    @include media-breakpoint-up(lg) {
+        font-size: 2.5rem; // 40px
+        line-height: 64px;
+    }
+
+    // Deep navy has no dark variant; the dark theme lifts headings to the
+    // same blue the home page uses for its highlights.
+    [data-bs-theme="dark"] & {
+        color: #{$pg-dark-highlight};
+    }
+}
+
+.pg-business-benefits__text {
+    margin: 0;
+    font-family: var(--pg-font-family-vazir);
+    font-size: .78125rem; // 12.5px
+    line-height: 21px;
+    color: var(--pg-ink);
+
+    @include media-breakpoint-up(lg) {
+        font-family: var(--pg-font-family-fn);
+        font-size: .875rem;
+        line-height: 22px;
+        letter-spacing: .0157em;
+    }
+}
+
+.pg-business-benefits__list {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include media-breakpoint-up(lg) {
+        flex: 0 0 auto;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 62px;
+    }
+}
+
+.pg-benefit {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.pg-benefit__icon {
+    flex: 0 0 auto;
+    width: 26px;
+    height: 26px;
+
+    // The exported icon is a navy disc with a cream tick; on dark surfaces
+    // the disc is brightened to a light blue (the tick clips to white).
+    [data-bs-theme="dark"] & {
+        filter: brightness(2.4);
+    }
+}
+
+.pg-benefit__text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 305px;
+
+    @include media-breakpoint-up(lg) {
+        max-width: 224px;
+    }
+}
+
+.pg-benefit__title {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 28px;
+    letter-spacing: .0156em;
+    color: var(--pg-primary-dark);
+
+    @include media-breakpoint-up(lg) {
+        font-size: 1.125rem; // 18px
+    }
+
+    [data-bs-theme="dark"] & {
+        color: var(--pg-text-strong);
+    }
+}
+
+.pg-benefit__desc {
+    margin: 0;
+    font-family: var(--pg-font-family-fn);
+    font-size: .84375rem; // 13.5px
+    line-height: 23px;
+    color: var(--pg-text-body);
+}
+
+.pg-business-benefits__media {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    aspect-ratio: 343 / 169;
+    background: var(--pg-surface-3);
+
+    @include media-breakpoint-up(lg) {
+        aspect-ratio: 1260 / 625;
+    }
+
+    img,
+    video {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        /* rtl:ignore */
+        object-position: 50% 0;
+    }
+}
+
+// Video: native controls stay available; the designed play icon sits over
+// the poster until playback starts (business-video.js shows/hides it).
+.pg-business-video--idle .pg-business-video__player::-webkit-media-controls {
+    display: none;
+}
+
+.pg-business-video__play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+
+    img {
+        width: 36px;
+        height: 36px;
+        transition: transform .2s ease;
+
+        @include media-breakpoint-up(lg) {
+            width: 90px;
+            height: 90px;
+        }
+    }
+
+    &:hover img,
+    &:focus-visible img {
+        transform: scale(1.06);
+    }
+}

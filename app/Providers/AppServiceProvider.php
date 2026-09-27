@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Article;
+use App\Models\Business;
 use App\Models\Menu;
 use App\Models\MenuItem;
 use App\Models\Page;
@@ -48,6 +49,7 @@ class AppServiceProvider extends ServiceProvider
         // Public contact form: a handful of submissions per minute per IP is
         // plenty for humans and blunts naive spam without any external service.
         RateLimiter::for('contact-form', fn (Request $request) => Limit::perMinute(5)->by($request->ip()));
+        RateLimiter::for('job-apply', fn (Request $request) => Limit::perMinute(3)->by($request->ip()));
 
         // Navigation caches depend on menus and on page publication state.
         $flushMenus = fn () => app(MenuRepository::class)->flush();
@@ -64,5 +66,7 @@ class AppServiceProvider extends ServiceProvider
         Page::deleted($flushSitemap);
         Article::saved($flushSitemap);
         Article::deleted($flushSitemap);
+        Business::saved($flushSitemap);
+        Business::deleted($flushSitemap);
     }
 }

@@ -1,7 +1,8 @@
 {{--
     Site footer (Figma 159:290 desktop / 178:449 mobile). Every value is
     managed content: pages column = "footer" menu, legal links = "legal"
-    menu, services = the product line-up, contact + social = settings.
+    menu, services = the published businesses (designed line-up until one
+    exists), contact + social = settings.
     Empty values are omitted rather than replaced with placeholder data.
 --}}
 @php
@@ -21,11 +22,9 @@
         'telegram' => settings('social.telegram'),
         'linkedin' => settings('social.linkedin'),
     ])->filter();
-    $services = collect(config('home.products', []))->map(fn ($product) => [
-        'label' => __('home.products.items.'.$product['key'].'.plain_name'),
-        'slug' => $product['slug'],
-    ]);
-    $serviceUrls = app(\App\Support\Home\HomePage::class)->pageUrls($services->pluck('slug')->all());
+    // Same line-up as the home page: published businesses, else the designed products.
+    $home = app(\App\Support\Home\HomePage::class);
+    $services = $home->products($home->pageUrls(array_column(config('home.products', []), 'slug')));
     $year = \App\Support\Localization\Jalali::year(now());
 @endphp
 <footer class="pg-footer mt-auto">
@@ -57,7 +56,7 @@
                     <h2 class="pg-footer__heading">{{ __('home.footer.services') }}</h2>
                     <ul class="pg-footer__list pg-footer__list--services">
                         @foreach ($services as $service)
-                            <li><x-ui.cta :href="$serviceUrls[$service['slug']] ?? null">{{ $service['label'] }}</x-ui.cta></li>
+                            <li><x-ui.cta :href="$service['url']">{{ $service['plain_name'] }}</x-ui.cta></li>
                         @endforeach
                     </ul>
                 </div>

@@ -106,6 +106,7 @@ class PageManagementTest extends TestCase
         $this->get('/robots.txt')->assertOk();
         $this->get('/sitemap.xml')->assertOk();
         $this->get('/up')->assertOk();
-        $this->get('/articles')->assertNotFound();
+        $this->get('/articles')->assertOk()->assertSee(__('articles.title')); // the listing, never a CMS page
+        $this->get('/careers')->assertOk();
     }
 }

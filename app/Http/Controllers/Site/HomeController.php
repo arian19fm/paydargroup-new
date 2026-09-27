@@ -17,12 +17,15 @@ class HomeController extends Controller
     {
         $pageUrls = $home->pageUrls($home->linkedSlugs());
         $links = collect(config('home.links', []))->map(fn (string $slug) => $pageUrls[$slug] ?? null)->all();
+        // The blog has its own listing; a CMS page with the `blog` slug may still override it.
+        $links['blog'] ??= route('articles.index');
         [$heroVideo, $heroImage] = $home->heroMedia();
 
         return view('site.home', [
             'heroVideo' => $heroVideo,
             'heroImage' => $heroImage,
             'products' => $home->products($pageUrls),
+            'productsSection' => $home->productsSection($links),
             'articles' => $home->latestArticles(),
             'links' => $links,
             'faqItems' => __('home.faq.items'),

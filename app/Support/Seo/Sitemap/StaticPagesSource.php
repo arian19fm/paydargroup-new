@@ -16,6 +16,8 @@ class StaticPagesSource implements SitemapSource
         'home',
         'contact',
         'team',
+        'careers',
+        'articles.index',
     ];
 
     public function urls(): iterable

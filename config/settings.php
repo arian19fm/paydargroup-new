@@ -48,6 +48,13 @@ return [
                 'hero_video_media_id' => ['type' => 'media', 'public' => true, 'label' => 'settings.home.hero_video'],
                 // Optional replacement for the designed hero photograph.
                 'hero_image_media_id' => ['type' => 'media', 'public' => true, 'label' => 'settings.home.hero_image'],
+                // Businesses ("our products") section copy; blank = the designed text in lang/{locale}/home.php.
+                'products_eyebrow' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.products_eyebrow'],
+                'products_title_highlight' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.products_title_highlight'],
+                'products_title' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.products_title'],
+                'products_text' => ['type' => 'text', 'public' => true, 'label' => 'settings.home.products_text'],
+                'products_cta_label' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.products_cta_label'],
+                'products_cta_url' => ['type' => 'url', 'public' => true, 'label' => 'settings.home.products_cta_url'],
             ],
         ],
 
@@ -68,6 +75,35 @@ return [
             ],
         ],
 
+        // Careers page copy and benefit cards (blank = the designed text in lang/{locale}/careers.php).
+        'careers' => [
+            'label' => 'settings.groups.careers',
+            'keys' => [
+                'hero_eyebrow' => ['type' => 'string', 'public' => true, 'label' => 'settings.careers.hero_eyebrow'],
+                'hero_title' => ['type' => 'string', 'public' => true, 'label' => 'settings.careers.hero_title'],
+                'hero_image_media_id' => ['type' => 'media', 'public' => true, 'label' => 'settings.careers.hero_image'],
+                'benefits_eyebrow' => ['type' => 'string', 'public' => true, 'label' => 'settings.careers.benefits_eyebrow'],
+                'benefits_title_highlight' => ['type' => 'string', 'public' => true, 'label' => 'settings.careers.benefits_title_highlight'],
+                'benefits_title' => ['type' => 'string', 'public' => true, 'label' => 'settings.careers.benefits_title'],
+                'benefits_text' => ['type' => 'text', 'public' => true, 'label' => 'settings.careers.benefits_text'],
+                'benefits_cta_label' => ['type' => 'string', 'public' => true, 'label' => 'settings.careers.benefits_cta_label'],
+                'benefits_cta_url' => ['type' => 'url', 'public' => true, 'label' => 'settings.careers.benefits_cta_url'],
+                'benefit_1_title' => ['type' => 'string', 'public' => true, 'label' => 'settings.careers.benefit_1_title'],
+                'benefit_1_text' => ['type' => 'text', 'public' => true, 'label' => 'settings.careers.benefit_1_text'],
+                'benefit_2_title' => ['type' => 'string', 'public' => true, 'label' => 'settings.careers.benefit_2_title'],
+                'benefit_2_text' => ['type' => 'text', 'public' => true, 'label' => 'settings.careers.benefit_2_text'],
+                'benefit_3_title' => ['type' => 'string', 'public' => true, 'label' => 'settings.careers.benefit_3_title'],
+                'benefit_3_text' => ['type' => 'text', 'public' => true, 'label' => 'settings.careers.benefit_3_text'],
+                'benefit_4_title' => ['type' => 'string', 'public' => true, 'label' => 'settings.careers.benefit_4_title'],
+                'benefit_4_text' => ['type' => 'text', 'public' => true, 'label' => 'settings.careers.benefit_4_text'],
+                'jobs_eyebrow' => ['type' => 'string', 'public' => true, 'label' => 'settings.careers.jobs_eyebrow'],
+                'jobs_title_highlight' => ['type' => 'string', 'public' => true, 'label' => 'settings.careers.jobs_title_highlight'],
+                'jobs_title' => ['type' => 'string', 'public' => true, 'label' => 'settings.careers.jobs_title'],
+                'jobs_text' => ['type' => 'text', 'public' => true, 'label' => 'settings.careers.jobs_text'],
+                'jobs_empty' => ['type' => 'string', 'public' => true, 'label' => 'settings.careers.jobs_empty'],
+            ],
+        ],
+
         'contact' => [
             'label' => 'settings.groups.contact',
             'keys' => [
@@ -75,9 +111,10 @@ return [
                 'phone' => ['type' => 'string', 'public' => true, 'label' => 'settings.contact.phone'],
                 'address' => ['type' => 'text', 'public' => true, 'label' => 'settings.contact.address'],
                 'working_hours' => ['type' => 'string', 'public' => true, 'label' => 'settings.contact.working_hours'],
-                // Contact page map: a static map image from the media library, optionally linking to a maps URL.
+                // Contact page map: a Google Maps link (embedded live via App\Support\Contact\GoogleMapsEmbed),
+                // with a static image from the media library as the fallback.
+                'map_url' => ['type' => 'text', 'public' => true, 'label' => 'settings.contact.map_url'],
                 'map_image_media_id' => ['type' => 'media', 'public' => true, 'label' => 'settings.contact.map_image'],
-                'map_url' => ['type' => 'url', 'public' => true, 'label' => 'settings.contact.map_url'],
             ],
         ],
 

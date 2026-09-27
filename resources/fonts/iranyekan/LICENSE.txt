@@ -1,4 +1,4 @@
-﻿IRANYekan fonts are considered a proprietary software.
+IRANYekan fonts are considered a proprietary software.
 To gain information about the laws regarding the use of these fonts, please visit www.fontiran.com 
 
 This set of fonts are used in this project under the license: (.....)
@@ -15,4 +15,4 @@ www.fontiran.com
 در اين پروژه استفاده می شود
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-در صورت استفاده از این مجموعه فونت در یک محصول نرم افزاری‌ یا وب‌سایت کد ۵ رقمی لایسنس خود را در محل مشخص شده (.....) درج کنید و این فایل را در کنار فونت ها قرار دهید.
+در صورت استفاده از این مجموعه فونت در یک محصول نرم افزاری‌ یا وب‌سایت کد ۶ رقمی لایسنس خود را در محل مشخص شده (.....) درج کنید و این فایل را در کنار فونت ها قرار دهید.

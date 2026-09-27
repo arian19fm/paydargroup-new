@@ -1,0 +1,1205 @@
+// Careers page (Figma 339:352 desktop 1440 / 348:79 mobile 375).
+//
+// Desktop: 72px gutters. Hero: eyebrow (IRANYekanFN 14/22 #737a82) + h1
+// (Doran Bold 32/48 black), 43px, then the 1294×391 photo under a 20%
+// black wash. Benefits (#fbfbf9, 72px padding): eyebrow (Doran 16 at
+// 85%) at the start, the 908px content column at the end — heading
+// 40/64 (Bold primary + Medium grey/700), text 16/24, 175×48 primary-dark
+// button — 92px above four adjoining 324×317 cards (1px grey/300 border,
+// 24/24/40 padding, 48px #a97c50 icon tile, IRANYekanFN ExtraBold 18
+// title in the same brown, 13.5/25 #737a82 text; the first card is white
+// with a grey/500 border). Jobs (72px padding): 404px intro at the start
+// (eyebrow, 40/64 heading, IRANYekan 19 text), 687px list at the end:
+// cards #fcfdfd with #eaecf0 border, 24/24/28 padding, title Doran Bold
+// 18/28 #101828 + category badge (13/20, 8px dot), 16/24 #475467 blurb,
+// meta (20px icons, 16/24) 24px apart, "send résumé" (Doran Bold 16
+// #8a5028 + 20px arrow) at the end; dot pager under the list.
+// Mobile: 16px gutters, sections 56px apart; h1 21.44/32.16, photo 149px;
+// heading 24/38.4; cards stacked 16px apart (25.4/25.4/42.3 padding,
+// 50.8px tile, 19px title, 14.3/26.5 text); job cards 16px padding, title
+// 16/24.9 with the badge below (11.7/18), blurb 12.5/22, meta 13.6/20.4
+// with 17px icons, "send résumé" 14.4 with an 18px arrow.
+
+$pg-careers-brown: #a97c50;
+$pg-careers-link: #8a5028;
+
+.pg-careers {
+    background: var(--pg-background);
+
+    .pg-container {
+        @include media-breakpoint-up(lg) {
+            --pg-gutter: 72px;
+        }
+    }
+}
+
+// ---------------------------------------------------------------- hero
+
+.pg-careers-hero {
+    padding: 32px 0 56px;
+
+    @include media-breakpoint-up(lg) {
+        padding: 32px 0;
+    }
+}
+
+.pg-careers-hero__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    @include media-breakpoint-up(lg) {
+        gap: 43px;
+    }
+}
+
+.pg-careers-hero__head {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    @include media-breakpoint-up(lg) {
+        gap: 13px;
+    }
+}
+
+.pg-careers-hero__eyebrow {
+    margin: 0;
+    font-family: var(--pg-font-family-fn);
+    font-size: .7875rem; // 12.6px
+    line-height: 19.8px;
+    letter-spacing: .0157em;
+    color: var(--pg-text-muted);
+
+    @include media-breakpoint-up(lg) {
+        font-size: .875rem;
+        line-height: 22px;
+    }
+}
+
+.pg-careers-hero__title {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: 1.34rem; // 21.44px
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: .015em;
+    color: var(--pg-text-strong);
+
+    @include media-breakpoint-up(lg) {
+        font-size: 2rem;
+        line-height: 48px;
+    }
+}
+
+.pg-careers-hero__media {
+    position: relative;
+    margin: 0;
+    height: 149px;
+    overflow: hidden;
+    background: var(--pg-surface-3);
+
+    @include media-breakpoint-up(md) {
+        height: auto;
+        aspect-ratio: 1294 / 391;
+    }
+
+    // The frame's 20% black wash over the photo.
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, .2);
+        pointer-events: none;
+    }
+
+    picture,
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    img {
+        object-fit: cover;
+    }
+}
+
+// ------------------------------------------------------------ benefits
+
+.pg-careers-benefits {
+    padding: 0 0 56px;
+    background: var(--pg-background);
+
+    @include media-breakpoint-up(lg) {
+        padding: 72px 0;
+        background: var(--pg-background-alt);
+    }
+}
+
+.pg-careers-benefits__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+
+    @include media-breakpoint-up(lg) {
+        gap: 92px;
+    }
+}
+
+// Eyebrow at the start, content column at the end.
+.pg-careers-benefits__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    @include media-breakpoint-up(lg) {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 40px;
+    }
+}
+
+.pg-careers-benefits__eyebrow {
+    @extend .pg-eyebrow;
+
+    margin: 0;
+    font-size: .85rem; // 13.6px
+    color: var(--pg-text-body);
+
+    @include media-breakpoint-up(lg) {
+        flex: 0 0 auto;
+        font-size: 1rem;
+        white-space: nowrap;
+    }
+}
+
+.pg-careers-benefits__content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    @include media-breakpoint-up(lg) {
+        flex: 0 1 908px;
+        gap: 16px;
+    }
+}
+
+.pg-careers-benefits__title,
+.pg-careers-jobs__title {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 .3em;
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: 1.5rem; // 24px
+    font-weight: 500;
+    line-height: 1.6; // 38.4px
+    letter-spacing: .0133em;
+    color: var(--pg-text-body);
+
+    @include media-breakpoint-up(lg) {
+        font-size: 2.5rem; // 40px
+        line-height: 64px;
+    }
+}
+
+.pg-careers-benefits__title-highlight,
+.pg-careers-jobs__title-highlight {
+    font-weight: 700;
+    color: var(--pg-primary);
+
+    [data-bs-theme="dark"] & {
+        color: #{$pg-dark-highlight};
+    }
+}
+
+.pg-careers-benefits__text {
+    margin: 0;
+    font-family: var(--pg-font-family-vazir);
+    font-size: .84375rem; // 13.5px
+    line-height: 26px;
+    color: var(--pg-text-body);
+
+    @include media-breakpoint-up(lg) {
+        font-family: var(--pg-font-family-fn);
+        font-size: 1rem;
+        line-height: 24px;
+        letter-spacing: .015em;
+    }
+}
+
+// 175×48 primary-dark button (Doran Medium 16, white).
+.pg-careers-benefits__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    width: 175px;
+    height: 48px;
+    margin-top: 0;
+    padding: 10px 18px;
+    border: 1px solid var(--pg-button-bg);
+    background: var(--pg-button-bg);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+    font-family: var(--pg-font-family-display);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 24px;
+    color: #fff;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity .15s ease;
+
+    @include media-breakpoint-up(lg) {
+        margin-top: 9px;
+    }
+
+    &:hover,
+    &:focus-visible {
+        color: #fff;
+        opacity: .9;
+    }
+}
+
+.pg-careers-benefits__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include media-breakpoint-up(md) {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    @include media-breakpoint-up(lg) {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0;
+    }
+}
+
+.pg-benefit-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 42px;
+    padding: 25px 25px 42px;
+    border: 1px solid var(--pg-border-soft, #dfe3e8);
+    background: var(--pg-background-alt);
+
+    @include media-breakpoint-up(lg) {
+        gap: 40px;
+        min-height: 317px;
+        padding: 24px 24px 40px;
+        background: transparent;
+
+        // Adjoining cards share one hairline.
+        & + & {
+            margin-inline-start: -1px;
+        }
+    }
+
+    &--lead {
+        border-color: #919eab;
+        background: var(--pg-background);
+    }
+}
+
+.pg-benefit-card__icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50.8px;
+    height: 50.8px;
+    background: $pg-careers-brown;
+
+    @include media-breakpoint-up(lg) {
+        width: 48px;
+        height: 48px;
+    }
+
+    img {
+        width: 25.4px;
+        height: 25.4px;
+
+        @include media-breakpoint-up(lg) {
+            width: 24px;
+            height: 24px;
+        }
+
+        // The tick icon is two layered exports (the ring inset by 8.33%).
+        + img {
+            position: absolute;
+            width: 21.2px;
+            height: 21.2px;
+
+            @include media-breakpoint-up(lg) {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    }
+}
+
+.pg-benefit-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 34px;
+
+    @include media-breakpoint-up(lg) {
+        gap: 32px;
+    }
+}
+
+.pg-benefit-card__title {
+    margin: 0;
+    font-family: var(--pg-font-family-fn);
+    font-size: 1.19rem; // 19px
+    font-weight: 800;
+    line-height: 1.4;
+    color: $pg-careers-brown;
+
+    @include media-breakpoint-up(lg) {
+        font-size: 1.125rem;
+    }
+}
+
+.pg-benefit-card__text {
+    max-width: 290px;
+    margin: 0;
+    font-family: var(--pg-font-family-fn);
+    font-size: .89rem; // 14.3px
+    line-height: 26.5px;
+    color: var(--pg-text-muted);
+
+    @include media-breakpoint-up(lg) {
+        max-width: 274px;
+        font-size: .84375rem; // 13.5px
+        line-height: 25px;
+    }
+}
+
+// Decorative cursor drawn on the lead card in the 375 frame.
+.pg-benefit-card__pointer {
+    position: absolute;
+    top: 159px;
+    left: 118px; // 200.94px from the frame's left edge on the 343px card, mirrored to reading direction
+    width: 24px;
+    height: 24px;
+    pointer-events: none;
+
+    @include media-breakpoint-up(lg) {
+        display: none;
+    }
+}
+
+// ---------------------------------------------------------------- jobs
+
+.pg-careers-jobs {
+    padding: 0 0 56px;
+    background: var(--pg-background);
+
+    @include media-breakpoint-up(lg) {
+        padding: 72px 0;
+    }
+}
+
+.pg-careers-jobs__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 33px;
+
+    @include media-breakpoint-up(lg) {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 64px;
+    }
+}
+
+.pg-careers-jobs__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 24.6px;
+
+    @include media-breakpoint-up(lg) {
+        position: sticky;
+        top: 32px;
+        flex: 0 0 404px;
+        gap: 29px;
+    }
+}
+
+.pg-careers-jobs__eyebrow {
+    @extend .pg-eyebrow;
+
+    margin: 0 0 -17px;
+    font-size: .85rem;
+    color: var(--pg-text-body);
+
+    @include media-breakpoint-up(lg) {
+        margin-bottom: -21px;
+        font-size: 1rem;
+    }
+}
+
+.pg-careers-jobs__title {
+    @include media-breakpoint-down(lg) {
+        font-size: 1.5rem;
+        line-height: 36px;
+        font-weight: 700;
+    }
+}
+
+.pg-careers-jobs__text {
+    margin: 0;
+    font-family: var(--pg-font-family-base);
+    font-size: 1.008rem; // 16.13px
+    line-height: 1.5;
+    color: var(--pg-text-body);
+
+    @include media-breakpoint-up(lg) {
+        font-size: 1.1875rem; // 19px
+    }
+}
+
+.pg-careers-jobs__list-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    @include media-breakpoint-up(lg) {
+        flex: 0 1 687px;
+        gap: 24px;
+    }
+}
+
+.pg-careers-jobs__empty {
+    margin: 0;
+    padding: 24px;
+    border: 1px solid var(--pg-border-soft, #eaecf0);
+    background: var(--pg-surface-2);
+    font-family: var(--pg-font-family-fn);
+    font-size: .9375rem;
+    line-height: 1.7;
+    color: var(--pg-text-body);
+}
+
+.pg-careers-jobs__list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include media-breakpoint-up(lg) {
+        gap: 24px;
+    }
+}
+
+.pg-job {
+    // Category badge tones (see App\Models\JobOpening::TONES).
+    &--blue    { --pg-job-tone: #3c8afd; --pg-job-tone-bg: #e4e7ed; }
+    &--green   { --pg-job-tone: #68a62b; --pg-job-tone-bg: #eaede4; }
+    &--orange  { --pg-job-tone: #f97316; --pg-job-tone-bg: #fcf2eb; }
+    &--emerald { --pg-job-tone: #067647; --pg-job-tone-bg: #ecfdf3; }
+    &--amber   { --pg-job-tone: #d98b06; --pg-job-tone-bg: #fcf6ea; }
+    &--red     { --pg-job-tone: #ef4444; --pg-job-tone-bg: #fbeeee; }
+    &--dark    { --pg-job-tone: #172617; --pg-job-tone-bg: #ecefed; }
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 16px;
+    border: 1px solid var(--pg-border-soft, #eaecf0);
+    background: var(--pg-surface-2, #fcfdfd);
+
+    // Desktop: the "send résumé" link sits at the end edge on the title
+    // row (Figma 339:968), not centred on the card.
+    @include media-breakpoint-up(lg) {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 24px 24px 28px;
+    }
+
+    [data-bs-theme="dark"] & {
+        --pg-job-tone-bg: rgba(255, 255, 255, .08);
+    }
+}
+
+.pg-job__main {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+
+    @include media-breakpoint-up(lg) {
+        flex: 1 1 auto;
+        gap: 16px;
+    }
+}
+
+.pg-job__head {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+
+    @include media-breakpoint-up(lg) {
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        min-height: 28px;
+    }
+}
+
+.pg-job__title {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 24.9px;
+    color: var(--pg-text-strong);
+
+    @include media-breakpoint-up(lg) {
+        font-size: 1.125rem;
+        line-height: 28px;
+    }
+}
+
+.pg-job__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5.4px;
+    padding: 3.6px 9px;
+    background: var(--pg-job-tone-bg);
+    font-family: var(--pg-font-family-base);
+    font-size: .73rem; // 11.7px
+    line-height: 18px;
+    color: var(--pg-job-tone);
+    white-space: nowrap;
+
+    @include media-breakpoint-up(lg) {
+        gap: 6px;
+        padding: 4px 10px;
+        font-size: .8125rem;
+        line-height: 20px;
+    }
+}
+
+.pg-job__dot {
+    width: 7.2px;
+    height: 7.2px;
+    border-radius: 50%;
+    background: var(--pg-job-tone);
+
+    @include media-breakpoint-up(lg) {
+        width: 8px;
+        height: 8px;
+    }
+}
+
+.pg-job__desc {
+    margin: 0;
+    font-family: var(--pg-font-family-vazir);
+    font-size: .78125rem; // 12.5px
+    line-height: 22px;
+    color: var(--pg-text-label, #475467);
+
+    @include media-breakpoint-up(lg) {
+        font-family: var(--pg-font-family-fn);
+        font-size: 1rem;
+        line-height: 24px;
+    }
+}
+
+.pg-job__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 17px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include media-breakpoint-up(lg) {
+        gap: 24px;
+    }
+
+    li {
+        display: inline-flex;
+        align-items: center;
+        gap: 6.8px;
+        font-family: var(--pg-font-family-fn);
+        font-size: .85rem; // 13.6px
+        line-height: 20.4px;
+        color: var(--pg-text-label, #475467);
+        white-space: nowrap;
+
+        @include media-breakpoint-up(lg) {
+            gap: 8px;
+            font-size: 1rem;
+            line-height: 24px;
+        }
+    }
+
+    img {
+        width: 17px;
+        height: 17px;
+
+        @include media-breakpoint-up(lg) {
+            width: 20px;
+            height: 20px;
+        }
+    }
+}
+
+// "ارسال رزومه": brown Doran Bold with the exported arrow. On the 375
+// frame it sits at the end (left) edge under the meta; on desktop at the
+// end edge of the title row.
+.pg-job__apply {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-self: flex-end;
+    align-items: center;
+    gap: 7.2px;
+    font-family: var(--pg-font-family-display);
+    font-size: .9rem; // 14.4px
+    font-weight: 700;
+    line-height: 18px;
+    color: $pg-careers-link;
+    text-decoration: none;
+    white-space: nowrap;
+
+    @include media-breakpoint-up(lg) {
+        align-self: flex-start;
+        gap: 8px;
+        margin-top: 4px; // centres the 20px link on the 28px title row
+        font-size: 1rem;
+        line-height: 20px;
+    }
+
+    &:hover,
+    &:focus-visible {
+        color: $pg-careers-link;
+        text-decoration: underline;
+    }
+
+    img {
+        width: 18px;
+        height: 18px;
+        /* rtl:ignore */
+        transform: rotate(-90deg);
+
+        @include media-breakpoint-up(lg) {
+            width: 20px;
+            height: 20px;
+            /* rtl:ignore */
+            transform: none;
+        }
+    }
+
+    [data-bs-theme="dark"] & {
+        color: #{tint-color($pg-careers-link, 40%)};
+    }
+}
+
+// Dot pager: 8px dots, the current page a 27px pill.
+.pg-careers-jobs__pages {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 8px 0;
+}
+
+.pg-careers-jobs__page {
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 8px;
+    background: #d9d9d9;
+    transition: width .2s ease, background-color .2s ease;
+
+    &:hover,
+    &:focus-visible {
+        background: #6b6e76;
+    }
+
+    &.is-active {
+        width: 27px;
+        background: #6b6e76;
+    }
+}
+
+[data-bs-theme="dark"] {
+    .pg-benefit-card--lead {
+        background: var(--pg-surface);
+        border-color: var(--pg-border);
+    }
+
+    .pg-benefit-card,
+    .pg-job,
+    .pg-careers-jobs__empty {
+        border-color: var(--pg-border);
+    }
+}
+
+// ------------------------------------------------- detail + application
+// Figma 350:6108 (detail, 1070 wide) and 358:13045 (form, 640 wide): white
+// panels over a 70% grey/900 blurred overlay; 24px padding, 16px gaps,
+// a 48px handshake tile at the start, the close cross at the top end.
+// Detail: title Doran Bold 24/28 #101828 + badge, meta, hairline, body in
+// Vazirmatn (16.5/30 SemiBold headings, 15/30 text, bullets), spec rows
+// 58px tall over #eaecf0 hairlines (label SemiBold 14.5 at the start,
+// value 14 grey/700 at 60%), then the 474×56 primary-dark button. Form:
+// title Doran Bold 18/28, text IRANYekanFN 16 #6b6e76, underlined phone
+// field with a 12px hint, résumé dropzone (#eaecf0 border, 40px icon
+// tile, Vazirmatn 14 / 12), divider and the same button.
+
+.pg-modal {
+    --bs-modal-margin: 16px;
+
+    .modal-backdrop + &,
+    & {
+        --bs-backdrop-bg: #141a21;
+        --bs-backdrop-opacity: .7;
+    }
+
+    @include media-breakpoint-up(lg) {
+        --bs-modal-margin: 40px auto;
+    }
+}
+
+.modal-backdrop.show {
+    backdrop-filter: blur(8px);
+}
+
+.pg-modal__dialog {
+    --bs-modal-width: 1070px;
+    max-width: calc(100% - 32px);
+
+    @include media-breakpoint-up(lg) {
+        max-width: 1070px;
+    }
+
+    &--apply {
+        --bs-modal-width: 640px;
+
+        @include media-breakpoint-up(lg) {
+            max-width: 640px;
+        }
+    }
+}
+
+.pg-modal__content {
+    position: relative;
+    border: 1px solid #eaecf0;
+    border-radius: 0;
+    background: var(--pg-background);
+    box-shadow: 0 1px 2px rgba(16, 24, 40, .05);
+    color: var(--pg-text);
+}
+
+.pg-modal__close {
+    position: absolute;
+    top: 24px;
+    inset-inline-end: 24px;
+    z-index: 2;
+    display: inline-flex;
+    padding: 10px;
+    border: 0;
+    border-radius: var(--pg-radius-md);
+    background: transparent;
+    line-height: 0;
+
+    &:hover,
+    &:focus-visible {
+        background: var(--pg-surface-3);
+    }
+
+    [data-bs-theme="dark"] & img {
+        filter: invert(1);
+    }
+}
+
+// Shared panel layout (modal body and the opening's own page).
+.pg-job-detail,
+.pg-apply {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 24px;
+
+    @include media-breakpoint-up(lg) {
+        padding: 32px 48px;
+    }
+}
+
+.pg-job-detail__tile {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border: 1px solid #dddee1;
+    background: var(--pg-background);
+
+    [data-bs-theme="dark"] & {
+        border-color: var(--pg-border);
+        background: var(--pg-surface);
+
+        img {
+            filter: invert(1);
+        }
+    }
+}
+
+.pg-apply__tile {
+    border-radius: 10px;
+}
+
+.pg-job-detail__head {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.pg-job-detail__title-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    min-height: 28px;
+    padding-inline-end: 40px;
+}
+
+.pg-job-detail__title {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 28px;
+    color: var(--pg-text-strong);
+
+    @include media-breakpoint-up(lg) {
+        font-size: 1.5rem; // 24px
+    }
+}
+
+.pg-job-detail__rule {
+    width: 100%;
+    margin: 0;
+    border: 0;
+    border-top: 1px solid #dddee1;
+    opacity: 1;
+
+    [data-bs-theme="dark"] & {
+        border-color: var(--pg-border);
+    }
+}
+
+.pg-job-detail__body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    font-family: var(--pg-font-family-vazir);
+    font-size: .9375rem; // 15px
+    line-height: 30px;
+    color: var(--pg-text-body);
+
+    h3 {
+        margin: 0;
+        font-family: inherit;
+        font-size: 1.03rem; // 16.5px
+        font-weight: 600;
+        line-height: 30px;
+        color: var(--pg-text-strong);
+    }
+
+    p {
+        margin: 0;
+    }
+
+    ul {
+        margin: 0;
+        padding-inline-start: 1.5em;
+    }
+
+    li::marker {
+        content: '•   ';
+    }
+}
+
+// Spec rows: hairline above each, label at the start, value at 60%.
+.pg-job-detail__specs {
+    width: 100%;
+    margin: 8px 0 0;
+    border-bottom: 1px solid #eaecf0;
+
+    [data-bs-theme="dark"] & {
+        border-color: var(--pg-border);
+    }
+}
+
+.pg-job-detail__spec {
+    display: grid;
+    grid-template-columns: minmax(0, 40%) minmax(0, 1fr);
+    gap: 16px;
+    min-height: 58px;
+    padding: 19px 0;
+    border-top: 1px solid #eaecf0;
+    font-family: var(--pg-font-family-vazir);
+    line-height: 20px;
+
+    [data-bs-theme="dark"] & {
+        border-color: var(--pg-border);
+    }
+
+    dt {
+        font-size: .90625rem; // 14.5px
+        font-weight: 600;
+        color: var(--pg-text-strong);
+    }
+
+    dd {
+        margin: 0;
+        font-size: .875rem;
+        color: var(--pg-text-body);
+    }
+}
+
+.pg-job-detail__actions,
+.pg-apply__footer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 16px 0 0;
+}
+
+.pg-apply__footer {
+    border-top: 1px solid #eaecf0;
+    padding-top: 16px;
+
+    [data-bs-theme="dark"] & {
+        border-color: var(--pg-border);
+    }
+}
+
+// "ارسال درخواست": 474×56 primary-dark button with the document icon.
+.pg-job-detail__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 474px;
+    height: 56px;
+    padding: 12px 20px;
+    border: 0;
+    background: var(--pg-button-bg);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+    font-family: var(--pg-font-family-display);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 24px;
+    color: #fff;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity .15s ease;
+
+    &:hover,
+    &:focus-visible {
+        color: #fff;
+        opacity: .9;
+    }
+}
+
+// Application form.
+.pg-apply__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    padding-inline-end: 40px;
+}
+
+.pg-apply__title {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 28px;
+    color: var(--pg-text-strong);
+}
+
+.pg-apply__text {
+    margin: 0;
+    font-family: var(--pg-font-family-fn);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--pg-text-muted);
+}
+
+.pg-apply__fields {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+    padding: 24px 0 8px;
+}
+
+.pg-apply__field {
+    max-width: 389px;
+}
+
+.pg-apply__hint {
+    display: block;
+    margin-top: 8px;
+    font-family: var(--pg-font-family-fn);
+    font-size: .75rem;
+    line-height: 20px;
+    color: var(--pg-text-muted);
+}
+
+.pg-apply__upload {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.pg-dropzone {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 16px 24px;
+    border: 1px solid #eaecf0;
+    background: var(--pg-background);
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .15s ease, background-color .15s ease;
+
+    [data-bs-theme="dark"] & {
+        border-color: var(--pg-border);
+        background: var(--pg-surface);
+    }
+
+    &:hover,
+    &.is-dragover,
+    &:focus-within {
+        border-color: var(--pg-primary);
+    }
+
+    &.is-invalid {
+        border-color: var(--pg-required);
+    }
+}
+
+// The native input stays keyboard/AT reachable but is visually the whole zone.
+.pg-dropzone__input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.pg-dropzone__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #eaecf0;
+    background: var(--pg-background);
+    box-shadow: 0 1px 1px rgba(16, 24, 40, .05);
+
+    [data-bs-theme="dark"] & {
+        border-color: var(--pg-border);
+        background: var(--pg-surface-2);
+
+        img {
+            filter: invert(1);
+        }
+    }
+}
+
+.pg-dropzone__text {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
+    font-family: var(--pg-font-family-vazir);
+    font-size: .875rem;
+    line-height: 20px;
+    color: var(--pg-text-label);
+}
+
+.pg-dropzone__action {
+    font-weight: 600;
+    color: $pg-careers-brown;
+}
+
+.pg-dropzone__help,
+.pg-dropzone__file {
+    font-family: var(--pg-font-family-vazir);
+    font-size: .75rem;
+    line-height: 18px;
+    color: var(--pg-text-label);
+}
+
+.pg-dropzone__file {
+    font-weight: 600;
+    color: var(--pg-text-strong);
+    direction: ltr;
+}
+
+// The opening's own page (no-JS / deep link): the same panels stacked.
+.pg-careers-job {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 26px 0 56px;
+
+    @include media-breakpoint-up(lg) {
+        gap: 32px;
+        padding: 26px 0 72px;
+    }
+}
+
+.pg-careers-job__back a {
+    font-family: var(--pg-font-family-fn);
+    font-size: .875rem;
+    color: var(--pg-text-muted);
+}
+
+.pg-careers-job__panel {
+    border: 1px solid #eaecf0;
+    background: var(--pg-background);
+
+    [data-bs-theme="dark"] & {
+        border-color: var(--pg-border);
+    }
+
+    &--form {
+        max-width: 640px;
+    }
+}

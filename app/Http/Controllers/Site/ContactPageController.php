@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
 use App\Models\Media;
+use App\Support\Contact\GoogleMapsEmbed;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\QueryException;
 
 /**
  * Contact page (Figma 258:460 / 258:622): the shared request form, the
- * contact channels from Settings → contact and an optional static map.
+ * contact channels from Settings → contact and the map — a live Google
+ * map embedded from the configured link, else the static map image.
  * Values that are not configured are simply not rendered.
  */
 class ContactPageController extends Controller
@@ -38,13 +40,16 @@ class ContactPageController extends Controller
             }
         }
 
+        $mapUrl = trim((string) settings('contact.map_url')) ?: null;
+
         return view('site.contact', [
             'address' => settings('contact.address'),
             'email' => settings('contact.email'),
             'phone' => settings('contact.phone'),
             'hours' => settings('contact.working_hours'),
             'map' => $map,
-            'mapUrl' => settings('contact.map_url'),
+            'mapUrl' => $mapUrl,
+            'mapEmbed' => $mapUrl ? GoogleMapsEmbed::fromUrl($mapUrl) : null,
         ]);
     }
 }

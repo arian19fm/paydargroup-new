@@ -40,6 +40,7 @@
     --pg-eyebrow-soft:   #{$pg-eyebrow-soft};
     --pg-card-bg:        #{$pg-card-bg};
     --pg-tag-warm:       #{$pg-tag-warm};
+    --pg-tag-neutral:    #{$pg-tag-neutral};
 
     // Colour — semantic
     --pg-success: #{$pg-success};
@@ -90,6 +91,7 @@
     --pg-font-family-base:    #{inspect($pg-font-family-base)};
     --pg-font-family-fn:      #{inspect($pg-font-family-fn)};
     --pg-font-family-display: #{inspect($pg-font-family-display)};
+    --pg-font-family-dots:    #{inspect($pg-font-family-dots)};
     --pg-font-family-vazir:   #{inspect($pg-font-family-vazir)};
 
     color-scheme: light;
@@ -125,6 +127,7 @@
     --pg-heading-soft:   #{$pg-dark-heading-soft};
     --pg-eyebrow-soft:   #{$pg-dark-eyebrow-soft};
     --pg-tag-warm:       #{$pg-dark-tag-warm};
+    --pg-tag-neutral:    #{$pg-dark-tag-neutral};
 
     --pg-highlight:      #{$pg-dark-highlight};
     --pg-button-bg:      #{$pg-dark-button-bg};

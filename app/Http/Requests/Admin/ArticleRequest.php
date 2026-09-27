@@ -6,9 +6,11 @@ use App\Http\Requests\Admin\Concerns\ValidatesPublishing;
 use App\Http\Requests\Admin\Concerns\ValidatesSeoFields;
 use App\Models\Article;
 use App\Rules\Slug;
+use App\Support\Media\MediaService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\File;
 
 class ArticleRequest extends FormRequest
 {
@@ -33,6 +35,7 @@ class ArticleRequest extends FormRequest
     {
         $this->merge([
             'slug' => Str::slug($this->input('slug') ?: $this->input('title', '')),
+            'featured_image_id' => $this->input('featured_image_id') ?: null,
         ]);
     }
 
@@ -46,6 +49,8 @@ class ArticleRequest extends FormRequest
             'excerpt' => ['nullable', 'string', 'max:1000'],
             'content' => ['required', 'string'],
             'featured_image_id' => ['nullable', 'integer', Rule::exists('media', 'id')],
+            'featured_image' => ['nullable', File::types(['jpg', 'jpeg', 'png', 'webp'])->max(MediaService::MAX_KILOBYTES), 'mimetypes:image/jpeg,image/png,image/webp'],
+            'remove_featured_image' => ['nullable', 'boolean'],
             'author_id' => ['nullable', 'integer', Rule::exists('users', 'id')],
             'categories' => ['nullable', 'array'],
             'categories.*' => ['integer', Rule::exists('article_categories', 'id')],
@@ -56,10 +61,16 @@ class ArticleRequest extends FormRequest
 
     public function articleData(): array
     {
-        return [
+        $data = [
             ...$this->safe()->only(['title', 'slug', 'excerpt', 'content', 'featured_image_id', 'author_id']),
             ...$this->publishingData(),
         ];
+
+        if ($this->boolean('remove_featured_image')) {
+            $data['featured_image_id'] = null;
+        }
+
+        return $data;
     }
 
     /** @return list<int> */

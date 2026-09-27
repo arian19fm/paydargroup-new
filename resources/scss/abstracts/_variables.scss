@@ -56,6 +56,7 @@ $pg-heading-soft: rgba(31, 31, 31, .7) !default;
 $pg-eyebrow-soft: rgba(0, 0, 0, .7) !default;
 $pg-card-bg:      #ffffff !default; // white cards (Ask AI bar, contact form)
 $pg-tag-warm:     #fff2e9 !default; // blog tags (desktop)
+$pg-tag-neutral:  #ebedeb !default; // business page hero tags
 $pg-divider-2:    #e0e3e3 !default; // FAQ rows (mobile)
 
 // ----------------------------------------------------------------------------
@@ -83,6 +84,7 @@ $pg-dark-divider:        #2a323d !default;
 $pg-dark-heading-soft:   rgba(255, 255, 255, .72) !default;
 $pg-dark-eyebrow-soft:   rgba(255, 255, 255, .6) !default;
 $pg-dark-tag-warm:       rgba(255, 242, 233, .12) !default;
+$pg-dark-tag-neutral:    rgba(235, 237, 235, .12) !default;
 $pg-dark-highlight:      #1c94e1 !default; // the mobile-frame blue reads best on dark
 $pg-dark-button-bg:      #1f43a4 !default;
 
@@ -104,14 +106,15 @@ $pg-glass-shadow:    0 10px 32px rgba(0, 0, 0, .22) !default;
 
 // ----------------------------------------------------------------------------
 // Typography
-// Doran (display: headings, eyebrows, buttons, product names) and IRANYekan
-// (UI/body; the FN cut has Persian digits) are the Figma families, both
-// self-hosted from resources/fonts. Vazir stands in for Vazirmatn and Doran
-// Regular for Doran Classic Dots — see resources/fonts/README.md.
+// Doran FaNum (display: headings, eyebrows, buttons, product names), Doran
+// Classic Dots FaNum (dotted eyebrows) and IRANYekan (UI/body; the FN cut
+// has Persian digits) are the Figma families, all self-hosted from
+// resources/fonts. Vazir stands in for Vazirmatn — see resources/fonts/README.md.
 // ----------------------------------------------------------------------------
 $pg-font-family-base:    'IRANYekan', 'Vazir', 'Segoe UI', Tahoma, system-ui, -apple-system, sans-serif !default;
 $pg-font-family-fn:      'IRANYekanFN', 'IRANYekan', 'Vazir', 'Segoe UI', Tahoma, system-ui, sans-serif !default;
 $pg-font-family-display: 'Doran', 'IRANYekan', 'Vazir', 'Segoe UI', Tahoma, system-ui, sans-serif !default;
+$pg-font-family-dots:    'Doran Classic Dots', 'Doran', 'IRANYekan', 'Vazir', 'Segoe UI', Tahoma, system-ui, sans-serif !default;
 $pg-font-family-vazir:   'Vazir', 'IRANYekan', 'Segoe UI', Tahoma, system-ui, sans-serif !default;
 $pg-font-size-base:   1rem   !default; // 16px reference (nav, body)
 $pg-line-height-base: 1.75   !default; // 16/28 body copy in Figma

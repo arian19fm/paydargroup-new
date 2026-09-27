@@ -3,10 +3,16 @@
 {{--
     Contact page (Figma 258:460 desktop / 258:622 mobile). Photo + request
     form (the same form the home page carries, posting to contact.store),
-    then the contact channels from Settings → contact and an optional map.
+    then the contact channels from Settings → contact and the map: a live
+    Google map when the map link is a Google Maps URL, else the map image.
 --}}
 
 @section('content')
+    <style>
+        .pg-channel__value{
+            text-align: right !important;
+        }
+    </style>
     <div class="pg-contact-page">
         <section class="pg-contact-page__hero pg-container" aria-labelledby="contact-heading">
             <figure class="pg-contact-page__photo">
@@ -70,7 +76,13 @@
                 </ul>
             @endif
 
-            @if ($map)
+            @if ($mapEmbed)
+                {{-- Live Google map derived from the pasted link (GoogleMapsEmbed); the link itself opens the full map. --}}
+                <div class="pg-contact-page__map pg-contact-page__map--embed" data-motion="reveal">
+                    <iframe src="{{ $mapEmbed }}" title="{{ __('contact.map_alt') }}" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <a class="pg-contact-page__map-link" href="{{ $mapUrl }}" target="_blank" rel="noopener">{{ __('contact.map_open') }}</a>
+                </div>
+            @elseif ($map)
                 <div class="pg-contact-page__map" data-motion="reveal">
                     @if ($mapUrl)<a href="{{ $mapUrl }}" target="_blank" rel="noopener" aria-label="{{ __('contact.map_link') }}">@endif
                         <img src="{{ $map->url() }}" width="{{ $map->width ?: 1216 }}" height="{{ $map->height ?: 516 }}" alt="{{ $map->alt_text ?: __('contact.map_alt') }}" loading="lazy" decoding="async">

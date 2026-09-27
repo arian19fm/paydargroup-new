@@ -12,7 +12,7 @@ return [
     // Slugs that can never be used by a page because they collide with
     // application routes or infrastructure paths.
     'reserved_slugs' => [
-        'admin', 'api', 'articles', 'build', 'contact', 'login', 'logout', 'robots.txt',
+        'admin', 'api', 'articles', 'build', 'businesses', 'careers', 'contact', 'login', 'logout', 'robots.txt',
         'sitemap.xml', 'storage', 'team', 'up', 'vendor',
     ],
 

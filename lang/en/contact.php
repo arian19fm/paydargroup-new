@@ -11,5 +11,6 @@ return [
     'email_label' => 'Company e-mail',
     'phone_label' => 'Phone',
     'map_alt' => 'Map of the Paydar Group office',
+    'map_open' => 'Open in Google Maps',
     'map_link' => 'Open in maps',
 ];

@@ -3,7 +3,10 @@
 use App\Http\Controllers\Admin\ArticleCategoryController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\Auth\LoginController;
+use App\Http\Controllers\Admin\BusinessController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\JobApplicationController;
+use App\Http\Controllers\Admin\JobOpeningController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\MenuItemController;
@@ -40,6 +43,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::resource('pages', PageController::class)->except('show');
     Route::resource('articles', ArticleController::class)->except('show');
+    Route::resource('businesses', BusinessController::class)->except('show');
+    Route::resource('jobs', JobOpeningController::class)->except('show')->parameters(['jobs' => 'job']);
+    Route::resource('applications', JobApplicationController::class)->only(['index', 'show', 'destroy'])->parameters(['applications' => 'application']);
+    Route::get('applications/{application}/resume', [JobApplicationController::class, 'resume'])->name('applications.resume');
     Route::resource('categories', ArticleCategoryController::class)->except('show');
     Route::resource('redirects', RedirectController::class)->except('show');
     Route::resource('media', MediaController::class)->except('show');

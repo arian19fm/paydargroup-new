@@ -15,9 +15,23 @@ deletes. Public URL: `/{slug}` (single segment, lowercase ASCII/hyphen).
 ### Article — `articles`
 
 `title`, `slug` (unique), `excerpt`, `content` (required),
-`featured_image_id` → media, `status`, `published_at`, `author_id` → users,
-`created_by`, `updated_by`, timestamps, soft deletes. Public URL:
-`/articles/{slug}`. Many-to-many with categories via `article_category`.
+`featured_image_id` → media (uploaded straight from the form or picked by
+media ID), `status`, `published_at`, `author_id` → users, `created_by`,
+`updated_by`, timestamps, soft deletes. Many-to-many with categories via
+`article_category`.
+
+- **Listing** `GET /articles` (Figma 276:13365 / 302:8): the home page's
+  blog header, chips for the active categories (`?category={slug}`,
+  unknown slug = 404, canonical keeps the filter), 9 cards per page in a
+  3-column grid and the numbered pager. In the sitemap.
+- **Article** `GET /articles/{slug}` (313:13 / 315:1483): eyebrow + H1,
+  the cover, then the body beside a sidebar with the publication date, a
+  table of contents and share links (copy link, X, Facebook, LinkedIn);
+  the latest other posts and the contact card follow. `content` is plain
+  text rendered by `App\Support\Content\ArticleBody`: `# …` lines become
+  `<h2>` sections with anchor ids (these feed the table of contents),
+  `- …` lines bullets, blank lines paragraphs. Article JSON-LD is emitted
+  here only.
 
 ### ArticleCategory — `article_categories`
 
@@ -170,7 +184,9 @@ admin listing is a later phase.
 
 Any location string is accepted by the admin; the three above are the ones
 the layout reads. Footer contact and social blocks come from the `contact.*`
-and `social.*` settings; the brand text from `general.footer_text`.
+and `social.*` settings; the brand text from `general.footer_text`; the
+"خدمات" column lists the published businesses (the designed line-up until
+one exists), exactly like the home page section.
 
 ## Home page hero media
 
@@ -205,8 +221,14 @@ route, so `contact` is a reserved page slug. It renders the same request
 form as the home page (`partials/site/contact-fields`, posting to
 `contact.store`, which returns to whichever page carried the form), the
 channels from Settings → contact (address, phone + working hours, e-mail —
-empty values are skipped) and an optional static map (`contact.map_image_media_id`,
-linked to `contact.map_url`). The page is listed in the sitemap.
+empty values are skipped) and the map. `contact.map_url` takes any Google
+Maps link (share link, place page, search URL or the embed code);
+`App\Support\Contact\GoogleMapsEmbed` turns it into an embeddable URL
+and the page shows a live map with an "open in Google Maps" link (short
+`maps.app.goo.gl` links are resolved over HTTP once and cached for a
+week). When the link is blank or not a Google Maps URL, the static image
+`contact.map_image_media_id` is shown instead, linked to the URL. The page
+is listed in the sitemap.
 
 ## Team page
 
@@ -221,3 +243,83 @@ transparent PNG cut-out works best on the toned card. Permissions `team.view` /
 each with its active members; groups without visible members are skipped,
 and card tones alternate grey/warm per group automatically, as in the
 frames. A member without a photo keeps the toned box.
+
+## Businesses (کسب‌وکارها)
+
+`businesses` (`Business` model: `Publishable`, `HasSeo`, `HasAuditFields`,
+soft deletes): `title`, `slug` (unique), `eyebrow` (small line above the
+name at the top of the page), `tagline` (card description + second line
+of the intro heading), `features` (JSON list of tag texts, entered one per
+line), `accent` (one of `fund | exchange | broker | ai | bot` — the card
+palettes in `$pg-products`; its deep tone colours the name, intro heading
+and button), `image_media_id` (uploaded from the form or picked by media
+ID; the home card image, the page's hero image and the video poster),
+`excerpt` (hero paragraph + SEO description fallback), `content` (intro
+paragraphs, plain text until the editor policy is decided), `website_url`
+("مشاهده سایت" button), `benefits_title` (blank = "«name» چه مزایایی
+دارد؟"), `benefits_text`, `benefits` (JSON `[{title, description}]`,
+entered one per line as `title | description`, max 8),
+`benefits_media_id` (image, or MP4/WebM video rendered with native
+controls plus the designed play button), `benefits_poster_media_id`
+(banner shown over the video before playback, uploaded from the form;
+blank = the business image), `status` / `published_at`, `sort_order`.
+
+- Public page: `GET /businesses/{slug}` (`Site\BusinessController`, Figma
+  205:119 / 220:5): hero → intro → benefits; a block whose fields are all
+  empty is skipped. Published only; SEO via `seo()->fromModel()` with the
+  reusable SEO fieldset in the form; `businesses` is a reserved page slug;
+  published + indexable businesses are in the sitemap
+  (`BusinessesSource`), whose cache is flushed on every change.
+- Home page "our products" section (`partials/site/home/products`):
+  published businesses in sort order replace the designed line-up from
+  `config/home.php`, which is rendered only while no business is
+  published. The section copy (eyebrow, highlighted title, title rest,
+  text, CTA label and URL) is Settings → **صفحهٔ اصلی** (`home.products_*`)
+  with the designed text as fallback; the CTA falls back to the
+  `products` CMS page when published.
+- Permissions `businesses.view` / `businesses.manage` / `businesses.publish`
+  (editors: view + manage, no publishing).
+
+## Careers page
+
+`GET /careers` (`CareersPageController`, Figma 339:352 / 348:79; `careers`
+is a reserved page slug, listed in the sitemap). Three blocks:
+
+- **Intro**: eyebrow, H1 and the photo — Settings → **صفحهٔ فرصت‌های
+  شغلی** (`careers.hero_*`); blank values fall back to the designed copy in
+  `lang/{locale}/careers.php` and the designed photo
+  (`public/images/careers/hero.*`, 20% dark wash in CSS).
+- **Benefits**: eyebrow, two-tone heading, text and a button (blank link
+  = contact page), then four cards whose icons are fixed per slot (book,
+  tick, chart, money — Figma 341:52) and whose title/text come from
+  `careers.benefit_{1..4}_*` with the designed copy as fallback; a slot
+  with no title anywhere is skipped. The first card is the highlighted one.
+- **Openings**: `job_openings` (`JobOpening`: title, category + badge
+  tone from `JobOpening::TONES`, short description, employment type,
+  location, `apply_url` — an `https://` page or an e-mail address, rendered
+  as the "ارسال رزومه" link/mailto **instead of** the built-in form — sort
+  order, active flag, audit fields, plus `body` (the full description shown
+  in the detail dialog: plain text where `# …` lines are section headings,
+  `- …` lines bullets, blank lines separate paragraphs — rendered by
+  `App\Support\Content\JobBody`) and `specs` (JSON `[{label, value}]`,
+  entered one per line as `label | value`, the table under the
+  description). Managed under admin → **فرصت‌های شغلی** (`jobs.view` /
+  `jobs.manage`, editors included). Active openings render in sort order,
+  seven per page with the dot pager; `careers.jobs_empty` is shown when
+  none is active. `App\Support\Careers\CareersPage` assembles it all.
+- **Applying** (Figma 350:6108 / 358:13045): "ارسال رزومه" opens the
+  detail modal (title, badge, meta, body, specs) whose button opens the
+  application modal (phone + PDF/DOCX résumé ≤ 5 MB). Both are
+  server-rendered per opening; without JavaScript the link goes to
+  `/careers/{id}`, which shows the same detail and form inline.
+  `POST /careers/{id}/apply` (`job-apply` limiter, 3/min per IP, honeypot)
+  stores a `job_applications` row (job, its title at the time, phone,
+  résumé metadata, ip, user agent, `seen_at`) and the file on the
+  **private** `local` disk under `resumes/YYYY/MM/<uuid>`; the visitor is
+  redirected back and the form re-opens with the success message.
+- **Inbox**: admin → **درخواست‌های همکاری** (`applications.view` for
+  everyone incl. editors, `applications.manage` to delete). The sidebar
+  item carries the unseen count; opening a row or downloading its résumé
+  (`/admin/applications/{id}/resume`, streamed from the private disk) marks
+  it seen. Deleting a row deletes the file; deleting an opening keeps its
+  applications.

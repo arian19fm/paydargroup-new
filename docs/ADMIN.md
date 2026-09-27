@@ -76,6 +76,9 @@ articles.view   articles.create   articles.update   articles.delete   articles.p
 categories.view categories.manage
 media.view      media.manage
 team.view       team.manage
+businesses.view businesses.manage businesses.publish
+jobs.view       jobs.manage
+applications.view applications.manage
 menus.view      menus.manage
 settings.view   settings.update
 redirects.view  redirects.manage
@@ -140,6 +143,9 @@ reusable `<x-admin.seo-fields>` section (see `docs/SEO.md`). Lists paginate
 | Categories | `/admin/categories` | |
 | Media | `/admin/media` | upload, list, edit metadata (alt/title/caption), delete |
 | Team | `/admin/team/members`, `/admin/team/groups` | team page groups and members (`team.view` / `team.manage`) |
+| Job openings | `/admin/jobs` | careers page openings (`jobs.view` / `jobs.manage`; editors included) |
+| Applications | `/admin/applications` | résumés from the careers page; unseen count in the sidebar (`applications.view` / `applications.manage`) |
+| Businesses | `/admin/businesses` | group businesses: home page cards + their own pages (`businesses.view` / `businesses.manage` / `businesses.publish`; editors manage drafts only) |
 | Menus | `/admin/menus` | menu + inline item editor (nested via parent) |
 | Redirects | `/admin/redirects` | |
 | Settings | `/admin/settings/{group}` | generated from `config/settings.php` |

@@ -1,18 +1,20 @@
 {{--
-    Products / services (Figma 110:279 / 176:847). An ordered list of the
-    product line-up; desktop alternates image/body per row, mobile stacks
-    the image over the body. Accent colours come from the product key.
+    Businesses / "our products" (Figma 110:279 / 176:847). An ordered list
+    of the published businesses (the designed line-up until one exists);
+    desktop alternates image/body per row, mobile stacks the image over the
+    body. Accent colours come from the business's accent key; the section
+    copy comes from Settings → home with the designed text as fallback.
 --}}
 <section class="pg-products" id="products" aria-labelledby="products-heading">
     <div class="pg-container pg-products__inner">
         <div class="pg-products__intro" data-motion="reveal">
-            <p class="pg-eyebrow">{{ __('home.products.eyebrow') }}</p>
+            <p class="pg-eyebrow">{{ $productsSection['eyebrow'] }}</p>
             <h2 id="products-heading" class="pg-products__title" data-motion="reveal-heading">
-                <span class="pg-products__title-highlight">{{ __('home.products.heading_highlight') }}</span>
-                <span class="pg-products__title-rest">{{ __('home.products.heading') }}</span>
+                <span class="pg-products__title-highlight">{{ $productsSection['heading_highlight'] }}</span>
+                <span class="pg-products__title-rest">{{ $productsSection['heading'] }}</span>
             </h2>
-            <p class="pg-products__text">{{ __('home.products.text') }}</p>
-            <x-ui.cta class="btn pg-btn pg-btn--primary pg-products__cta" :href="$links['products'] ?? null">{{ __('home.products.cta') }}</x-ui.cta>
+            <p class="pg-products__text">{{ $productsSection['text'] }}</p>
+            <x-ui.cta class="btn pg-btn pg-btn--primary pg-products__cta" :href="$productsSection['cta_url']">{{ $productsSection['cta'] }}</x-ui.cta>
         </div>
 
         {{-- Each card carries its stack index; CSS makes the cards sticky and layered (no JS needed), GSAP adds the scale/opacity settle. --}}
@@ -39,10 +41,18 @@
                         </x-ui.cta>
                     </div>
                     <div class="pg-product__media">
-                        <picture data-motion="parallax">
-                            <source type="image/webp" srcset="{{ asset('images/home/'.$product['image'].'.webp') }}">
-                            <img src="{{ asset('images/home/'.$product['image'].'.'.$product['image_type']) }}" width="1024" height="768" alt="{{ $product['image_alt'] }}" loading="lazy" decoding="async">
-                        </picture>
+                        @if ($product['media'])
+                            <picture data-motion="parallax">
+                                <img src="{{ $product['media']->url() }}" width="{{ $product['media']->width ?: 1024 }}" height="{{ $product['media']->height ?: 768 }}" alt="{{ $product['image_alt'] }}" loading="lazy" decoding="async">
+                            </picture>
+                        @elseif ($product['image'])
+                            <picture data-motion="parallax">
+                                <source type="image/webp" srcset="{{ asset('images/home/'.$product['image'].'.webp') }}">
+                                <img src="{{ asset('images/home/'.$product['image'].'.'.$product['image_type']) }}" width="1024" height="768" alt="{{ $product['image_alt'] }}" loading="lazy" decoding="async">
+                            </picture>
+                        @else
+                            <div class="pg-product__placeholder" aria-hidden="true"></div>
+                        @endif
                     </div>
                 </li>
             @endforeach
