@@ -196,6 +196,7 @@ return [
         'target' => 'Target',
         'target_self' => 'Same window',
         'target_blank' => 'New window',
+        'source' => 'Automatic submenu',
         'last_login_at' => 'Last login',
     ],
 
@@ -231,12 +232,18 @@ return [
         'locations' => [
             'main' => 'Main menu',
             'footer' => 'Footer menu',
+            'legal' => 'Footer legal links',
         ],
         'items' => 'Menu items',
         'add_item' => 'Add item',
         'edit_item' => 'Edit item',
         'no_items' => 'This menu has no items yet.',
         'page_unpublished' => 'Page not published — hidden on the site',
+        'sources' => [
+            'businesses' => 'Businesses',
+        ],
+        'auto_children' => 'Automatic submenu: :source',
+        'source_help' => 'An item with an “automatic submenu” builds its children from published content (e.g. the businesses) and needs no URL. Links to site pages (such as /about) stay hidden until the page is published. The default items are created by “php artisan db:seed” and are never recreated.',
     ],
 
     'settings' => [

@@ -96,16 +96,30 @@ with `{!! !!}`.
 
 ## 5. Menus — `menus`, `menu_items`
 
-`Menu` (`name`, `location` unique: `main`, `footer`) → `MenuItem`
-(`parent_id`, `label`, `url` | `page_id`, `target`, `sort_order`,
-`is_active`). Exactly one of `url`/`page_id` is required; parents must be in
-the same menu and cycles are rejected (`MenuItemRequest`).
+`Menu` (`name`, `location` unique: `main`, `footer`, `legal`) → `MenuItem`
+(`parent_id`, `key`, `label`, `url` | `page_id`, `source`, `target`,
+`sort_order`, `is_active`). Exactly one of `url`/`page_id` is required
+unless the item has a `source`; parents must be in the same menu and cycles
+are rejected (`MenuItemRequest`).
+
+- **`source`** ("زیرمنوی خودکار", `MenuItem::SOURCES`): the item's children
+  are generated from managed content instead of being entered by hand.
+  `businesses` lists the `published()` businesses in their `sort_order`
+  (label = title, link = the business page). Manually added children follow
+  the generated ones. A source item without a page/URL of its own links to
+  the source's default (`/#products`, the home page section).
+- **`key`**: stable identifier of a default item (`home`, `about`,
+  `businesses`, …) so `MenusSeeder` can create it once and never duplicate
+  it. Items added in the admin have no key.
 
 `App\Support\Menus\MenuRepository::tree($location)` returns a cached,
-render-ready tree; items pointing at unpublished pages or marked inactive
-are dropped. Caches are flushed when menus, items or pages change. The
-public header uses the `main` menu (falling back to `config/site.php`), the
-footer uses `footer`.
+render-ready tree. Dropped from the tree: inactive items, items whose page
+is unpublished and URL items that point at a CMS page slug (`/about`,
+`/privacy`, …: a single segment that is not a reserved slug) while no
+published page with that slug exists — so the seeded links appear by
+themselves the moment the page goes live. Caches are flushed when menus,
+items, pages or businesses change. The public header uses the `main` menu
+(falling back to `config/site.php`), the footer uses `footer` and `legal`.
 
 ## 6. Settings — `settings`
 
@@ -160,9 +174,25 @@ page or article is saved/deleted.
 
 ## 10. Seeders
 
-`php artisan db:seed` runs `RolesAndPermissionsSeeder`, `MenusSeeder`
-(locations only) and `SettingsSeeder` (blank keys). No users, no content, no
-company data — ever.
+`php artisan db:seed` runs `RolesAndPermissionsSeeder`, `MenusSeeder` and
+`SettingsSeeder` (blank keys). No users, no content, no company data — ever.
+
+`MenusSeeder` creates the three locations and their default items, each with
+a `key`, and is meant to run on every deploy (`php artisan db:seed --force`,
+or `--class=MenusSeeder`):
+
+| Menu | Default items (key → link) |
+|---|---|
+| `main` | home → `/`, about → `/about`, businesses → automatic submenu (`source = businesses`), team → `/team`, careers → `/careers`, articles → `/articles`, contact → `/contact` |
+| `footer` | about, team, careers, articles, contact |
+| `legal` | privacy → `/privacy`, terms → `/terms` |
+
+Labels come from `lang/{locale}/nav.php`. A key that already exists is left
+untouched, so labels, order and `is_active` edited in the admin survive
+re-runs; a key that was deleted is recreated on the next run — deactivate a
+default item instead of deleting it. Links to CMS pages stay hidden on the
+site until the page is published (see §5), so the seeder never produces a
+dead link.
 
 ## Contact requests (home page form)
 
@@ -183,7 +213,8 @@ admin listing is a later phase.
 | `legal` | footer bottom row (privacy / terms links) |
 
 Any location string is accepted by the admin; the three above are the ones
-the layout reads. Footer contact and social blocks come from the `contact.*`
+the layout reads, and `MenusSeeder` fills them with the default items (§10).
+Footer contact and social blocks come from the `contact.*`
 and `social.*` settings; the brand text from `general.footer_text`; the
 "خدمات" column lists the published businesses (the designed line-up until
 one exists), exactly like the home page section.

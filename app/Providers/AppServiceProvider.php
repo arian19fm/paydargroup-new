@@ -51,7 +51,9 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('contact-form', fn (Request $request) => Limit::perMinute(5)->by($request->ip()));
         RateLimiter::for('job-apply', fn (Request $request) => Limit::perMinute(3)->by($request->ip()));
 
-        // Navigation caches depend on menus and on page publication state.
+        // Navigation caches depend on menus, on page publication state and on
+        // the businesses (they are listed automatically under the
+        // "businesses" menu item).
         $flushMenus = fn () => app(MenuRepository::class)->flush();
         Menu::saved($flushMenus);
         Menu::deleted($flushMenus);
@@ -59,6 +61,8 @@ class AppServiceProvider extends ServiceProvider
         MenuItem::deleted($flushMenus);
         Page::saved($flushMenus);
         Page::deleted($flushMenus);
+        Business::saved($flushMenus);
+        Business::deleted($flushMenus);
 
         // Sitemap reflects publication changes promptly.
         $flushSitemap = fn () => Cache::forget(config('seo.sitemap_cache_key', 'seo.sitemap.xml'));

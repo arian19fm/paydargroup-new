@@ -23,7 +23,9 @@
                 $pageOptions = $pages->mapWithKeys(fn ($p) => [$p->id => $p->title.($p->isPublished() ? '' : ' ('.__('admin.status.draft').')')])->all();
                 $parentOptions = $menu->items->mapWithKeys(fn ($i) => [$i->id => $i->label])->all();
                 $targetOptions = ['_self' => __('admin.fields.target_self'), '_blank' => __('admin.fields.target_blank')];
+                $sourceOptions = collect(\App\Models\MenuItem::SOURCES)->mapWithKeys(fn ($s) => [$s => __('admin.menus.sources.'.$s)])->all();
             @endphp
+            <p class="text-body-secondary small">{{ __('admin.menus.source_help') }}</p>
             <div class="col-lg-8">
                 <div class="card mb-4">
                     <div class="card-header h6 mb-0 py-2">{{ __('admin.menus.items') }}</div>
@@ -41,12 +43,15 @@
                                 @forelse ($menu->items as $item)
                                     <tr>
                                         <td>{{ $item->label }}</td>
-                                        <td class="small" dir="ltr">
+                                        <td class="small">
                                             @if ($item->page)
                                                 {{ $item->page->title }}
                                                 @unless ($item->page->isPublished())<span class="badge text-bg-warning" title="{{ __('admin.menus.page_unpublished') }}">{{ __('admin.status.draft') }}</span>@endunless
-                                            @else
-                                                <code>{{ $item->url }}</code>
+                                            @elseif ($item->url)
+                                                <code dir="ltr">{{ $item->url }}</code>
+                                            @endif
+                                            @if ($item->hasSource())
+                                                <span class="badge text-bg-info">{{ __('admin.menus.auto_children', ['source' => __('admin.menus.sources.'.$item->source)]) }}</span>
                                             @endif
                                         </td>
                                         <td class="small">{{ $item->parent?->label ?? __('admin.none') }}</td>
@@ -65,11 +70,12 @@
                                                 <div class="col-md-4"><x-admin.form.input name="label" id="label-{{ $item->id }}" :label="__('admin.fields.label')" :value="$item->label" required /></div>
                                                 <div class="col-md-4"><x-admin.form.select name="page_id" id="page-{{ $item->id }}" :label="__('admin.fields.page')" :options="$pageOptions" :selected="$item->page_id" :placeholder="__('admin.none')" /></div>
                                                 <div class="col-md-4"><x-admin.form.input name="url" id="url-{{ $item->id }}" :label="__('admin.fields.url')" :value="$item->url" dir="ltr" /></div>
+                                                <div class="col-md-4"><x-admin.form.select name="source" id="source-{{ $item->id }}" :label="__('admin.fields.source')" :options="$sourceOptions" :selected="$item->source" :placeholder="__('admin.none')" /></div>
                                                 <div class="col-md-4"><x-admin.form.select name="parent_id" id="parent-{{ $item->id }}" :label="__('admin.fields.parent')" :options="array_diff_key($parentOptions, [$item->id => null])" :selected="$item->parent_id" :placeholder="__('admin.none')" /></div>
-                                                <div class="col-md-3"><x-admin.form.select name="target" id="target-{{ $item->id }}" :label="__('admin.fields.target')" :options="$targetOptions" :selected="$item->target" /></div>
+                                                <div class="col-md-2"><x-admin.form.select name="target" id="target-{{ $item->id }}" :label="__('admin.fields.target')" :options="$targetOptions" :selected="$item->target" /></div>
                                                 <div class="col-md-2"><x-admin.form.input name="sort_order" id="sort-{{ $item->id }}" type="number" min="0" :label="__('admin.fields.sort_order')" :value="$item->sort_order" /></div>
                                                 <div class="col-md-2"><x-admin.form.checkbox name="is_active" id="active-{{ $item->id }}" :label="__('admin.fields.is_active')" :checked="$item->is_active" /></div>
-                                                <div class="col-md-1 mb-3"><button type="submit" class="btn btn-primary btn-sm">{{ __('admin.save') }}</button></div>
+                                                <div class="col-md-2 mb-3"><button type="submit" class="btn btn-primary btn-sm">{{ __('admin.save') }}</button></div>
                                             </form>
                                         </td>
                                     </tr>
@@ -88,11 +94,12 @@
                         <div class="col-md-4"><x-admin.form.input name="label" :label="__('admin.fields.label')" required /></div>
                         <div class="col-md-4"><x-admin.form.select name="page_id" :label="__('admin.fields.page')" :options="$pageOptions" :placeholder="__('admin.none')" /></div>
                         <div class="col-md-4"><x-admin.form.input name="url" :label="__('admin.fields.url')" dir="ltr" /></div>
+                        <div class="col-md-4"><x-admin.form.select name="source" :label="__('admin.fields.source')" :options="$sourceOptions" :placeholder="__('admin.none')" /></div>
                         <div class="col-md-4"><x-admin.form.select name="parent_id" :label="__('admin.fields.parent')" :options="$parentOptions" :placeholder="__('admin.none')" /></div>
-                        <div class="col-md-3"><x-admin.form.select name="target" :label="__('admin.fields.target')" :options="$targetOptions" selected="_self" /></div>
+                        <div class="col-md-2"><x-admin.form.select name="target" :label="__('admin.fields.target')" :options="$targetOptions" selected="_self" /></div>
                         <div class="col-md-2"><x-admin.form.input name="sort_order" type="number" min="0" :label="__('admin.fields.sort_order')" value="0" /></div>
                         <div class="col-md-2"><x-admin.form.checkbox name="is_active" :label="__('admin.fields.is_active')" :checked="true" /></div>
-                        <div class="col-md-1 mb-3"><button type="submit" class="btn btn-primary btn-sm">{{ __('admin.create') }}</button></div>
+                        <div class="col-md-2 mb-3"><button type="submit" class="btn btn-primary btn-sm">{{ __('admin.create') }}</button></div>
                     </div>
                 </form>
             </div>

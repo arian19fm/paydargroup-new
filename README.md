@@ -70,7 +70,7 @@ php artisan key:generate
 
 # create the database (see "Database setup" below), then:
 php artisan migrate
-php artisan db:seed          # roles, permissions, menu locations, blank settings
+php artisan db:seed          # roles, permissions, default menus, blank settings
 php artisan storage:link
 php artisan admin:create     # first administrator (interactive, password prompted)
 
@@ -135,7 +135,7 @@ npm run build                     # production assets → public/build
 
 php artisan migrate               # run migrations
 php artisan migrate:status        # migration state
-php artisan db:seed               # structural seed data (idempotent)
+php artisan db:seed               # structural seed data + default menus (idempotent; on deploy: --force)
 php artisan admin:create          # create an administrator account
 php artisan db:show               # connection / table overview
 

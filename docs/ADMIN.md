@@ -43,7 +43,7 @@ they are deactivated — so `created_by`/`updated_by` references stay intact.
 ### Creating the first administrator
 
 ```bash
-php artisan db:seed            # roles, permissions, menu locations, blank settings (idempotent)
+php artisan db:seed            # roles, permissions, default menus, blank settings (idempotent — run on every deploy)
 php artisan admin:create       # interactive: name, e-mail, role, hidden password prompt
 # or partially scripted (password is always prompted, never passed on the command line):
 php artisan admin:create --name="Name" --email=admin@example.com --role=super_admin
@@ -146,7 +146,7 @@ reusable `<x-admin.seo-fields>` section (see `docs/SEO.md`). Lists paginate
 | Job openings | `/admin/jobs` | careers page openings (`jobs.view` / `jobs.manage`; editors included) |
 | Applications | `/admin/applications` | résumés from the careers page; unseen count in the sidebar (`applications.view` / `applications.manage`) |
 | Businesses | `/admin/businesses` | group businesses: home page cards + their own pages (`businesses.view` / `businesses.manage` / `businesses.publish`; editors manage drafts only) |
-| Menus | `/admin/menus` | menu + inline item editor (nested via parent) |
+| Menus | `/admin/menus` | menu + inline item editor (nested via parent; "زیرمنوی خودکار" = children generated from published businesses; default items come from `MenusSeeder`) |
 | Redirects | `/admin/redirects` | |
 | Settings | `/admin/settings/{group}` | generated from `config/settings.php` |
 | Users | `/admin/users` | |

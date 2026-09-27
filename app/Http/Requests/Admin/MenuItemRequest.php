@@ -10,8 +10,9 @@ use Illuminate\Validation\Validator;
 
 /**
  * A menu item must point at exactly one target: an internal page OR an
- * explicit URL. Parents must belong to the same menu and an item can never
- * be its own ancestor.
+ * explicit URL — unless it has a `source` (automatic children), which
+ * provides a default link, so the target may then be left empty. Parents
+ * must belong to the same menu and an item can never be its own ancestor.
  */
 class MenuItemRequest extends FormRequest
 {
@@ -25,6 +26,7 @@ class MenuItemRequest extends FormRequest
         $this->merge([
             'url' => trim((string) $this->input('url')) ?: null,
             'page_id' => $this->input('page_id') ?: null,
+            'source' => $this->input('source') ?: null,
             'parent_id' => $this->input('parent_id') ?: null,
             'is_active' => $this->boolean('is_active'),
         ]);
@@ -40,6 +42,7 @@ class MenuItemRequest extends FormRequest
             'label' => ['required', 'string', 'max:255'],
             'url' => ['nullable', 'string', 'max:2048', 'regex:#^(/[^\s]*|https?://[^\s]+|mailto:[^\s]+|tel:[^\s]+|\#[^\s]*)$#i'],
             'page_id' => ['nullable', 'integer', Rule::exists('pages', 'id')->whereNull('deleted_at')],
+            'source' => ['nullable', Rule::in(MenuItem::SOURCES)],
             'parent_id' => [
                 'nullable', 'integer',
                 Rule::exists('menu_items', 'id')->where('menu_id', $menu->id),
@@ -56,8 +59,9 @@ class MenuItemRequest extends FormRequest
         $validator->after(function (Validator $validator) {
             $hasUrl = filled($this->input('url'));
             $hasPage = filled($this->input('page_id'));
+            $hasSource = filled($this->input('source'));
 
-            if ($hasUrl === $hasPage) {
+            if (($hasUrl && $hasPage) || (! $hasUrl && ! $hasPage && ! $hasSource)) {
                 $validator->errors()->add('url', __('validation.custom.menu_item.target'));
             }
 
@@ -82,7 +86,7 @@ class MenuItemRequest extends FormRequest
 
     public function itemData(): array
     {
-        $data = $this->safe()->only(['label', 'url', 'page_id', 'parent_id', 'target', 'sort_order', 'is_active']);
+        $data = $this->safe()->only(['label', 'url', 'page_id', 'source', 'parent_id', 'target', 'sort_order', 'is_active']);
         $data['sort_order'] = (int) ($data['sort_order'] ?? 0);
 
         return $data;

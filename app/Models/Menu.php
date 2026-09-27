@@ -10,7 +10,8 @@ class Menu extends Model
 {
     use HasFactory;
 
-    public const LOCATIONS = ['main', 'footer'];
+    /** Locations the public layout reads: header, footer "pages" column, footer legal row. */
+    public const LOCATIONS = ['main', 'footer', 'legal'];
 
     protected $fillable = ['name', 'location'];
 

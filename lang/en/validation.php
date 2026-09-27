@@ -12,7 +12,7 @@ return [
             'loop' => 'This redirect would create a loop.',
         ],
         'menu_item' => [
-            'target' => 'Exactly one of “page” or “URL” must be set.',
+            'target' => 'Exactly one of “page” or “URL” must be set (unless the item has an automatic submenu).',
             'cycle' => 'An item cannot be nested under itself.',
         ],
     ],
