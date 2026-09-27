@@ -207,3 +207,17 @@ form as the home page (`partials/site/contact-fields`, posting to
 channels from Settings → contact (address, phone + working hours, e-mail —
 empty values are skipped) and an optional static map (`contact.map_image_media_id`,
 linked to `contact.map_url`). The page is listed in the sitemap.
+
+## Team page
+
+`GET /team` (`TeamPageController`, Figma 229:12 / 246:675; `team` is a
+reserved page slug, listed in the sitemap). Content is managed under
+admin → **تیم**: `team_groups` (name, sort order, active) and
+`team_members` (group, name, role, LinkedIn URL, photo, sort order,
+active). The photo is uploaded straight from the member form (it lands in
+the media library, titled after the member) or picked by media ID; a
+transparent PNG cut-out works best on the toned card. Permissions `team.view` /
+`team.manage` (editors view only). The page shows active groups in order,
+each with its active members; groups without visible members are skipped,
+and card tones alternate grey/warm per group automatically, as in the
+frames. A member without a photo keeps the toned box.

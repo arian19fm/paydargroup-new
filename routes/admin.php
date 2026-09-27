@@ -12,6 +12,8 @@ use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\RedirectController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\TeamGroupController;
+use App\Http\Controllers\Admin\TeamMemberController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -41,6 +43,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('categories', ArticleCategoryController::class)->except('show');
     Route::resource('redirects', RedirectController::class)->except('show');
     Route::resource('media', MediaController::class)->except('show');
+    Route::resource('team/groups', TeamGroupController::class)->except('show')->names('team.groups')->parameters(['groups' => 'group']);
+    Route::resource('team/members', TeamMemberController::class)->except('show')->names('team.members')->parameters(['members' => 'member']);
 
     Route::resource('menus', MenuController::class)->except('show');
     Route::post('menus/{menu}/items', [MenuItemController::class, 'store'])->name('menus.items.store');

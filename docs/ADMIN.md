@@ -75,6 +75,7 @@ pages.view      pages.create      pages.update      pages.delete      pages.publ
 articles.view   articles.create   articles.update   articles.delete   articles.publish
 categories.view categories.manage
 media.view      media.manage
+team.view       team.manage
 menus.view      menus.manage
 settings.view   settings.update
 redirects.view  redirects.manage
@@ -138,6 +139,7 @@ reusable `<x-admin.seo-fields>` section (see `docs/SEO.md`). Lists paginate
 | Articles | `/admin/articles` | categories (multi-select), author, featured image ID, SEO section |
 | Categories | `/admin/categories` | |
 | Media | `/admin/media` | upload, list, edit metadata (alt/title/caption), delete |
+| Team | `/admin/team/members`, `/admin/team/groups` | team page groups and members (`team.view` / `team.manage`) |
 | Menus | `/admin/menus` | menu + inline item editor (nested via parent) |
 | Redirects | `/admin/redirects` | |
 | Settings | `/admin/settings/{group}` | generated from `config/settings.php` |

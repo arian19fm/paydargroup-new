@@ -21,6 +21,7 @@ class RolesAndPermissionsSeeder extends Seeder
         'articles.view', 'articles.create', 'articles.update', 'articles.delete', 'articles.publish',
         'categories.view', 'categories.manage',
         'media.view', 'media.manage',
+        'team.view', 'team.manage',
         'menus.view', 'menus.manage',
         'settings.view', 'settings.update',
         'redirects.view', 'redirects.manage',
@@ -37,6 +38,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'articles.view', 'articles.create', 'articles.update', 'articles.delete', 'articles.publish',
             'categories.view', 'categories.manage',
             'media.view', 'media.manage',
+            'team.view', 'team.manage',
             'menus.view', 'menus.manage',
             'settings.view', 'settings.update',
             'redirects.view', 'redirects.manage',
@@ -51,6 +53,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'articles.view', 'articles.create', 'articles.update',
             'categories.view',
             'media.view', 'media.manage',
+            'team.view',
             'menus.view',
         ],
     ];

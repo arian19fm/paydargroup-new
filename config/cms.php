@@ -13,7 +13,7 @@ return [
     // application routes or infrastructure paths.
     'reserved_slugs' => [
         'admin', 'api', 'articles', 'build', 'contact', 'login', 'logout', 'robots.txt',
-        'sitemap.xml', 'storage', 'up', 'vendor',
+        'sitemap.xml', 'storage', 'team', 'up', 'vendor',
     ],
 
     // Page templates selectable in the admin: key => public Blade view that

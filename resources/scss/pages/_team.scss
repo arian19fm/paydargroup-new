@@ -1,0 +1,239 @@
+// Team page (Figma 229:12 desktop 1440 / 246:675 mobile 375).
+//
+// Desktop: 1240 content (100px gutters) on #fbfbfa; intro (eyebrow 14,
+// h1 32/48 Doran Bold) over a hairline; each group = heading (24/36 Doran
+// Bold) in the start column and a row of 300px cards (24px apart) in the
+// 949px end column, wrapping to further rows; groups separated by a
+// hairline with 35px above and below. Card: 300×320 toned box with the
+// cut-out portrait bottom-centred, then name (18/28 Doran Medium) + role
+// (14/22 IRANYekanFN #919eab) at the start and a 32px LinkedIn tile at
+// the end. Tones alternate per group: grey #dfe3e8 / tile #dce6f5, then
+// warm #fff3e9 / tile #f9ebde. Mobile: 16px gutters, stacked full-width
+// cards (343×320), headings 19/29 Doran Medium.
+
+.pg-team {
+    padding: 32px 0 48px;
+    background: var(--pg-background-alt);
+
+    @include media-breakpoint-up(lg) {
+        padding: 26px 0 64px;
+    }
+
+    .pg-container {
+        @include media-breakpoint-up(lg) {
+            --pg-gutter: 64px;
+        }
+
+        @include media-breakpoint-up(xxl) {
+            --pg-gutter: 100px;
+        }
+    }
+}
+
+.pg-team__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e0e0de;
+
+    @include media-breakpoint-up(lg) {
+        padding-bottom: 24px;
+    }
+}
+
+.pg-team__eyebrow {
+    margin: 0;
+    font-family: var(--pg-font-family-fn);
+    font-size: .75rem;
+    line-height: 18px;
+    letter-spacing: .015em;
+    color: var(--pg-text-muted);
+
+    @include media-breakpoint-up(lg) {
+        font-size: .875rem;
+        line-height: 22px;
+    }
+}
+
+.pg-team__title {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: 1.1875rem;
+    font-weight: 500;
+    line-height: 29px;
+    letter-spacing: .015em;
+    color: #2a412a;
+
+    @include media-breakpoint-up(lg) {
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 48px;
+    }
+}
+
+.pg-team__empty {
+    margin: 0;
+    padding: 40px 0;
+    font-family: var(--pg-font-family-fn);
+    color: var(--pg-text-muted);
+}
+
+// ---- Groups -----------------------------------------------------------------
+.pg-team__group {
+    --pg-team-tone: #dfe3e8;
+    --pg-team-tile: #dce6f5;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 16px 0 35px;
+    border-bottom: 1px solid #e0e0de;
+
+    &:last-child {
+        border-bottom: 0;
+    }
+
+    @include media-breakpoint-up(lg) {
+        display: grid;
+        grid-template-columns: minmax(120px, 1fr) minmax(0, 949px);
+        gap: 0 16px;
+        padding: 55px 0 35px;
+    }
+
+    &--warm {
+        --pg-team-tone: #fff3e9;
+        --pg-team-tile: #f9ebde;
+    }
+}
+
+.pg-team__group-title {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: 1.1875rem;
+    font-weight: 500;
+    line-height: 29px;
+    letter-spacing: .015em;
+    color: #1a1a1c;
+
+    @include media-breakpoint-up(lg) {
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 36px;
+    }
+}
+
+.pg-team__members {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include media-breakpoint-up(md) {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 300px));
+        justify-content: start;
+    }
+
+    @include media-breakpoint-up(lg) {
+        grid-template-columns: repeat(auto-fill, 300px);
+        gap: 24px;
+    }
+}
+
+// ---- Card -------------------------------------------------------------------
+.pg-member {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+}
+
+.pg-member__photo {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    height: 320px;
+    padding-top: 44px;
+    overflow: hidden;
+    background: var(--pg-team-tone);
+
+    img {
+        display: block;
+        width: auto;
+        max-width: 92%;
+        max-height: 100%;
+        height: auto;
+        object-fit: contain;
+        object-position: 50% 100%;
+    }
+}
+
+.pg-member__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.pg-member__text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.pg-member__name {
+    margin: 0;
+    font-family: var(--pg-font-family-display);
+    font-size: 1.125rem;
+    font-weight: 500;
+    line-height: 28px;
+    letter-spacing: .015em;
+    color: #1a1a1c;
+}
+
+.pg-member__role {
+    margin: 0;
+    font-family: var(--pg-font-family-fn);
+    font-size: .875rem;
+    line-height: 22px;
+    letter-spacing: .015em;
+    color: #919eab;
+}
+
+.pg-member__linkedin {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    width: 32px;
+    height: 32px;
+    margin-top: 13px;
+    background: var(--pg-team-tile);
+    transition: filter .15s ease;
+
+    &:hover,
+    &:focus-visible {
+        filter: brightness(.94);
+    }
+
+    img {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+[data-bs-theme="dark"] {
+    .pg-team__group-title,
+    .pg-member__name,
+    .pg-team__title {
+        color: var(--pg-text-strong);
+    }
+
+    .pg-team__intro,
+    .pg-team__group {
+        border-color: var(--pg-divider);
+    }
+}

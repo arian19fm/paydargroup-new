@@ -7,6 +7,7 @@
             ['route' => 'admin.articles.index', 'icon' => 'articles', 'label' => __('admin.nav.articles'), 'can' => 'articles.view', 'active' => 'admin.articles.*'],
             ['route' => 'admin.categories.index', 'icon' => 'categories', 'label' => __('admin.nav.categories'), 'can' => 'categories.view', 'active' => 'admin.categories.*'],
             ['route' => 'admin.media.index', 'icon' => 'media', 'label' => __('admin.nav.media'), 'can' => 'media.view', 'active' => 'admin.media.*'],
+            ['route' => 'admin.team.members.index', 'icon' => 'users', 'label' => __('admin.nav.team'), 'can' => 'team.view', 'active' => 'admin.team.*'],
         ],
         __('admin.nav.structure') => [
             ['route' => 'admin.menus.index', 'icon' => 'menus', 'label' => __('admin.nav.menus'), 'can' => 'menus.view', 'active' => 'admin.menus.*'],

@@ -15,6 +15,7 @@ class StaticPagesSource implements SitemapSource
     protected array $routes = [
         'home',
         'contact',
+        'team',
     ];
 
     public function urls(): iterable
