@@ -4,28 +4,35 @@
     region; the first item starts open as in the design. The "Ask AI" field
     is visual only — no assistant backend exists yet, so the controls are
     disabled and say so. Questions come from admin → FAQ
-    (HomePage::faqItems()); an unanswered one shows the pending note.
+    (HomePage::faqItems()); an unanswered one shows the pending note. The
+    section texts and the side card come from Settings → صفحهٔ اصلی; a
+    blank one is left out (a blank placeholder hides the "Ask AI" field).
 --}}
+@php $section = $sections['faq']; @endphp
 <section class="pg-faq" id="faq" aria-labelledby="faq-heading">
     <div class="pg-container">
         <div class="pg-faq__header" data-motion="reveal">
-            <p class="pg-eyebrow pg-eyebrow--faq">{{ __('home.faq.eyebrow') }}</p>
+            @if ($section['eyebrow'])
+                <p class="pg-eyebrow pg-eyebrow--faq">{{ $section['eyebrow'] }}</p>
+            @endif
             <h2 id="faq-heading" class="pg-faq__title" data-motion="reveal-heading">
-                <span class="pg-faq__title-highlight">{{ __('home.faq.heading_highlight') }}</span>
-                <span class="pg-faq__title-rest">{{ __('home.faq.heading') }}</span>
+                @if ($section['heading_highlight'])<span class="pg-faq__title-highlight">{{ $section['heading_highlight'] }}</span>@endif
+                @if ($section['heading'])<span class="pg-faq__title-rest">{{ $section['heading'] }}</span>@endif
             </h2>
         </div>
 
         <div class="pg-faq__body">
             <div class="pg-faq__main" data-motion="reveal" data-motion-exit>
-                <div class="pg-ask" role="group" aria-labelledby="ask-ai-label">
-                    <label id="ask-ai-label" class="visually-hidden" for="ask-ai-input">{{ __('home.faq.ask_label') }}</label>
-                    <input id="ask-ai-input" class="pg-ask__input" type="text" placeholder="{{ __('home.faq.ask_placeholder') }}" aria-describedby="ask-ai-note" disabled>
-                    <button class="pg-ask__send" type="button" aria-label="{{ __('home.faq.ask_send') }}" disabled>
-                        <img src="{{ asset('images/icons/faq-ask-button.svg') }}" width="46" height="54" alt="" aria-hidden="true">
-                    </button>
-                    <span id="ask-ai-note" class="visually-hidden">{{ __('home.faq.ask_pending') }}</span>
-                </div>
+                @if ($section['ask_placeholder'])
+                    <div class="pg-ask" role="group" aria-labelledby="ask-ai-label">
+                        <label id="ask-ai-label" class="visually-hidden" for="ask-ai-input">{{ __('home.faq.ask_label') }}</label>
+                        <input id="ask-ai-input" class="pg-ask__input" type="text" placeholder="{{ $section['ask_placeholder'] }}" aria-describedby="ask-ai-note" disabled>
+                        <button class="pg-ask__send" type="button" aria-label="{{ __('home.faq.ask_send') }}" disabled>
+                            <img src="{{ asset('images/icons/faq-ask-button.svg') }}" width="46" height="54" alt="" aria-hidden="true">
+                        </button>
+                        <span id="ask-ai-note" class="visually-hidden">{{ __('home.faq.ask_pending') }}</span>
+                    </div>
+                @endif
 
                 @if (count($faqItems))
                 <div class="pg-faq__list" id="faq-accordion">
@@ -53,12 +60,20 @@
                 @endif
             </div>
 
-            <aside class="pg-faq__card" aria-labelledby="faq-card-title" data-motion="reveal" data-motion-exit>
-                <span class="pg-faq__card-icon" aria-hidden="true">؟</span>
-                <h3 id="faq-card-title" class="pg-faq__card-title">{{ __('home.faq.card_title') }}</h3>
-                <p class="pg-faq__card-text">{{ __('home.faq.card_text') }}</p>
-                <a class="btn pg-btn pg-btn--solid pg-faq__card-cta" href="#contact">{{ __('home.faq.card_cta') }}</a>
-            </aside>
+            @if ($section['card_title'] || $section['card_text'] || $section['card_cta'])
+                <aside class="pg-faq__card" @if ($section['card_title']) aria-labelledby="faq-card-title" @endif data-motion="reveal" data-motion-exit>
+                    <span class="pg-faq__card-icon" aria-hidden="true">؟</span>
+                    @if ($section['card_title'])
+                        <h3 id="faq-card-title" class="pg-faq__card-title">{{ $section['card_title'] }}</h3>
+                    @endif
+                    @if ($section['card_text'])
+                        <p class="pg-faq__card-text">{{ $section['card_text'] }}</p>
+                    @endif
+                    @if ($section['card_cta'])
+                        <a class="btn pg-btn pg-btn--solid pg-faq__card-cta" href="{{ $section['card_cta_url'] }}">{{ $section['card_cta'] }}</a>
+                    @endif
+                </aside>
+            @endif
         </div>
     </div>
 </section>

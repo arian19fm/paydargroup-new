@@ -6,8 +6,8 @@ use App\Models\Page;
 use App\Models\User;
 
 /**
- * Maps Page abilities onto permissions. Super admins bypass policies
- * through Gate::before (AppServiceProvider).
+ * Maps Page abilities onto permissions. Pages are fixed, so create and
+ * delete are denied to everyone.
  */
 class PagePolicy
 {
@@ -21,9 +21,10 @@ class PagePolicy
         return $user->can('pages.view');
     }
 
+    /** Pages are fixed; none can be created from the admin. */
     public function create(User $user): bool
     {
-        return $user->can('pages.create');
+        return false;
     }
 
     public function update(User $user, Page $model): bool
@@ -31,14 +32,15 @@ class PagePolicy
         return $user->can('pages.update');
     }
 
+    /** Pages are fixed; none can be deleted from the admin. */
     public function delete(User $user, Page $model): bool
     {
-        return $user->can('pages.delete');
+        return false;
     }
 
     public function restore(User $user, Page $model): bool
     {
-        return $user->can('pages.delete');
+        return false;
     }
 
     /** Setting status = published (or changing a published item's date). */

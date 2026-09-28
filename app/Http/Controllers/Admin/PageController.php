@@ -9,6 +9,11 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
+/**
+ * The site's pages are fixed: they are listed and edited here but never
+ * created or deleted (config/cms.php → fixed_pages; the
+ * ensure_fixed_pages migration guarantees they exist).
+ */
 class PageController extends Controller
 {
     public function __construct()
@@ -31,19 +36,6 @@ class PageController extends Controller
         return view('admin.pages.index', compact('pages'));
     }
 
-    public function create(): View
-    {
-        return view('admin.pages.form', ['page' => new Page]);
-    }
-
-    public function store(PageRequest $request): RedirectResponse
-    {
-        $page = Page::create($request->pageData());
-        $page->saveSeo($request->seoPayload());
-
-        return redirect()->route('admin.pages.edit', $page)->with('success', __('admin.saved'));
-    }
-
     public function edit(Page $page): View
     {
         $page->load('seo');
@@ -57,12 +49,5 @@ class PageController extends Controller
         $page->saveSeo($request->seoPayload());
 
         return redirect()->route('admin.pages.edit', $page)->with('success', __('admin.saved'));
-    }
-
-    public function destroy(Page $page): RedirectResponse
-    {
-        $page->delete();
-
-        return redirect()->route('admin.pages.index')->with('success', __('admin.deleted'));
     }
 }

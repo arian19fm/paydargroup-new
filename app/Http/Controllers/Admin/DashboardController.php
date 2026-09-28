@@ -39,7 +39,6 @@ class DashboardController extends Controller
 
         $quick = array_values(array_filter([
             $user->can('articles.create') ? ['route' => 'admin.articles.create', 'icon' => 'articles', 'label' => __('admin.quick.new_article')] : null,
-            $user->can('pages.create') ? ['route' => 'admin.pages.create', 'icon' => 'pages', 'label' => __('admin.quick.new_page')] : null,
             $user->can('media.manage') ? ['route' => 'admin.media.create', 'icon' => 'media', 'label' => __('admin.quick.upload_media')] : null,
             $user->can('settings.view') ? ['route' => 'admin.settings.edit', 'params' => 'home', 'icon' => 'settings', 'label' => __('admin.quick.home_settings')] : null,
         ]));

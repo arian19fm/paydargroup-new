@@ -16,6 +16,9 @@
             @method('PUT')
             @foreach ($schema['keys'] as $key => $definition)
                 @php $name = "values[$key]"; $value = $values[$key] ?? null; $label = __($definition['label']); @endphp
+                @if (! empty($definition['section']))
+                    <h2 class="h6 fw-bold border-bottom pb-2 @if (! $loop->first) mt-4 @endif mb-3">{{ __($definition['section']) }}</h2>
+                @endif
                 @switch($definition['type'])
                     @case('text')
                         <x-admin.form.textarea :name="$name" :label="$label" :value="$value" rows="3" />
@@ -40,6 +43,9 @@
                         @break
                     @case('url')
                         <x-admin.form.input :name="$name" type="url" :label="$label" :value="$value" dir="ltr" />
+                        @break
+                    @case('link')
+                        <x-admin.form.input :name="$name" :label="$label" :value="$value" dir="ltr" :help="__('admin.settings.link_help')" />
                         @break
                     @case('email')
                         <x-admin.form.input :name="$name" type="email" :label="$label" :value="$value" dir="ltr" />

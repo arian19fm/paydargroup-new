@@ -102,7 +102,7 @@ class BusinessPageTest extends TestCase
         $this->assertStringContainsString('کسب‌وکارهای ما؛', $html);
         $this->assertStringContainsString('توضیح سفارشی بخش', $html);
         $this->assertStringContainsString('href="https://example.com/all"', $html);
-        $this->assertStringContainsString(__('home.products.eyebrow'), $html); // unset keys fall back to the designed copy
+        $this->assertStringContainsString('درخـواست مشـاوره در هـر کجا و هـر زمـان', $html); // filled by the home settings migration
         $this->assertStringNotContainsString('کسب‌وکار پیش‌نویس', $html);
         $this->assertStringNotContainsString('/images/home/product-fund.webp', $html);
     }

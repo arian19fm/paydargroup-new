@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin;
 
 use App\Models\Page;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Permission;
 use Tests\Concerns\InteractsWithAdmin;
 use Tests\TestCase;
 
@@ -11,60 +12,43 @@ class PageManagementTest extends TestCase
 {
     use InteractsWithAdmin, RefreshDatabase;
 
-    public function test_page_crud_basics(): void
+    public function test_pages_are_edited_but_never_created_or_deleted(): void
     {
         $admin = $this->superAdmin();
+        $page = Page::factory()->create(['slug' => 'about', 'template' => 'about', 'title' => 'درباره ما']);
 
-        $this->actingAs($admin)->get('/admin/pages/create')->assertOk();
-
-        $this->actingAs($admin)->post('/admin/pages', [
-            'title' => 'درباره ما',
-            'slug' => 'about-us',
-            'excerpt' => 'خلاصه',
-            'content' => "پاراگراف اول\n\nپاراگراف دوم",
-            'status' => 'published',
-        ])->assertRedirect();
-
-        $page = Page::where('slug', 'about-us')->firstOrFail();
-        $this->assertTrue($page->isPublished());
-        $this->assertSame($admin->id, $page->created_by);
-
-        $this->actingAs($admin)->get("/admin/pages/{$page->id}/edit")->assertOk()->assertSee('about-us');
-
-        $this->actingAs($admin)->put("/admin/pages/{$page->id}", [
-            'title' => 'درباره گروه', 'slug' => 'about-us', 'status' => 'draft',
-        ])->assertRedirect();
-
-        $this->assertSame('درباره گروه', $page->fresh()->title);
-        $this->assertFalse($page->fresh()->isPublished());
-
-        $this->actingAs($admin)->delete("/admin/pages/{$page->id}")->assertRedirect('/admin/pages');
-        $this->assertSoftDeleted('pages', ['id' => $page->id]);
-    }
-
-    public function test_slug_must_be_unique_and_not_reserved(): void
-    {
-        $admin = $this->superAdmin();
-        Page::factory()->create(['slug' => 'services']);
-
-        $this->actingAs($admin)->from('/admin/pages/create')
-            ->post('/admin/pages', ['title' => 'x', 'slug' => 'services', 'status' => 'draft'])
-            ->assertSessionHasErrors('slug');
-
-        foreach (['admin', 'up', 'articles', 'build'] as $reserved) {
-            $this->actingAs($admin)->from('/admin/pages/create')
-                ->post('/admin/pages', ['title' => 'x', 'slug' => $reserved, 'status' => 'draft'])
-                ->assertSessionHasErrors('slug');
-        }
-
+        $this->actingAs($admin)->get('/admin/pages')->assertOk()->assertSee('/about')
+            ->assertDontSee(route('admin.pages.edit', $page).'" class="btn', false);
+        $this->actingAs($admin)->get('/admin/pages/create')->assertStatus(405);
+        $this->actingAs($admin)->post('/admin/pages', ['title' => 'x', 'status' => 'draft'])->assertStatus(405);
+        $this->actingAs($admin)->delete("/admin/pages/{$page->id}")->assertStatus(405);
         $this->assertSame(1, Page::count());
+
+        $this->actingAs($admin)->get("/admin/pages/{$page->id}/edit")->assertOk()
+            ->assertSee(__('admin.pages.templates.about'))
+            ->assertDontSee('name="slug"', false)
+            ->assertDontSee('name="template"', false);
+
+        // Slug and template are locked even when submitted.
+        $this->actingAs($admin)->put("/admin/pages/{$page->id}", [
+            'title' => 'درباره گروه', 'slug' => 'hacked', 'template' => 'default',
+            'excerpt' => 'خلاصه', 'content' => "پاراگراف اول\n\nپاراگراف دوم", 'status' => 'published',
+        ])->assertSessionHasNoErrors()->assertRedirect();
+
+        $page->refresh();
+        $this->assertSame('درباره گروه', $page->title);
+        $this->assertSame('about', $page->slug);
+        $this->assertSame('about', $page->template);
+        $this->assertTrue($page->isPublished());
+        $this->assertSame($admin->id, $page->updated_by);
     }
 
-    public function test_slug_is_generated_from_title_when_empty(): void
+    public function test_nobody_holds_create_or_delete_page_permissions(): void
     {
-        $this->actingAs($this->superAdmin())->post('/admin/pages', ['title' => 'Our Services', 'status' => 'draft']);
+        $this->superAdmin();
 
-        $this->assertDatabaseHas('pages', ['slug' => 'our-services']);
+        $this->assertFalse(Permission::whereIn('name', ['pages.create', 'pages.delete'])->exists());
+        $this->assertFalse($this->superAdmin()->can('create', Page::class));
     }
 
     public function test_draft_and_scheduled_pages_are_not_public(): void

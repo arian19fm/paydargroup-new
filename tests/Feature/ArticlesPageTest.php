@@ -57,7 +57,7 @@ class ArticlesPageTest extends TestCase
 
     public function test_listing_empty_state(): void
     {
-        $this->get('/articles')->assertOk()->assertSee(__('home.blog.empty'))->assertDontSee('pg-pager');
+        $this->get('/articles')->assertOk()->assertSee('هنوز مطلبی منتشر نشده است.')->assertDontSee('pg-pager');
     }
 
     public function test_article_page_renders_body_toc_share_and_latest_posts(): void

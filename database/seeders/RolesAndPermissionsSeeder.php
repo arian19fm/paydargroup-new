@@ -17,7 +17,7 @@ class RolesAndPermissionsSeeder extends Seeder
 {
     public const PERMISSIONS = [
         'admin.access',
-        'pages.view', 'pages.create', 'pages.update', 'pages.delete', 'pages.publish',
+        'pages.view', 'pages.update', 'pages.publish',
         'articles.view', 'articles.create', 'articles.update', 'articles.delete', 'articles.publish',
         'categories.view', 'categories.manage',
         'media.view', 'media.manage',
@@ -38,7 +38,7 @@ class RolesAndPermissionsSeeder extends Seeder
         // Everything except user administration.
         'admin' => [
             'admin.access',
-            'pages.view', 'pages.create', 'pages.update', 'pages.delete', 'pages.publish',
+            'pages.view', 'pages.update', 'pages.publish',
             'articles.view', 'articles.create', 'articles.update', 'articles.delete', 'articles.publish',
             'categories.view', 'categories.manage',
             'media.view', 'media.manage',
@@ -57,7 +57,7 @@ class RolesAndPermissionsSeeder extends Seeder
         // Content work only: no publishing, deleting, configuration or users.
         'editor' => [
             'admin.access',
-            'pages.view', 'pages.create', 'pages.update',
+            'pages.view', 'pages.update',
             'articles.view', 'articles.create', 'articles.update',
             'categories.view',
             'media.view', 'media.manage',

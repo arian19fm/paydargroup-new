@@ -67,7 +67,6 @@ return [
     'welcome_text' => 'Manage the site content, structure and staff from here.',
     'quick' => [
         'new_article' => 'New article',
-        'new_page' => 'New page',
         'upload_media' => 'Upload media',
         'home_settings' => 'Home page settings',
     ],
@@ -250,6 +249,7 @@ return [
     ],
 
     'settings' => [
+        'link_help' => 'A full URL (https://…), a path on this site (e.g. /about) or an anchor (e.g. #contact).',
         'media_missing' => 'No media item has this ID.',
         'group' => 'Settings group',
     ],
@@ -276,7 +276,7 @@ return [
             'menus' => 'Menus', 'settings' => 'Settings', 'redirects' => 'Redirects', 'users' => 'Users', 'roles' => 'Roles', 'seo' => 'SEO', 'team' => 'Team', 'businesses' => 'Businesses', 'jobs' => 'Job openings', 'faqs' => 'FAQ', 'applications' => 'Applications',
         ],
         'admin_access' => 'Access the admin panel',
-        'pages_view' => 'View pages', 'pages_create' => 'Create pages', 'pages_update' => 'Edit pages', 'pages_delete' => 'Delete pages', 'pages_publish' => 'Publish pages',
+        'pages_view' => 'View pages', 'pages_update' => 'Edit pages', 'pages_publish' => 'Publish pages',
         'articles_view' => 'View articles', 'articles_create' => 'Create articles', 'articles_update' => 'Edit articles', 'articles_delete' => 'Delete articles', 'articles_publish' => 'Publish articles',
         'categories_view' => 'View categories', 'categories_manage' => 'Manage categories',
         'media_view' => 'View media', 'media_manage' => 'Manage media',
@@ -310,6 +310,13 @@ return [
         'settings_link' => '"Our products" section settings',
         'benefits_section' => 'Benefits section',
         'benefits_help' => 'Third block of the business page; hidden when no title, text, benefit or file is entered.',
+    ],
+
+    'pages' => [
+        'help' => 'The site pages are fixed: they are only edited here, their address and template never change. “About” is published; “Privacy” and “Terms” stay drafts (and their footer links hidden) until their text is written and published.',
+        'address' => 'Page address',
+        'about_extras' => 'Photos, partner logos, history and statistics of this page: Settings → About page',
+        'templates' => ['default' => 'Plain (title, lead and body)', 'about' => 'About (dedicated design)'],
     ],
 
     'faqs' => [

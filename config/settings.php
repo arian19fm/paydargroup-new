@@ -10,7 +10,8 @@
 | database only stores values; keys not declared here cannot be set.
 | All defaults are intentionally blank — never seed company data here.
 |
-| Types: string, text, boolean, integer, url, email, json, media (media id)
+| Types: string, text, boolean, integer, url, link (https URL, /path or
+| #anchor), email, json, media (media id)
 |
 */
 
@@ -40,21 +41,55 @@ return [
             ],
         ],
 
+        // Every text, link and image of the home page, grouped by section
+        // (`section` starts a heading in the admin form). The designed copy
+        // was written into these rows by the
+        // 2026_09_28_130000_fill_home_page_settings migration, so the admin
+        // shows exactly what the page renders; a blank text is not rendered.
+        // Blank links fall back to the natural target (noted in each label).
         'home' => [
             'label' => 'settings.groups.home',
             'keys' => [
-                // Background video for the hero (MP4/WebM from the media library). When set,
-                // the image below (or the default photo) is its poster / no-motion fallback.
-                'hero_video_media_id' => ['type' => 'media', 'public' => true, 'label' => 'settings.home.hero_video'],
-                // Optional replacement for the designed hero photograph.
+                // Hero. With a background video the image (or the designed photo) is its poster / no-motion fallback.
+                'hero_video_media_id' => ['type' => 'media', 'public' => true, 'label' => 'settings.home.hero_video', 'section' => 'settings.home.sections.hero'],
                 'hero_image_media_id' => ['type' => 'media', 'public' => true, 'label' => 'settings.home.hero_image'],
-                // Businesses ("our products") section copy; blank = the designed text in lang/{locale}/home.php.
-                'products_eyebrow' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.products_eyebrow'],
+                'hero_eyebrow' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.hero_eyebrow'],
+                'hero_title_line_1' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.hero_title_line_1'],
+                'hero_title_line_2' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.hero_title_line_2'],
+                'hero_text' => ['type' => 'text', 'public' => true, 'label' => 'settings.home.hero_text'],
+                'hero_cta_label' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.hero_cta_label'],
+                'hero_cta_url' => ['type' => 'link', 'public' => true, 'label' => 'settings.home.hero_cta_url'],
+                // Businesses ("our products"); the cards themselves are admin → businesses.
+                'products_eyebrow' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.products_eyebrow', 'section' => 'settings.home.sections.products'],
                 'products_title_highlight' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.products_title_highlight'],
                 'products_title' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.products_title'],
                 'products_text' => ['type' => 'text', 'public' => true, 'label' => 'settings.home.products_text'],
                 'products_cta_label' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.products_cta_label'],
-                'products_cta_url' => ['type' => 'url', 'public' => true, 'label' => 'settings.home.products_cta_url'],
+                'products_cta_url' => ['type' => 'link', 'public' => true, 'label' => 'settings.home.products_cta_url'],
+                'products_card_cta_label' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.products_card_cta_label'],
+                // Latest articles; the cards are the published articles.
+                'blog_eyebrow' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.blog_eyebrow', 'section' => 'settings.home.sections.blog'],
+                'blog_title' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.blog_title'],
+                'blog_title_highlight' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.blog_title_highlight'],
+                'blog_text' => ['type' => 'text', 'public' => true, 'label' => 'settings.home.blog_text'],
+                'blog_cta_label' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.blog_cta_label'],
+                'blog_cta_url' => ['type' => 'link', 'public' => true, 'label' => 'settings.home.blog_cta_url'],
+                'blog_empty_text' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.blog_empty_text'],
+                // FAQ; the questions themselves are admin → FAQ.
+                'faq_eyebrow' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.faq_eyebrow', 'section' => 'settings.home.sections.faq'],
+                'faq_title_highlight' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.faq_title_highlight'],
+                'faq_title' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.faq_title'],
+                'faq_ask_placeholder' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.faq_ask_placeholder'],
+                'faq_card_title' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.faq_card_title'],
+                'faq_card_text' => ['type' => 'text', 'public' => true, 'label' => 'settings.home.faq_card_text'],
+                'faq_card_cta_label' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.faq_card_cta_label'],
+                'faq_card_cta_url' => ['type' => 'link', 'public' => true, 'label' => 'settings.home.faq_card_cta_url'],
+                // Contact form section.
+                'contact_image_media_id' => ['type' => 'media', 'public' => true, 'label' => 'settings.home.contact_image', 'section' => 'settings.home.sections.contact'],
+                'contact_eyebrow' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.contact_eyebrow'],
+                'contact_title' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.contact_title'],
+                'contact_text' => ['type' => 'text', 'public' => true, 'label' => 'settings.home.contact_text'],
+                'contact_submit_label' => ['type' => 'string', 'public' => true, 'label' => 'settings.home.contact_submit_label'],
             ],
         ],
 

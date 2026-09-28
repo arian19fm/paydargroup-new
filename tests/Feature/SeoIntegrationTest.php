@@ -69,16 +69,16 @@ class SeoIntegrationTest extends TestCase
     {
         $admin = $this->superAdmin();
 
-        $this->actingAs($admin)->post('/admin/pages', [
-            'title' => 'Plain', 'status' => 'draft',
-            'seo' => ['title' => '', 'description' => '', 'robots_index' => '1', 'robots_follow' => '1'],
-        ]);
-        $this->assertSame(0, SeoMeta::count());
-
-        $page = Page::where('slug', 'plain')->firstOrFail();
+        $page = Page::factory()->create(['slug' => 'plain']);
 
         $this->actingAs($admin)->put("/admin/pages/{$page->id}", [
-            'title' => 'Plain', 'slug' => 'plain', 'status' => 'draft',
+            'title' => 'Plain', 'status' => 'draft',
+            'seo' => ['title' => '', 'description' => '', 'robots_index' => '1', 'robots_follow' => '1'],
+        ])->assertRedirect();
+        $this->assertSame(0, SeoMeta::count());
+
+        $this->actingAs($admin)->put("/admin/pages/{$page->id}", [
+            'title' => 'Plain', 'status' => 'draft',
             'seo' => ['title' => 'Custom', 'robots_index' => '1', 'robots_follow' => '0'],
         ])->assertRedirect();
 

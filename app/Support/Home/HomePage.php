@@ -7,6 +7,7 @@ use App\Models\Business;
 use App\Models\Faq;
 use App\Models\Media;
 use App\Models\Page;
+use App\Support\Seo\SeoManager;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\QueryException;
 
@@ -19,69 +20,105 @@ use Illuminate\Database\QueryException;
 class HomePage
 {
     /**
-     * Business cards for the "our products" section, in display order.
-     * Published businesses from the CMS come first; when none exists yet
-     * the designed line-up from config/home.php is rendered so the section
-     * never disappears. Every card has the same shape whichever source it
-     * came from: `media` (Media|null) or `image`/`image_type` (design asset).
+     * Business cards for the "our products" section (also the footer
+     * services column), in display order: the published businesses
+     * managed in admin → businesses.
      *
      * @return list<array<string, mixed>>
      */
-    public function products(array $pageUrls): array
+    public function products(): array
     {
-        $businesses = $this->businesses();
-
-        if ($businesses->isNotEmpty()) {
-            return $businesses->values()->map(fn (Business $business, int $index) => [
-                'key' => $business->accentKey(),
-                'number' => str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT),
-                'media' => $business->image?->isImage() ? $business->image : null,
-                'image' => null,
-                'image_type' => null,
-                'url' => route('businesses.show', $business->slug),
-                'name' => $business->title,
-                'plain_name' => $business->title,
-                'description' => $business->tagline,
-                'features' => $business->featureList(),
-                'image_alt' => $business->image?->alt_text ?: $business->title,
-            ])->all();
-        }
-
-        return array_map(function (array $product) use ($pageUrls) {
-            $copy = __('home.products.items.'.$product['key']);
-
-            return [
-                ...$product,
-                'media' => null,
-                'url' => $pageUrls[$product['slug']] ?? null,
-                'name' => $copy['name'],
-                'plain_name' => $copy['plain_name'],
-                'description' => $copy['description'],
-                'features' => $copy['features'],
-                'image_alt' => $copy['image_alt'],
-            ];
-        }, config('home.products', []));
+        return $this->businesses()->values()->map(fn (Business $business, int $index) => [
+            'key' => $business->accentKey(),
+            'number' => str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT),
+            'media' => $business->image?->isImage() ? $business->image : null,
+            'url' => route('businesses.show', $business->slug),
+            'name' => $business->title,
+            'plain_name' => $business->title,
+            'description' => $business->tagline,
+            'features' => $business->featureList(),
+            'image_alt' => $business->image?->alt_text ?: $business->title,
+        ])->all();
     }
 
     /**
-     * Copy of the "our products" section: Settings → home overrides, the
-     * designed text otherwise. The CTA links to the configured URL, else
-     * to the `products` CMS page when it is published.
+     * Texts and links of every home page section, from Settings → home.
+     * A blank text is returned as '' and the view leaves that element out;
+     * the H1 falls back to the site name and the submit button to its
+     * generic label, since neither can be missing. A blank link falls back
+     * to the section's natural target (null when that page is not
+     * published, which renders the CTA without a link).
      *
-     * @return array{eyebrow: string, heading_highlight: string, heading: string, text: string, cta: string, cta_url: ?string}
+     * @return array<string, array<string, ?string>>
      */
-    public function productsSection(array $links): array
+    public function sections(array $links): array
     {
-        $setting = fn (string $key, string $fallback) => trim((string) settings('home.'.$key)) ?: __($fallback);
+        $text = fn (string $key) => trim((string) settings('home.'.$key));
+        $link = fn (string $key, ?string $fallback) => $text($key) ?: $fallback;
+
+        $headline = array_values(array_filter([$text('hero_title_line_1'), $text('hero_title_line_2')]));
 
         return [
-            'eyebrow' => $setting('products_eyebrow', 'home.products.eyebrow'),
-            'heading_highlight' => $setting('products_title_highlight', 'home.products.heading_highlight'),
-            'heading' => $setting('products_title', 'home.products.heading'),
-            'text' => $setting('products_text', 'home.products.text'),
-            'cta' => $setting('products_cta_label', 'home.products.cta'),
-            'cta_url' => trim((string) settings('home.products_cta_url')) ?: ($links['products'] ?? null),
+            'hero' => [
+                'eyebrow' => $text('hero_eyebrow'),
+                'headline' => $headline ?: [SeoManager::siteName()],
+                'text' => $text('hero_text'),
+                'cta' => $text('hero_cta_label'),
+                'cta_url' => $link('hero_cta_url', $links['about'] ?? null),
+            ],
+            'products' => [
+                'eyebrow' => $text('products_eyebrow'),
+                'heading_highlight' => $text('products_title_highlight'),
+                'heading' => $text('products_title'),
+                'text' => $text('products_text'),
+                'cta' => $text('products_cta_label'),
+                'cta_url' => $link('products_cta_url', $links['products'] ?? null),
+                'card_cta' => $text('products_card_cta_label'),
+            ],
+            'blog' => [
+                'eyebrow' => $text('blog_eyebrow'),
+                'heading' => $text('blog_title'),
+                'heading_highlight' => $text('blog_title_highlight'),
+                'text' => $text('blog_text'),
+                'cta' => $text('blog_cta_label'),
+                'cta_url' => $link('blog_cta_url', $links['blog'] ?? null),
+                'empty' => $text('blog_empty_text'),
+            ],
+            'faq' => [
+                'eyebrow' => $text('faq_eyebrow'),
+                'heading_highlight' => $text('faq_title_highlight'),
+                'heading' => $text('faq_title'),
+                'ask_placeholder' => $text('faq_ask_placeholder'),
+                'card_title' => $text('faq_card_title'),
+                'card_text' => $text('faq_card_text'),
+                'card_cta' => $text('faq_card_cta_label'),
+                'card_cta_url' => $link('faq_card_cta_url', '#contact'),
+            ],
+            'contact' => [
+                'eyebrow' => $text('contact_eyebrow'),
+                'heading' => $text('contact_title'),
+                'text' => $text('contact_text'),
+                'submit' => $text('contact_submit_label') ?: __('home.contact.submit'),
+            ],
         ];
+    }
+
+    /** Background photo of the contact section from settings, else null (the designed photo). */
+    public function contactImage(): ?Media
+    {
+        $id = (int) settings('home.contact_image_media_id');
+
+        if ($id <= 0) {
+            return null;
+        }
+
+        try {
+            $media = Media::query()->find($id);
+        } catch (QueryException) {
+            return null;
+        }
+
+        return $media?->isImage() ? $media : null;
     }
 
     /**
@@ -192,12 +229,9 @@ class HomePage
         ];
     }
 
-    /** Every slug the home page may link to (products + section CTAs). */
+    /** Every CMS page slug the home page section CTAs may link to. */
     public function linkedSlugs(): array
     {
-        return [
-            ...array_column(config('home.products', []), 'slug'),
-            ...array_values(config('home.links', [])),
-        ];
+        return array_values(config('home.links', []));
     }
 }

@@ -71,7 +71,7 @@ Permissions (`resource.action`):
 
 ```
 admin.access
-pages.view      pages.create      pages.update      pages.delete      pages.publish
+pages.view      pages.update      pages.publish
 articles.view   articles.create   articles.update   articles.delete   articles.publish
 categories.view categories.manage
 media.view      media.manage
@@ -94,7 +94,7 @@ Roles:
 |---|---|
 | `super_admin` | **all** — synced to the full permission list on every seed run. Policies still execute for super admins so safety rules (e.g. self-deactivation) apply. |
 | `admin` | everything except `users.manage` and `roles.manage` |
-| `editor` | `admin.access`, pages/articles view+create+update (no publish, no delete), categories.view, media.view+manage, menus.view |
+| `editor` | `admin.access`, pages view+update, articles view+create+update (no publish, no delete), categories.view, media.view+manage, menus.view |
 
 ### Managing roles in the panel
 
@@ -139,7 +139,7 @@ reusable `<x-admin.seo-fields>` section (see `docs/SEO.md`). Lists paginate
 | Screen | Route prefix | Notes |
 |---|---|---|
 | Dashboard | `/admin` | welcome banner with quick actions, real counts (pages, articles, media, redirects) and the five most recently edited pages/articles — all filtered by permission |
-| Pages | `/admin/pages` | search, status filter, SEO section |
+| Pages | `/admin/pages` | fixed pages: list and edit only (no create/delete; address and template locked), status filter, SEO section |
 | Articles | `/admin/articles` | categories (multi-select), author, featured image ID, SEO section |
 | Categories | `/admin/categories` | |
 | Media | `/admin/media` | upload, list, edit metadata (alt/title/caption), delete |

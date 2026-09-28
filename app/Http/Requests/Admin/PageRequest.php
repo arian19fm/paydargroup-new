@@ -5,10 +5,7 @@ namespace App\Http\Requests\Admin;
 use App\Http\Requests\Admin\Concerns\ValidatesPublishing;
 use App\Http\Requests\Admin\Concerns\ValidatesSeoFields;
 use App\Models\Page;
-use App\Rules\Slug;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 
 class PageRequest extends FormRequest
 {
@@ -20,10 +17,10 @@ class PageRequest extends FormRequest
         $page = $this->route('page');
         $user = $this->user();
 
-        $allowed = $page ? $user->can('update', $page) : $user->can('create', Page::class);
+        $allowed = $page && $user->can('update', $page);
 
         if ($allowed && $this->wantsPublished()) {
-            $allowed = $user->can('publish', $page ?? Page::class);
+            $allowed = $user->can('publish', $page);
         }
 
         return $allowed;
@@ -31,22 +28,16 @@ class PageRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        $this->merge([
-            'slug' => Str::slug($this->input('slug') ?: $this->input('title', '')),
-            'is_featured' => $this->boolean('is_featured'),
-        ]);
+        $this->merge(['is_featured' => $this->boolean('is_featured')]);
     }
 
     public function rules(): array
     {
-        $page = $this->route('page');
-
+        // Slug and template are fixed (the URL and design of the page).
         return [
             'title' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', new Slug, Rule::unique('pages', 'slug')->ignore($page)->withoutTrashed()],
             'excerpt' => ['nullable', 'string', 'max:1000'],
             'content' => ['nullable', 'string'],
-            'template' => ['nullable', 'string', Rule::in(array_keys(config('cms.page_templates')))],
             'is_featured' => ['boolean'],
             ...$this->publishingRules(),
             ...$this->seoRules(),
@@ -57,7 +48,7 @@ class PageRequest extends FormRequest
     public function pageData(): array
     {
         return [
-            ...$this->safe()->only(['title', 'slug', 'excerpt', 'content', 'template', 'is_featured']),
+            ...$this->safe()->only(['title', 'excerpt', 'content', 'is_featured']),
             ...$this->publishingData(),
         ];
     }

@@ -1,8 +1,7 @@
 {{--
     Site footer (Figma 159:290 desktop / 178:449 mobile). Every value is
     managed content: pages column = "footer" menu, legal links = "legal"
-    menu, services = the published businesses (designed line-up until one
-    exists), contact + social = settings.
+    menu, services = the published businesses, contact + social = settings.
     Empty values are omitted rather than replaced with placeholder data.
 --}}
 @php
@@ -22,9 +21,8 @@
         'telegram' => settings('social.telegram'),
         'linkedin' => settings('social.linkedin'),
     ])->filter();
-    // Same line-up as the home page: published businesses, else the designed products.
-    $home = app(\App\Support\Home\HomePage::class);
-    $services = $home->products($home->pageUrls(array_column(config('home.products', []), 'slug')));
+    // Same line-up as the home page: the published businesses.
+    $services = app(\App\Support\Home\HomePage::class)->products();
     $year = \App\Support\Localization\Jalali::year(now());
 @endphp
 <footer class="pg-footer mt-auto">
@@ -52,6 +50,7 @@
                     </nav>
                 @endif
 
+                @if ($services)
                 <div class="pg-footer__col pg-footer__col--services">
                     <h2 class="pg-footer__heading">{{ __('home.footer.services') }}</h2>
                     <ul class="pg-footer__list pg-footer__list--services">
@@ -60,6 +59,7 @@
                         @endforeach
                     </ul>
                 </div>
+                @endif
 
                 @if (array_filter($contact))
                     <div class="pg-footer__col pg-footer__col--contact">

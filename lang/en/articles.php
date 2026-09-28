@@ -2,6 +2,7 @@
 
 return [
     'title' => 'News & articles',
+    'empty' => 'No articles have been published yet.',
     'description' => 'Analysis, market trends and practical notes on investing and asset tokenisation from Paydar Group.',
     'categories' => 'Categories',
     'all' => 'All',

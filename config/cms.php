@@ -16,8 +16,18 @@ return [
         'sitemap.xml', 'storage', 'team', 'up', 'vendor',
     ],
 
-    // Page templates selectable in the admin: key => public Blade view that
-    // renders the page. A page without a template uses 'default'.
+    // The site's pages are fixed: they cannot be created or deleted in the
+    // admin (only edited), and their slug and template are locked. These
+    // are guaranteed to exist by the 2026_09_28_140000_ensure_fixed_pages
+    // migration; any other page already in the database stays as it is.
+    'fixed_pages' => [
+        'about' => ['template' => 'about'],
+        'privacy' => ['template' => null],
+        'terms' => ['template' => null],
+    ],
+
+    // Page templates: key => public Blade view that renders the page. A page
+    // without a template uses 'default'.
     'page_templates' => [
         'default' => 'site.pages.show',
         'about' => 'site.pages.templates.about',

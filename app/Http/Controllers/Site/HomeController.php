@@ -24,8 +24,9 @@ class HomeController extends Controller
         return view('site.home', [
             'heroVideo' => $heroVideo,
             'heroImage' => $heroImage,
-            'products' => $home->products($pageUrls),
-            'productsSection' => $home->productsSection($links),
+            'products' => $home->products(),
+            'sections' => $home->sections($links),
+            'contactImage' => $home->contactImage(),
             'articles' => $home->latestArticles(),
             'links' => $links,
             'faqItems' => $home->faqItems(),

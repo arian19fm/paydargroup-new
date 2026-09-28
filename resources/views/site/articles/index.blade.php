@@ -2,7 +2,7 @@
 
 {{--
     Blog listing (Figma 276:13365 desktop / 302:8 mobile): the section
-    header shared with the home page, category chips ("همه" + the active
+    header shared with the home page (Settings → صفحهٔ اصلی → blog), category chips ("همه" + the active
     categories), a 3-column grid of post cards (stacked on mobile) and the
     numbered pager.
 --}}
@@ -13,12 +13,20 @@
     <div class="pg-articles">
         <div class="pg-container pg-articles__inner">
             <header class="pg-articles__header" data-motion="reveal">
-                <p class="pg-eyebrow pg-eyebrow--blog">{{ __('home.blog.eyebrow') }}</p>
+                @if ($header['eyebrow'])
+                    <p class="pg-eyebrow pg-eyebrow--blog">{{ $header['eyebrow'] }}</p>
+                @endif
                 <h1 class="pg-blog__title pg-articles__title" data-motion="reveal-heading">
-                    <span class="pg-blog__title-rest">{{ __('home.blog.heading') }}</span>
-                    <span class="pg-blog__title-highlight">{{ __('home.blog.heading_highlight') }}</span>
+                    @if ($header['heading'] || $header['heading_highlight'])
+                        @if ($header['heading'])<span class="pg-blog__title-rest">{{ $header['heading'] }}</span>@endif
+                        @if ($header['heading_highlight'])<span class="pg-blog__title-highlight">{{ $header['heading_highlight'] }}</span>@endif
+                    @else
+                        {{ __('articles.title') }}
+                    @endif
                 </h1>
-                <p class="pg-blog__text">{{ __('home.blog.text') }}</p>
+                @if ($header['text'])
+                    <p class="pg-blog__text">{{ $header['text'] }}</p>
+                @endif
             </header>
 
             @if ($categories->isNotEmpty())
@@ -31,7 +39,7 @@
             @endif
 
             @if ($articles->isEmpty())
-                <p class="pg-blog__empty pg-articles__empty">{{ __('home.blog.empty') }}</p>
+                <p class="pg-blog__empty pg-articles__empty">{{ $header['empty'] ?: __('articles.empty') }}</p>
             @else
                 <ul class="pg-articles__grid" data-motion="reveal-group">
                     @foreach ($articles as $article)

@@ -23,23 +23,20 @@ class AuthorizationTest extends TestCase
         $this->actingAs($editor)->post('/admin/redirects', ['source_path' => '/a', 'destination_url' => '/b', 'http_status' => 301])->assertForbidden();
     }
 
-    public function test_editor_can_create_drafts_but_not_publish_or_delete(): void
+    public function test_editor_can_edit_page_drafts_but_not_publish(): void
     {
         $editor = $this->editor();
+        $page = Page::factory()->create(['slug' => 'privacy']);
 
         $this->actingAs($editor)->get('/admin/pages')->assertOk();
 
-        $this->actingAs($editor)->post('/admin/pages', ['title' => 'Draft page', 'status' => 'draft'])
+        $this->actingAs($editor)->put("/admin/pages/{$page->id}", ['title' => 'Draft page', 'status' => 'draft'])
             ->assertRedirect();
-        $this->assertDatabaseHas('pages', ['slug' => 'draft-page', 'status' => 'draft', 'created_by' => $editor->id]);
+        $this->assertDatabaseHas('pages', ['id' => $page->id, 'title' => 'Draft page', 'status' => 'draft', 'updated_by' => $editor->id]);
 
-        $this->actingAs($editor)->post('/admin/pages', ['title' => 'Live page', 'status' => 'published'])
+        $this->actingAs($editor)->put("/admin/pages/{$page->id}", ['title' => 'Live page', 'status' => 'published'])
             ->assertForbidden();
-        $this->assertDatabaseMissing('pages', ['slug' => 'live-page']);
-
-        $page = Page::factory()->create();
-        $this->actingAs($editor)->delete("/admin/pages/{$page->id}")->assertForbidden();
-        $this->assertDatabaseHas('pages', ['id' => $page->id, 'deleted_at' => null]);
+        $this->assertFalse($page->fresh()->isPublished());
     }
 
     public function test_admin_role_cannot_manage_users(): void
@@ -58,9 +55,10 @@ class AuthorizationTest extends TestCase
             $this->actingAs($super)->get($url)->assertOk();
         }
 
-        $this->actingAs($super)->post('/admin/pages', ['title' => 'Live page', 'status' => ContentStatus::Published->value])
+        $page = Page::factory()->create(['slug' => 'terms']);
+        $this->actingAs($super)->put("/admin/pages/{$page->id}", ['title' => 'Live page', 'status' => ContentStatus::Published->value])
             ->assertRedirect();
-        $this->assertDatabaseHas('pages', ['slug' => 'live-page', 'status' => 'published']);
+        $this->assertDatabaseHas('pages', ['slug' => 'terms', 'status' => 'published']);
 
         $redirect = Redirect::factory()->create();
         $this->actingAs($super)->delete("/admin/redirects/{$redirect->id}")->assertRedirect();

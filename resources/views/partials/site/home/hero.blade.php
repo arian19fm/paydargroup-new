@@ -6,10 +6,13 @@
     is off or the browser cannot play it. The photo is the LCP image:
     eager, preloaded in the page head, with explicit dimensions. Desktop and
     mobile crops are set in CSS (object-position), not by swapping images.
+    All texts and the CTA come from Settings → صفحهٔ اصلی; a blank one is
+    left out.
 --}}
 @php
     $video = $heroVideo ?? null;
     $image = $heroImage ?? null;
+    $hero = $sections['hero'];
 @endphp
 <section class="pg-hero{{ $video ? ' pg-hero--video' : '' }}" aria-labelledby="hero-heading" data-motion="hero">
     <picture class="pg-hero__media">
@@ -29,16 +32,22 @@
 
     <div class="pg-hero__inner">
         <div class="pg-hero__text">
-            <p class="pg-hero__eyebrow">{{ __('home.hero.eyebrow') }}</p>
+            @if ($hero['eyebrow'])
+                <p class="pg-hero__eyebrow">{{ $hero['eyebrow'] }}</p>
+            @endif
             <h1 id="hero-heading" class="pg-hero__title">
-                @foreach (__('home.hero.headline') as $line)
+                @foreach ($hero['headline'] as $line)
                     {{ $line }}@if (! $loop->last)<br>@endif
                 @endforeach
             </h1>
         </div>
         <div class="pg-hero__aside">
-            <p class="pg-hero__lead">{{ __('home.hero.text') }}</p>
-            <x-ui.cta class="btn pg-btn pg-btn--light pg-hero__cta" :href="$links['about'] ?? null">{{ __('home.hero.cta') }}</x-ui.cta>
+            @if ($hero['text'])
+                <p class="pg-hero__lead">{{ $hero['text'] }}</p>
+            @endif
+            @if ($hero['cta'])
+                <x-ui.cta class="btn pg-btn pg-btn--light pg-hero__cta" :href="$hero['cta_url']">{{ $hero['cta'] }}</x-ui.cta>
+            @endif
         </div>
     </div>
 </section>

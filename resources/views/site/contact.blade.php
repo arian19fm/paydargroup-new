@@ -5,6 +5,8 @@
     form (the same form the home page carries, posting to contact.store),
     then the contact channels from Settings → contact and the map: a live
     Google map when the map link is a Google Maps URL, else the map image.
+    Title, text and submit label are the home page contact section's
+    (Settings → صفحهٔ اصلی); a blank title falls back to the page name.
 --}}
 
 @section('content')
@@ -27,13 +29,15 @@
                 @csrf
                 <div class="pg-contact-page__intro">
                     <p class="pg-contact-page__eyebrow">{{ __('contact.eyebrow') }}</p>
-                    <h1 id="contact-heading" class="pg-contact-page__title">{{ __('home.contact.heading') }}</h1>
-                    <p class="pg-contact-page__text">{{ __('home.contact.text') }}</p>
+                    <h1 id="contact-heading" class="pg-contact-page__title">{{ $intro['heading'] ?: __('contact.title') }}</h1>
+                    @if ($intro['text'])
+                        <p class="pg-contact-page__text">{{ $intro['text'] }}</p>
+                    @endif
                 </div>
                 <div class="pg-contact-page__fields" id="contact">
                     @include('partials.site.contact-fields', ['idPrefix' => 'contact-page'])
                 </div>
-                <button class="btn pg-btn pg-btn--solid pg-contact-page__submit" type="submit">{{ __('home.contact.submit') }}</button>
+                <button class="btn pg-btn pg-btn--solid pg-contact-page__submit" type="submit">{{ $intro['submit'] }}</button>
             </form>
         </section>
 

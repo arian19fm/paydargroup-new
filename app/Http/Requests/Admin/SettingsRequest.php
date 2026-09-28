@@ -25,6 +25,8 @@ class SettingsRequest extends FormRequest
                 'integer' => ['nullable', 'integer'],
                 'media' => ['nullable', 'integer', Rule::exists('media', 'id')],
                 'url' => ['nullable', 'string', 'url:http,https', 'max:2048'],
+                // A button target: absolute http(s) URL, site path or in-page anchor (never javascript: etc.).
+                'link' => ['nullable', 'string', 'max:2048', 'regex:/^(https?:\/\/[^\s]+|\/[^\s]*|#[^\s]*)$/i'],
                 'email' => ['nullable', 'string', 'email', 'max:255'],
                 'text' => ['nullable', 'string', 'max:5000'],
                 'json' => ['nullable', 'json'],

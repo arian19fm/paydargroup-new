@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Models\Media;
 use App\Support\Contact\GoogleMapsEmbed;
+use App\Support\Home\HomePage;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\QueryException;
 
@@ -12,11 +13,13 @@ use Illuminate\Database\QueryException;
  * Contact page (Figma 258:460 / 258:622): the shared request form, the
  * contact channels from Settings → contact and the map — a live Google
  * map embedded from the configured link, else the static map image.
- * Values that are not configured are simply not rendered.
+ * Values that are not configured are simply not rendered. The intro
+ * (title, text, submit label) is shared with the home page contact
+ * section (Settings → صفحهٔ اصلی).
  */
 class ContactPageController extends Controller
 {
-    public function __invoke(): View
+    public function __invoke(HomePage $home): View
     {
         seo()->title(__('contact.title'))
             ->description(__('contact.description'))
@@ -43,6 +46,7 @@ class ContactPageController extends Controller
         $mapUrl = trim((string) settings('contact.map_url')) ?: null;
 
         return view('site.contact', [
+            'intro' => $home->sections([])['contact'],
             'address' => settings('contact.address'),
             'email' => settings('contact.email'),
             'phone' => settings('contact.phone'),

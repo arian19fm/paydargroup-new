@@ -12,6 +12,21 @@ rendered server-side.
 `template`, `is_featured`, `created_by`, `updated_by`, timestamps, soft
 deletes. Public URL: `/{slug}` (single segment, lowercase ASCII/hyphen).
 
+**Pages are fixed.** The admin lists and edits them but never creates or
+deletes them, and their slug and template are locked (the `pages.create`
+/ `pages.delete` permissions are gone). The set lives in
+`config/cms.php → fixed_pages`; the `2026_09_28_140000_ensure_fixed_pages`
+migration guarantees each exists (restoring a trashed one, never touching
+another page):
+
+| Slug | Template | Created as |
+|---|---|---|
+| `about` | `about` | published, with the Figma copy (249:1038 / 258:33); its extras (photos, partner logos, history, stats) are written into blank Settings → about rows, the images copied from `public/images/about` into the media library |
+| `privacy` | default | draft, empty — footer link hidden until published |
+| `terms` | default | draft, empty — footer link hidden until published |
+
+To add a page later: add it to `fixed_pages` and to a migration.
+
 ### Article — `articles`
 
 `title`, `slug` (unique), `excerpt`, `content` (required),
@@ -216,8 +231,38 @@ Any location string is accepted by the admin; the three above are the ones
 the layout reads, and `MenusSeeder` fills them with the default items (§10).
 Footer contact and social blocks come from the `contact.*`
 and `social.*` settings; the brand text from `general.footer_text`; the
-"خدمات" column lists the published businesses (the designed line-up until
-one exists), exactly like the home page section.
+"خدمات" column lists the published businesses, exactly like the home page
+section (the column is omitted when none is published).
+
+## Home page content
+
+Every text, button, link and background image of the home page is a
+setting in Settings → **صفحهٔ اصلی** (`home` group in
+`config/settings.php`), grouped in the form by section (hero, businesses,
+latest articles, FAQ, contact; a key's `section` entry starts a heading).
+The cards themselves come from their own screens: businesses, published
+articles and FAQ questions. `HomePage::sections($links)` returns the copy
+per section:
+
+- **Blank text = not rendered.** Exceptions: the H1 (both hero lines
+  blank → the site name) and the contact submit label (blank → the
+  generic label in `lang/*/home.php`), since neither may be missing.
+- **Links** use the `link` setting type: an `https://…` URL, a site path
+  (`/about`) or an anchor (`#contact`); anything else (e.g. `javascript:`)
+  fails validation. A blank link falls back to the natural target — the
+  `about` / `products` CMS page when published, the article listing, the
+  contact form on the page.
+- **Images** (`hero_image_media_id`, `contact_image_media_id`): blank →
+  the designed photo in `public/images/home`.
+- The article listing header and the contact page intro reuse the blog
+  and contact section copy, so one edit changes both places.
+
+The designed copy and the two designed photos (copied into the media
+library under `media/designed/`) were written into these settings by the
+`2026_09_28_130000_fill_home_page_settings` migration, only into rows
+that were still blank, so the admin shows exactly what the page renders.
+`lang/*/home.php` now holds interface strings only (form labels,
+accessibility labels, messages, footer headings).
 
 ## Home page hero media
 
@@ -302,11 +347,15 @@ blank = the business image), `status` / `published_at`, `sort_order`.
   published + indexable businesses are in the sitemap
   (`BusinessesSource`), whose cache is flushed on every change.
 - Home page "our products" section (`partials/site/home/products`):
-  published businesses in sort order replace the designed line-up from
-  `config/home.php`, which is rendered only while no business is
-  published. The section copy (eyebrow, highlighted title, title rest,
-  text, CTA label and URL) is Settings → **صفحهٔ اصلی** (`home.products_*`)
-  with the designed text as fallback; the CTA falls back to the
+  the published businesses in sort order — there is no hardcoded
+  fallback; with none published the card list is omitted. The five
+  designed businesses (Fund, Exchange, Broker, AI, Bot, with their card
+  images copied into the media library under `media/designed/`) were
+  moved into the table by the `2026_09_28_120000_import_designed_businesses`
+  migration, which runs only when the table is completely empty (trashed
+  rows included). The section copy (eyebrow, highlighted title, title rest,
+  text, CTA label and URL, card link label) is Settings → **صفحهٔ اصلی**
+  (`home.products_*`, see “Home page content”); the CTA falls back to the
   `products` CMS page when published.
 - Permissions `businesses.view` / `businesses.manage` / `businesses.publish`
   (editors: view + manage, no publishing).

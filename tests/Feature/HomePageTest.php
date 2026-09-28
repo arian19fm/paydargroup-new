@@ -3,14 +3,18 @@
 namespace Tests\Feature;
 
 use App\Models\Article;
+use App\Models\Business;
 use App\Models\Faq;
 use App\Models\Page;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Concerns\InteractsWithAdmin;
 use Tests\TestCase;
 
 class HomePageTest extends TestCase
 {
-    use RefreshDatabase;
+    use InteractsWithAdmin, RefreshDatabase;
+
+    protected bool $keepImportedContent = true;
 
     public function test_home_page_returns_200(): void
     {
@@ -101,19 +105,32 @@ class HomePageTest extends TestCase
 
         $this->assertSame(1, preg_match_all('/<h1[\s>]/', $html));
         $this->assertMatchesRegularExpression('/<h1[^>]*class="pg-hero__title"/', $html);
-        $this->assertStringContainsString(__('home.hero.headline')[0], $html);
+        $this->assertStringContainsString('پـایـــدار؛ سـاختـن آیـنـده،', $html);
     }
 
     public function test_products_section_lists_the_five_products(): void
     {
         $html = $this->get('/')->getContent();
 
-        foreach (config('home.products') as $product) {
-            $this->assertStringContainsString(__('home.products.items.'.$product['key'].'.name'), $html);
-            $this->assertStringContainsString('/images/home/'.$product['image'].'.webp', $html);
+        // Imported into the businesses table by the 2026_09_28_120000 migration.
+        foreach (['پایدار فاند', 'پایدار اکسچینج', 'پایدار بروکر', 'پایدار AI', 'پایدار بات'] as $name) {
+            $this->assertStringContainsString($name, $html);
         }
+        $this->assertStringContainsString('/storage/media/designed/product-fund.webp', $html);
 
         $this->assertSame(5, substr_count($html, 'class="pg-product '));
+    }
+
+    public function test_imported_businesses_are_the_ones_managed_in_the_admin(): void
+    {
+        $html = $this->actingAs($this->adminUser('editor'))->get('/admin/businesses')->assertOk()->getContent();
+        $this->assertStringContainsString('پایدار فاند', $html);
+        $this->assertStringContainsString('پایدار بات', $html);
+
+        $this->get('/businesses/paydar-fund')->assertOk();
+
+        Business::query()->where('slug', 'paydar-bot')->firstOrFail()->delete();
+        $this->assertStringNotContainsString('پایدار بات', $this->get('/')->getContent());
     }
 
     public function test_published_articles_appear_and_drafts_do_not(): void
@@ -128,18 +145,20 @@ class HomePageTest extends TestCase
         $this->assertStringContainsString(route('articles.show', $published->slug), $html);
         $this->assertStringNotContainsString($draft->title, $html);
         $this->assertStringNotContainsString($scheduled->title, $html);
-        $this->assertStringNotContainsString(__('home.blog.empty'), $html);
+        $this->assertStringNotContainsString('هنوز مطلبی منتشر نشده است.', $html);
     }
 
     public function test_blog_section_shows_an_empty_state_without_articles(): void
     {
         $this->get('/')
             ->assertSee('id="blog"', false)
-            ->assertSee(__('home.blog.empty'));
+            ->assertSee('هنوز مطلبی منتشر نشده است.');
     }
 
     public function test_calls_to_action_link_only_to_published_pages(): void
     {
+        Page::query()->forceDelete();
+
         $html = $this->get('/')->getContent();
         $this->assertStringNotContainsString(route('pages.show', 'about'), $html);
 

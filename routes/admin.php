@@ -42,7 +42,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/', DashboardController::class)->name('dashboard');
 
-    Route::resource('pages', PageController::class)->except('show');
+    // Pages are fixed (config/cms.php → fixed_pages): edit only, no create/delete.
+    Route::resource('pages', PageController::class)->only(['index', 'edit', 'update']);
     Route::resource('articles', ArticleController::class)->except('show');
     Route::resource('businesses', BusinessController::class)->except('show');
     Route::resource('jobs', JobOpeningController::class)->except('show')->parameters(['jobs' => 'job']);

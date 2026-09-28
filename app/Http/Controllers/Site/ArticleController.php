@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\ArticleCategory;
 use App\Support\Content\ArticleBody;
+use App\Support\Home\HomePage;
 use App\Support\Seo\JsonLd;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class ArticleController extends Controller
 {
     public const PER_PAGE = 9;
 
-    public function index(Request $request): View
+    public function index(Request $request, HomePage $home): View
     {
         $categories = ArticleCategory::query()->active()->ordered()->get(['id', 'name', 'slug']);
         $current = null;
@@ -47,10 +48,13 @@ class ArticleController extends Controller
                 $current ? ['label' => $current->name] : null,
             ]));
 
-        return view('site.articles.index', compact('articles', 'categories', 'current'));
+        // The header is the home page blog section's (Settings → صفحهٔ اصلی).
+        $header = $home->sections([])['blog'];
+
+        return view('site.articles.index', compact('articles', 'categories', 'current', 'header'));
     }
 
-    public function show(string $slug): View
+    public function show(string $slug, HomePage $home): View
     {
         $article = Article::query()->published()->where('slug', $slug)
             ->with(['author:id,name', 'categories' => fn ($q) => $q->active()->ordered(), 'featuredImage', 'seo.ogImage', 'seo.twitterImage'])
@@ -96,6 +100,9 @@ class ArticleController extends Controller
             'latest' => $latest,
             'share' => $share,
             'links' => ['blog' => route('articles.index')],
+            // The latest-posts and contact sections are the home page's, with its copy.
+            'sections' => $home->sections(['blog' => route('articles.index')]),
+            'contactImage' => $home->contactImage(),
         ]);
     }
 }

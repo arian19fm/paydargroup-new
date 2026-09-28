@@ -186,6 +186,9 @@
     margin: 0 auto;
     padding: 0;
     list-style: none;
+    // Latin brand marks laid out as in both frames: the first logo on the left.
+    /* rtl:ignore */
+    direction: ltr;
 
     @include media-breakpoint-up(md) {
         max-width: none;
@@ -198,7 +201,10 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
-        gap: 24px 48px;
+        // Figma 251:2521: a 1216px row (1280 minus 32px padding) spread by
+        // space-between; a fixed 48px gap made six logos wrap.
+        gap: 24px;
+        max-width: 1280px;
         padding-inline: 32px;
     }
 

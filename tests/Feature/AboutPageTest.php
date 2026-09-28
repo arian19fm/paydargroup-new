@@ -6,11 +6,21 @@ use App\Models\Media;
 use App\Models\Page;
 use App\Support\Settings\Settings;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class AboutPageTest extends TestCase
 {
     use RefreshDatabase;
+
+    /** These tests configure the extras themselves: start from blank rows, not the imported design values. */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        DB::table('settings')->where('group', 'about')->update(['value' => null]);
+        app(Settings::class)->flush();
+    }
 
     protected function aboutPage(): Page
     {
