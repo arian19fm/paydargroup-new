@@ -28,7 +28,7 @@ class HomeController extends Controller
             'productsSection' => $home->productsSection($links),
             'articles' => $home->latestArticles(),
             'links' => $links,
-            'faqItems' => __('home.faq.items'),
+            'faqItems' => $home->faqItems(),
         ]);
     }
 }

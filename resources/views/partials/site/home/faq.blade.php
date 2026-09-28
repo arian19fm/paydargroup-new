@@ -3,7 +3,8 @@
     each question is a button inside a heading, each answer a collapsible
     region; the first item starts open as in the design. The "Ask AI" field
     is visual only — no assistant backend exists yet, so the controls are
-    disabled and say so.
+    disabled and say so. Questions come from admin → FAQ
+    (HomePage::faqItems()), else the designed samples.
 --}}
 <section class="pg-faq" id="faq" aria-labelledby="faq-heading">
     <div class="pg-container">
@@ -26,6 +27,7 @@
                     <span id="ask-ai-note" class="visually-hidden">{{ __('home.faq.ask_pending') }}</span>
                 </div>
 
+                @if (count($faqItems))
                 <div class="pg-faq__list" id="faq-accordion">
                     @foreach ($faqItems as $index => $item)
                         @php
@@ -48,6 +50,7 @@
                         </div>
                     @endforeach
                 </div>
+                @endif
             </div>
 
             <aside class="pg-faq__card" aria-labelledby="faq-card-title" data-motion="reveal" data-motion-exit>

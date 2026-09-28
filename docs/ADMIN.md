@@ -78,6 +78,7 @@ media.view      media.manage
 team.view       team.manage
 businesses.view businesses.manage businesses.publish
 jobs.view       jobs.manage
+faqs.view       faqs.manage
 applications.view applications.manage
 menus.view      menus.manage
 settings.view   settings.update
@@ -144,6 +145,7 @@ reusable `<x-admin.seo-fields>` section (see `docs/SEO.md`). Lists paginate
 | Media | `/admin/media` | upload, list, edit metadata (alt/title/caption), delete |
 | Team | `/admin/team/members`, `/admin/team/groups` | team page groups and members (`team.view` / `team.manage`) |
 | Job openings | `/admin/jobs` | careers page openings (`jobs.view` / `jobs.manage`; editors included) |
+| FAQ | `/admin/faqs` | home page questions and answers (`faqs.view` / `faqs.manage`; editors included) |
 | Applications | `/admin/applications` | résumés from the careers page; unseen count in the sidebar (`applications.view` / `applications.manage`) |
 | Businesses | `/admin/businesses` | group businesses: home page cards + their own pages (`businesses.view` / `businesses.manage` / `businesses.publish`; editors manage drafts only) |
 | Menus | `/admin/menus` | menu + inline item editor (nested via parent; "زیرمنوی خودکار" = children generated from published businesses; default items come from `MenusSeeder`) |

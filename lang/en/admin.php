@@ -43,6 +43,7 @@ return [
         'team' => 'Team',
         'businesses' => 'Businesses',
         'jobs' => 'Job openings',
+        'faqs' => 'FAQ',
         'applications' => 'Applications',
         'structure' => 'Site structure',
         'menus' => 'Menus',
@@ -166,6 +167,8 @@ return [
         'new_password' => 'New password',
         'description' => 'Description',
         'sort_order' => 'Sort order',
+        'question' => 'Question',
+        'answer' => 'Answer',
         'categories' => 'Categories',
         'author' => 'Author',
         'featured_image' => 'Featured image',
@@ -270,7 +273,7 @@ return [
     'permissions' => [
         'groups' => [
             'admin' => 'Panel', 'pages' => 'Pages', 'articles' => 'Articles', 'categories' => 'Categories', 'media' => 'Media',
-            'menus' => 'Menus', 'settings' => 'Settings', 'redirects' => 'Redirects', 'users' => 'Users', 'roles' => 'Roles', 'seo' => 'SEO', 'team' => 'Team', 'businesses' => 'Businesses', 'jobs' => 'Job openings', 'applications' => 'Applications',
+            'menus' => 'Menus', 'settings' => 'Settings', 'redirects' => 'Redirects', 'users' => 'Users', 'roles' => 'Roles', 'seo' => 'SEO', 'team' => 'Team', 'businesses' => 'Businesses', 'jobs' => 'Job openings', 'faqs' => 'FAQ', 'applications' => 'Applications',
         ],
         'admin_access' => 'Access the admin panel',
         'pages_view' => 'View pages', 'pages_create' => 'Create pages', 'pages_update' => 'Edit pages', 'pages_delete' => 'Delete pages', 'pages_publish' => 'Publish pages',
@@ -280,6 +283,7 @@ return [
         'team_view' => 'View team', 'team_manage' => 'Manage team',
         'businesses_view' => 'View businesses', 'businesses_manage' => 'Manage businesses', 'businesses_publish' => 'Publish businesses',
         'jobs_view' => 'View job openings', 'jobs_manage' => 'Manage job openings',
+        'faqs_view' => 'View FAQ', 'faqs_manage' => 'Manage FAQ',
         'applications_view' => 'View applications', 'applications_manage' => 'Delete applications',
         'menus_view' => 'View menus', 'menus_manage' => 'Manage menus',
         'settings_view' => 'View settings', 'settings_update' => 'Edit settings',
@@ -306,6 +310,12 @@ return [
         'settings_link' => '"Our products" section settings',
         'benefits_section' => 'Benefits section',
         'benefits_help' => 'Third block of the business page; hidden when no title, text, benefit or file is entered.',
+    ],
+
+    'faqs' => [
+        'title' => 'Frequently asked questions',
+        'add' => 'Add question',
+        'help' => 'Active questions appear in the home page FAQ section in sort order. Until any question exists the designed sample questions are shown; if questions exist but none is active, the list is hidden.',
     ],
 
     'jobs' => [

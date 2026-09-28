@@ -9,6 +9,7 @@
             ['route' => 'admin.media.index', 'icon' => 'media', 'label' => __('admin.nav.media'), 'can' => 'media.view', 'active' => 'admin.media.*'],
             ['route' => 'admin.businesses.index', 'icon' => 'businesses', 'label' => __('admin.nav.businesses'), 'can' => 'businesses.view', 'active' => 'admin.businesses.*'],
             ['route' => 'admin.jobs.index', 'icon' => 'jobs', 'label' => __('admin.nav.jobs'), 'can' => 'jobs.view', 'active' => 'admin.jobs.*'],
+            ['route' => 'admin.faqs.index', 'icon' => 'faq', 'label' => __('admin.nav.faqs'), 'can' => 'faqs.view', 'active' => 'admin.faqs.*'],
             ['route' => 'admin.applications.index', 'icon' => 'inbox', 'label' => __('admin.nav.applications'), 'can' => 'applications.view', 'active' => 'admin.applications.*', 'badge' => \App\Models\JobApplication::unseenCount()],
             ['route' => 'admin.team.members.index', 'icon' => 'users', 'label' => __('admin.nav.team'), 'can' => 'team.view', 'active' => 'admin.team.*'],
         ],

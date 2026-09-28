@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\BusinessController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\JobApplicationController;
 use App\Http\Controllers\Admin\JobOpeningController;
 use App\Http\Controllers\Admin\MediaController;
@@ -47,6 +48,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('jobs', JobOpeningController::class)->except('show')->parameters(['jobs' => 'job']);
     Route::resource('applications', JobApplicationController::class)->only(['index', 'show', 'destroy'])->parameters(['applications' => 'application']);
     Route::get('applications/{application}/resume', [JobApplicationController::class, 'resume'])->name('applications.resume');
+    Route::resource('faqs', FaqController::class)->except('show');
     Route::resource('categories', ArticleCategoryController::class)->except('show');
     Route::resource('redirects', RedirectController::class)->except('show');
     Route::resource('media', MediaController::class)->except('show');

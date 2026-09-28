@@ -354,3 +354,14 @@ is a reserved page slug, listed in the sitemap). Three blocks:
   (`/admin/applications/{id}/resume`, streamed from the private disk) marks
   it seen. Deleting a row deletes the file; deleting an opening keeps its
   applications.
+
+## Home page FAQ
+
+Admin → **سؤالات متداول** (`/admin/faqs`, `faqs.view` / `faqs.manage`,
+editors included) manages the `faqs` table: `question`, `answer` (plain
+text), `sort_order`, `is_active`. `HomePage::faqItems()` feeds the home
+page accordion with the active questions in order (the first one starts
+open). Until any row exists the designed samples in `lang/{locale}/home.php`
+are shown; once questions exist but none is active, the list is omitted
+and the rest of the section (heading, contact card) stays. The section's
+headings and card copy are still the designed text in `home.faq.*`.

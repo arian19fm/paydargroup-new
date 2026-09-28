@@ -29,3 +29,4 @@ Thumbs.db
 # Local/raw font source packages - not part of production source
 /public/fonts/Doran/
 /public/fonts/IranYekan/
+.claude/worktrees/
