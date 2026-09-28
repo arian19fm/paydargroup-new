@@ -11,8 +11,25 @@ class FaqAdminTest extends TestCase
 {
     use InteractsWithAdmin, RefreshDatabase;
 
+    public function test_designed_questions_are_imported_and_listed_in_the_admin(): void
+    {
+        $this->assertSame(5, Faq::count());
+        $first = Faq::query()->ordered()->firstOrFail();
+        $this->assertSame('توکن‌سازی دارایی چیست و چه فایده‌ای برای من دارد؟', $first->question);
+        $this->assertSame(4, Faq::whereNull('answer')->count());
+
+        $this->actingAs($this->adminUser('editor'))->get('/admin/faqs')->assertOk()
+            ->assertSee($first->question)
+            ->assertSee(__('admin.faqs.no_answer'));
+
+        $html = $this->get('/')->getContent();
+        $this->assertSame(5, substr_count($html, 'data-bs-toggle="collapse"'));
+        $this->assertStringContainsString(__('home.faq.answer_pending'), $html);
+    }
+
     public function test_editor_manages_questions(): void
     {
+        Faq::query()->delete();
         $editor = $this->adminUser('editor');
 
         $this->actingAs($editor)->get('/admin/faqs')->assertOk();
@@ -26,6 +43,11 @@ class FaqAdminTest extends TestCase
         $this->assertSame(2, $faq->sort_order);
 
         $this->actingAs($editor)->get("/admin/faqs/{$faq->id}/edit")->assertOk()->assertSee('پاسخ آزمایشی');
+        $this->actingAs($editor)->put("/admin/faqs/{$faq->id}", [
+            'question' => 'پرسش ویرایش‌شده', 'answer' => '',
+        ])->assertSessionHasNoErrors();
+        $this->assertNull($faq->refresh()->answer);
+
         $this->actingAs($editor)->put("/admin/faqs/{$faq->id}", [
             'question' => 'پرسش ویرایش‌شده', 'answer' => 'پاسخ تازه',
         ])->assertSessionHasNoErrors()->assertRedirect('/admin/faqs');
@@ -44,7 +66,7 @@ class FaqAdminTest extends TestCase
         $admin = $this->adminUser('admin');
 
         $this->actingAs($admin)->post('/admin/faqs', ['question' => '', 'answer' => ''])
-            ->assertSessionHasErrors(['question', 'answer']);
+            ->assertSessionHasErrors(['question'])->assertSessionDoesntHaveErrors(['answer']);
         $this->actingAs($admin)->post('/admin/faqs', ['question' => str_repeat('a', 501), 'answer' => 'x'])
             ->assertSessionHasErrors(['question']);
 
@@ -54,6 +76,7 @@ class FaqAdminTest extends TestCase
 
     public function test_home_page_renders_active_questions_in_order(): void
     {
+        Faq::query()->delete();
         Faq::factory()->create(['question' => 'پرسش دوم', 'answer' => 'پاسخ دوم', 'sort_order' => 2]);
         Faq::factory()->create(['question' => 'پرسش اول', 'answer' => 'پاسخ اول', 'sort_order' => 1]);
         Faq::factory()->create(['question' => 'پرسش غیرفعال', 'is_active' => false]);
@@ -64,12 +87,12 @@ class FaqAdminTest extends TestCase
         $this->assertLessThan(strpos($html, 'پرسش دوم'), strpos($html, 'پرسش اول'));
         $this->assertStringContainsString('پاسخ اول', $html);
         $this->assertStringNotContainsString('پرسش غیرفعال', $html);
-        $this->assertStringNotContainsString(__('home.faq.items')[0]['question'], $html);
+        $this->assertStringNotContainsString('توکن‌سازی دارایی چیست', $html);
     }
 
     public function test_home_page_hides_the_list_when_no_question_is_active(): void
     {
-        Faq::factory()->create(['is_active' => false]);
+        Faq::query()->update(['is_active' => false]);
 
         $html = $this->get('/')->assertOk()->getContent();
 

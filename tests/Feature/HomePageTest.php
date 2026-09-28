@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Article;
+use App\Models\Faq;
 use App\Models\Page;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -169,7 +170,7 @@ class HomePageTest extends TestCase
         $this->assertStringContainsString('id="faq-panel-1" class="collapse show"', $html);
         $this->assertStringContainsString('aria-expanded="true" aria-controls="faq-panel-1"', $html);
         $this->assertStringContainsString('aria-expanded="false" aria-controls="faq-panel-2"', $html);
-        $this->assertSame(count(__('home.faq.items')), substr_count($html, 'data-bs-toggle="collapse"'));
+        $this->assertSame(Faq::query()->active()->count(), substr_count($html, 'data-bs-toggle="collapse"'));
     }
 
     public function test_theme_is_applied_before_paint_and_switchable(): void

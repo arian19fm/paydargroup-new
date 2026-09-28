@@ -23,7 +23,7 @@
             <tbody>
                 @forelse ($faqs as $faq)
                     <tr>
-                        <td><a href="{{ route('admin.faqs.edit', $faq) }}">{{ $faq->question }}</a></td>
+                        <td><a href="{{ route('admin.faqs.edit', $faq) }}">{{ $faq->question }}</a>@if (blank($faq->answer)) <span class="badge text-bg-warning ms-1">{{ __('admin.faqs.no_answer') }}</span>@endif</td>
                         <td>{{ fa_digits($faq->sort_order) }}</td>
                         <td>{{ $faq->is_active ? __('admin.yes') : __('admin.no') }}</td>
                         <td class="text-end">@can('delete', $faq)<x-admin.delete-button :action="route('admin.faqs.destroy', $faq)" />@endcan</td>

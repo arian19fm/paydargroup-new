@@ -100,26 +100,20 @@ class HomePage
     }
 
     /**
-     * Questions of the FAQ section, in display order. Once any question is
-     * managed in the admin, the active ones are shown (possibly none, which
-     * hides the list); before that the designed samples in
-     * lang/{locale}/home.php are rendered.
+     * Active questions of the FAQ section in display order, as managed in
+     * admin → FAQ (empty when the table does not exist yet).
      *
      * @return list<array{question: string, answer: ?string}>
      */
     public function faqItems(): array
     {
         try {
-            if (Faq::query()->exists()) {
-                return Faq::query()->active()->ordered()->get(['question', 'answer'])
-                    ->map(fn (Faq $faq) => ['question' => $faq->question, 'answer' => $faq->answer])
-                    ->all();
-            }
+            return Faq::query()->active()->ordered()->get(['question', 'answer'])
+                ->map(fn (Faq $faq) => ['question' => $faq->question, 'answer' => $faq->answer])
+                ->all();
         } catch (QueryException) {
-            // Table not migrated yet: fall through to the designed samples.
+            return [];
         }
-
-        return __('home.faq.items');
     }
 
     /**

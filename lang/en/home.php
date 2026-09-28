@@ -47,13 +47,6 @@ return [
         'ask_pending' => 'The smart assistant is coming soon.',
         'ask_send' => 'Send question',
         'answer_pending' => 'The answer to this question will be added soon.',
-        'items' => [
-            ['question' => 'What is asset tokenisation and how does it benefit me?', 'answer' => 'Tokenisation splits the ownership of a real asset, such as an industrial or commercial project, into small digital units, so you can take part in large projects with a small capital and track your share transparently.'],
-            ['question' => 'What is the minimum investment in Paydar Fund?', 'answer' => null],
-            ['question' => 'How are reports and project returns announced?', 'answer' => null],
-            ['question' => 'Can I sell my tokens before the project ends?', 'answer' => null],
-            ['question' => 'How is the asset backing each project supervised?', 'answer' => null],
-        ],
         'card_title' => 'Have another question?',
         'card_text' => 'Paydar experts are ready to give you precise, personal answers about projects, the investment process and tokens.',
         'card_cta' => 'Contact support',

@@ -315,7 +315,9 @@ return [
     'faqs' => [
         'title' => 'Frequently asked questions',
         'add' => 'Add question',
-        'help' => 'Active questions appear in the home page FAQ section in sort order. Until any question exists the designed sample questions are shown; if questions exist but none is active, the list is hidden.',
+        'help' => 'Active questions appear in the home page FAQ section in sort order; when none is active the list is hidden.',
+        'answer_help' => 'Left empty, the site shows “the answer will be added soon”.',
+        'no_answer' => 'No answer',
     ],
 
     'jobs' => [

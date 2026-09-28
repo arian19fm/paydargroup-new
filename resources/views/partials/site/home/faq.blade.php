@@ -4,7 +4,7 @@
     region; the first item starts open as in the design. The "Ask AI" field
     is visual only — no assistant backend exists yet, so the controls are
     disabled and say so. Questions come from admin → FAQ
-    (HomePage::faqItems()), else the designed samples.
+    (HomePage::faqItems()); an unanswered one shows the pending note.
 --}}
 <section class="pg-faq" id="faq" aria-labelledby="faq-heading">
     <div class="pg-container">
