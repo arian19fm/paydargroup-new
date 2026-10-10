@@ -22,10 +22,11 @@ class FixedPagesTest extends TestCase
         $html = $this->get('/about')->assertOk()->getContent();
 
         $this->assertStringContainsString('دربـاره پـایـدار گـروپ', $html);
-        $this->assertStringContainsString('کانون ایران نوین', $html);
-        $this->assertSame(5, substr_count(explode('pg-about__partners', $html)[0], '<p>') - substr_count(explode('pg-about__body', $html)[0], '<p>'));
-        $this->assertSame(6, substr_count($html, '<li><img'));
-        $this->assertStringContainsString('alt="Boltshift"', $html);
+        $this->assertStringContainsString('پایدار گروپ مجموعه‌ای از کسب‌وکارهای فناوری مالی است', $html);
+        $this->assertSame(4, substr_count(explode('pg-about__history', $html)[0], '<p>') - substr_count(explode('pg-about__body', $html)[0], '<p>'));
+        $this->assertStringNotContainsString('دات‌وان', $html);
+        // The design kit's sample partner logos are removed.
+        $this->assertStringNotContainsString('pg-about__partners', $html);
         $this->assertStringContainsString('/storage/media/designed/about-intro-1.png', $html);
         $this->assertStringContainsString('/storage/media/designed/about-history.png', $html);
         $this->assertStringContainsString('تاریخچه پایدار گروپ', $html);

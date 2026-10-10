@@ -289,6 +289,16 @@
         line-height: 30px;
         color: var(--pg-ink-70);
     }
+
+    // Answers are plain text rendered as paragraphs (PlainText::toHtml):
+    // the wrapper keeps the design offset, the paragraphs space themselves.
+    p {
+        margin: 0;
+
+        + p {
+            margin-top: .75em;
+        }
+    }
 }
 
 // Contact card.

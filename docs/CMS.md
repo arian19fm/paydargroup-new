@@ -410,8 +410,14 @@ Admin → **سؤالات متداول** (`/admin/faqs`, `faqs.view` / `faqs.mana
 editors included) manages the `faqs` table: `question`, `answer` (plain
 text, optional), `sort_order`, `is_active`. `HomePage::faqItems()` feeds
 the home page accordion with the active questions in order (the first one
-starts open); an unanswered question shows `home.faq.answer_pending` and is
-flagged in the admin list. With no active question the list is omitted and
+starts open). The answer is rendered with `PlainText::toHtml()` (§3): a
+blank line in the textarea is a new paragraph, a single line break is kept,
+nothing else is interpreted. The admin form shows a live preview under the
+textarea (`<x-admin.form.textarea :preview="true">` +
+`resources/js/admin/text-preview.js`, which mirrors the same rules
+client-side) so authors see the answer as the site will render it. An
+unanswered question shows `home.faq.answer_pending` and is flagged in the
+admin list. With no active question the list is omitted and
 the rest of the section (heading, contact card) stays. The five designed
 questions were moved into the table by the
 `2026_09_28_110000_import_designed_faqs` migration (only when the table is

@@ -14,6 +14,7 @@ import './site/business-video';
 import './site/job-apply';
 import './site/share-link';
 import './admin/char-counter';
+import './admin/text-preview';
 import { mountVueComponents } from './vue/mount';
 
 mountVueComponents();

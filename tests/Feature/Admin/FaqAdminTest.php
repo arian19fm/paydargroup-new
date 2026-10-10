@@ -15,16 +15,26 @@ class FaqAdminTest extends TestCase
     {
         $this->assertSame(5, Faq::count());
         $first = Faq::query()->ordered()->firstOrFail();
-        $this->assertSame('توکن‌سازی دارایی چیست و چه فایده‌ای برای من دارد؟', $first->question);
-        $this->assertSame(4, Faq::whereNull('answer')->count());
+        $this->assertSame('پایدار گروپ چیست و چه خدماتی ارائه می‌دهد؟', $first->question);
+        $this->assertSame(0, Faq::whereNull('answer')->count()); // answered by the content migration
 
         $this->actingAs($this->adminUser('editor'))->get('/admin/faqs')->assertOk()
-            ->assertSee($first->question)
-            ->assertSee(__('admin.faqs.no_answer'));
+            ->assertSee($first->question);
 
         $html = $this->get('/')->getContent();
         $this->assertSame(5, substr_count($html, 'data-bs-toggle="collapse"'));
-        $this->assertStringContainsString(__('home.faq.answer_pending'), $html);
+        $this->assertStringNotContainsString(__('home.faq.answer_pending'), $html);
+    }
+
+    public function test_answer_form_has_a_live_preview_of_the_rendered_text(): void
+    {
+        $faq = Faq::create(['question' => 'پرسش', 'answer' => "خط اول\n\nخط دوم", 'is_active' => true]);
+
+        $html = $this->actingAs($this->adminUser('editor'))->get("/admin/faqs/{$faq->id}/edit")->assertOk()->getContent();
+
+        $this->assertStringContainsString('data-text-preview="f-answer-preview"', $html);
+        $this->assertStringContainsString('id="f-answer-preview"', $html);
+        $this->assertStringContainsString('<p>خط اول</p>'."\n".'<p>خط دوم</p>', $html);
     }
 
     public function test_editor_manages_questions(): void

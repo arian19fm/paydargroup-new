@@ -824,3 +824,32 @@
     color: #fff;
     text-align: center;
 }
+
+// Live preview under plain-text content fields (admin/text-preview.js):
+// the text as the site will render it — paragraphs and line breaks.
+.pg-admin-preview {
+    margin-top: .75rem;
+    padding: 1rem 1.25rem;
+    border: 1px dashed var(--pg-border);
+    border-radius: var(--pg-admin-card-radius);
+    background: #fff;
+
+    &__label {
+        margin-bottom: .5rem;
+        font-size: .75rem;
+        font-weight: 600;
+        color: var(--pg-text-muted);
+    }
+
+    &__body {
+        line-height: 1.9;
+
+        p {
+            margin: 0;
+
+            + p {
+                margin-top: .75em;
+            }
+        }
+    }
+}

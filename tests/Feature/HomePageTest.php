@@ -130,7 +130,7 @@ class HomePageTest extends TestCase
         $this->get('/businesses/paydar-fund')->assertOk();
 
         Business::query()->where('slug', 'paydar-bot')->firstOrFail()->delete();
-        $this->assertStringNotContainsString('پایدار بات', $this->get('/')->getContent());
+        $this->assertStringNotContainsString(route('businesses.show', 'paydar-bot'), $this->get('/')->getContent());
     }
 
     public function test_published_articles_appear_and_drafts_do_not(): void
@@ -190,6 +190,24 @@ class HomePageTest extends TestCase
         $this->assertStringContainsString('aria-expanded="true" aria-controls="faq-panel-1"', $html);
         $this->assertStringContainsString('aria-expanded="false" aria-controls="faq-panel-2"', $html);
         $this->assertSame(Faq::query()->active()->count(), substr_count($html, 'data-bs-toggle="collapse"'));
+    }
+
+    public function test_faq_answers_keep_paragraphs_and_line_breaks(): void
+    {
+        Faq::query()->update(['is_active' => false]);
+        Faq::create([
+            'question' => 'پرسش چندپاراگرافی',
+            'answer' => "پاراگراف اول\nخط دوم همان پاراگراف\n\nپاراگراف دوم <b>بدون</b> HTML",
+            'is_active' => true,
+        ]);
+
+        $html = $this->get('/')->getContent();
+
+        $this->assertStringContainsString(
+            '<p>پاراگراف اول<br>'."\n".'خط دوم همان پاراگراف</p>'."\n".'<p>پاراگراف دوم &lt;b&gt;بدون&lt;/b&gt; HTML</p>',
+            $html
+        );
+        $this->assertStringNotContainsString('<b>بدون</b>', $html);
     }
 
     public function test_theme_is_applied_before_paint_and_switchable(): void
