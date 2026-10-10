@@ -10,6 +10,7 @@ import './site/navigation';
 import './site/theme';
 import './site/drag-scroll';
 import './site/hero-video';
+import './site/hero-particles';
 import './site/business-video';
 import './site/job-apply';
 import './site/share-link';

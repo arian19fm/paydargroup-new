@@ -1,0 +1,43 @@
+// Scrollbars: thin, in the brand blues, on every page (site and admin) and
+// every scrollable box — scrollbar-color/width inherit from the root. The
+// standard properties come first (Chrome 121+, Firefox, Safari 18.2+);
+// the ::-webkit-scrollbar rules cover older Chromium/WebKit and are
+// ignored where the standard ones apply.
+
+:root {
+    --pg-scrollbar-thumb: #{rgba($pg-primary, .75)};
+    --pg-scrollbar-thumb-hover: #{$pg-primary};
+    --pg-scrollbar-track: #{$pg-surface};
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--pg-scrollbar-thumb) var(--pg-scrollbar-track);
+}
+
+[data-bs-theme="dark"] {
+    --pg-scrollbar-thumb: #{rgba(tint-color($pg-primary, 30%), .8)};
+    --pg-scrollbar-thumb-hover: #{tint-color($pg-accent, 10%)};
+    --pg-scrollbar-track: #{$pg-dark-surface};
+}
+
+*::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+    background: var(--pg-scrollbar-track);
+}
+
+*::-webkit-scrollbar-thumb {
+    border: 2px solid var(--pg-scrollbar-track); // keeps the 4px bar look
+    border-radius: 8px;
+    background: var(--pg-scrollbar-thumb);
+
+    &:hover {
+        background: var(--pg-scrollbar-thumb-hover);
+    }
+}
+
+*::-webkit-scrollbar-corner {
+    background: var(--pg-scrollbar-track);
+}

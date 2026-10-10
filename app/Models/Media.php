@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Seo\SeoManager;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -45,9 +46,29 @@ class Media extends Model
     }
 
     /** Public URL of the file on its disk. */
+    /**
+     * URL for use in pages. Files on a local disk get a root-relative path
+     * ("/storage/…") so they load from whatever host serves the page; an
+     * absolute URL built from APP_URL breaks as soon as the site is
+     * reached on another host or port. Remote disks keep their own URL.
+     */
     public function url(): string
     {
-        return Storage::disk($this->disk)->url($this->path);
+        $url = Storage::disk($this->disk)->url($this->path);
+
+        if (config("filesystems.disks.{$this->disk}.driver") !== 'local') {
+            return $url;
+        }
+
+        return parse_url($url, PHP_URL_PATH) ?: $url;
+    }
+
+    /** Absolute URL under APP_URL, for sharing metadata and structured data. */
+    public function absoluteUrl(): string
+    {
+        $url = $this->url();
+
+        return str_starts_with($url, '/') ? SeoManager::absoluteUrl($url) : $url;
     }
 
     public function isImage(): bool

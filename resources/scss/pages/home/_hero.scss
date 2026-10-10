@@ -1,80 +1,59 @@
-// Hero (Figma 110:267 desktop 1440×885 / 172:294 mobile 375×609).
+// Hero.
 //
-// Desktop: photo with the darkening baked into the export, content pinned
-// to the bottom with 75px insets — headline block (513) at the start,
-// paragraph + CTA block (440) at the end. Mobile: the same photo cropped
-// to its centre with a top→bottom overlay, content stacked near the bottom
-// with a full-width CTA. The glass header floats above (layout/_header).
+// One backdrop on every size: the brand gradient (no background photo)
+// with the particle field. Mobile (Figma 172:294 proportions) and tablet:
+// the business network in flow between the glass header and the copy,
+// then the copy stacked with a full-width CTA. Desktop (re-composed from
+// Figma 110:267): the copy in the start column (right in RTL) and the
+// network in the media column, vertically centred. The admin video is a
+// framed box at the top of the copy column. The glass header floats above
+// on every size (layout/_header).
 
 .pg-hero {
     position: relative;
     display: flex;
-    align-items: flex-end;
+    flex-direction: column;
+    justify-content: flex-end;
+    z-index: 1; // the shadow paints over the next section's background
     min-height: 609px;
     overflow: hidden;
-    background: var(--pg-primary-dark);
+    // Backdrop on every size (values as specified by the site owner,
+    // 2026-10-10): a dark navy with a soft accent bloom behind the visual's
+    // column (the end side, left in RTL). No background photo.
+    background:
+        radial-gradient(48% 60% at 28% 48%, #1c94e138, #0000 70%),
+        linear-gradient(-180deg, #03070e 0%, #050a22 55%, #020e23 100%);
     color: #fff;
+    // Physical corner + shadow as specified for the rendered (RTL) page:
+    // kept out of the RTL flip.
+    /* rtl:begin:ignore */
+    border-bottom-right-radius: 65px;
+    box-shadow: 3px 3px 11px 3px #2b2b2b;
+    /* rtl:end:ignore */
 
     @include media-breakpoint-up(md) {
         min-height: clamp(609px, 61.5vw, 885px);
     }
 
     @include media-breakpoint-up(lg) {
-        min-height: 885px;
+        justify-content: center;
+        min-height: clamp(760px, 92vh, 885px);
     }
 }
 
-.pg-hero__media {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        /* rtl:ignore */
-        object-position: 50% 0;
-
-        @include media-breakpoint-up(lg) {
-            /* rtl:ignore */
-            object-position: 50% 50%;
-        }
-    }
-}
-
-// Optional background video (Settings → home). It sits over the photo,
-// which remains the poster and the fallback: the video is hidden when the
-// visitor prefers reduced motion, so the page never moves on its own.
-.pg-hero__video {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    /* rtl:ignore */
-    object-position: 50% 0;
-    background: transparent;
-
-    @include media-breakpoint-up(lg) {
-        /* rtl:ignore */
-        object-position: 50% 50%;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        display: none;
-    }
-}
-
-// Mobile-only gradient (Figma "overlay": 5% → 55% black).
-.pg-hero__overlay {
+// Particle field (site/hero-particles.js) between the background and the
+// content. Sized by the script to the hero box; it never takes pointer
+// events so the CTA, the chips and scrolling behave as before.
+.pg-hero__particles {
     position: absolute;
     inset: 0;
     z-index: 1;
-    background: linear-gradient(180deg, rgba(0, 0, 0, .05) 0%, rgba(0, 0, 0, .55) 100%);
+    display: block;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
 
-    @include media-breakpoint-up(lg) {
+    @media (prefers-reduced-motion: reduce) {
         display: none;
     }
 }
@@ -88,30 +67,93 @@
     width: 100%;
     max-width: var(--pg-container-max);
     margin-inline: auto;
-    padding: 120px 23px 24px;
+    padding: 16px 23px 24px; // the network above provides the header clearance
 
     @include media-breakpoint-up(md) {
         padding-inline: var(--pg-gutter);
     }
 
+    // Two columns: copy at the start, visual at the end, both centred.
     @include media-breakpoint-up(lg) {
-        flex-direction: row;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 48px;
-        padding: 200px clamp(32px, 5.2vw, 75px) clamp(48px, 5.2vw, 75px); // 75px at the 1440 frame
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+        align-items: center;
+        column-gap: clamp(32px, 4vw, 64px);
+        padding: 160px clamp(32px, 5.2vw, 75px) 72px; // 75px at the 1440 frame
     }
+}
+
+.pg-hero__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 0 auto;
+    text-align: center;
+
+    @include media-breakpoint-up(lg) {
+        gap: 28px;
+        max-width: 560px;
+    }
+}
+
+// The network's slot. Stacked layouts: in flow before the copy, clear of
+// the header (23 + 58px pill). Desktop: the media column.
+.pg-hero__visual {
+    order: -1;
+    align-self: center;
+    width: 100%;
+    max-width: 440px;
+    margin-top: 76px;
+
+    @include media-breakpoint-up(md) {
+        max-width: 520px;
+        margin-top: 84px;
+    }
+
+    @include media-breakpoint-up(lg) {
+        order: 0;
+        justify-self: center;
+        max-width: 700px;
+        margin-top: 0;
+    }
+}
+
+// The admin's hero video as a framed box at the top of the copy column:
+// under the globe on mobile/tablet, above the eyebrow on desktop. 16:9,
+// the footage is cropped to fill it.
+.pg-hero__video-box {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: 1px solid rgba(140, 200, 255, .3);
+    border-radius: 16px;
+    background: rgba($pg-primary-dark, .6);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, .35), 0 0 0 4px rgba(79, 179, 255, .06);
+
+    @include media-breakpoint-up(md) {
+        max-width: 520px;
+        align-self: center;
+    }
+
+    @include media-breakpoint-up(lg) {
+        max-width: 420px;
+        align-self: flex-start; // the start edge: right under dir="rtl"
+        border-radius: 20px;
+    }
+}
+
+.pg-hero__video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .pg-hero__text {
     display: flex;
     flex-direction: column;
     gap: 8px;
-
-    @include media-breakpoint-up(lg) {
-        flex: 0 1 513px;
-        order: 1;
-    }
 }
 
 .pg-hero__eyebrow {
@@ -144,7 +186,7 @@
     }
 
     @include media-breakpoint-up(lg) {
-        font-size: clamp(2.5rem, 3.75vw, 3.375rem); // 54px at the 1440 frame
+        font-size: clamp(2.375rem, 3.4vw, 3.375rem); // 54px at the 1440 frame
         font-weight: 800;
         line-height: 1.48; // 80px at 54px
         letter-spacing: -.02em;
@@ -157,11 +199,9 @@
     gap: 16px;
 
     @include media-breakpoint-up(lg) {
-        flex: 0 1 440px;
         // Column cross-axis start = the right edge under dir="rtl": the CTA
         // hugs the block's start edge as in the frame.
         align-items: flex-start;
-        order: 2;
         gap: 27px;
     }
 }
@@ -175,6 +215,7 @@
     opacity: .9;
 
     @include media-breakpoint-up(lg) {
+        max-width: 440px;
         font-size: 1rem;
         line-height: 28px;
         color: var(--pg-text-on-dark);
@@ -199,30 +240,30 @@
 // Load-in motion. Runs only when the page is scripted (<html class="pg-js">,
 // set inline in the home page head) so the static no-JS page never starts
 // invisible, and only when the visitor allows motion. Transform/opacity
-// only: the photo is neither resized nor re-fetched, so LCP is unaffected.
+// only, so nothing is resized or re-fetched.
 @media (prefers-reduced-motion: no-preference) {
-    .pg-js .pg-hero__media img,
-    .pg-js .pg-hero__video {
-        animation: pg-hero-settle 1.6s ease-out both;
+    .pg-js .pg-hero__video-box {
+        animation: pg-hero-rise .9s .15s cubic-bezier(.22, 1, .36, 1) both;
     }
 
     .pg-js .pg-header--overlay .pg-header__bar {
         animation: pg-hero-drop .8s .15s cubic-bezier(.22, 1, .36, 1) both;
     }
 
-    .pg-js .pg-hero__inner > * {
+    .pg-js .pg-hero__text,
+    .pg-js .pg-hero__aside {
         animation: pg-hero-rise .9s cubic-bezier(.22, 1, .36, 1) both;
         animation-delay: .25s;
-
-        &:nth-child(2) {
-            animation-delay: .4s;
-        }
     }
-}
 
-@keyframes pg-hero-settle {
-    from { transform: scale(1.04); }
-    to { transform: scale(1); }
+    .pg-js .pg-hero__aside {
+        animation-delay: .4s;
+    }
+
+    // On the network itself, not its slot: the slot is layout.
+    .pg-js .pg-network {
+        animation: pg-hero-bloom 1.4s .1s cubic-bezier(.22, 1, .36, 1) both;
+    }
 }
 
 @keyframes pg-hero-drop {
@@ -233,4 +274,285 @@
 @keyframes pg-hero-rise {
     from { opacity: 0; transform: translateY(28px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pg-hero-bloom {
+    from { opacity: 0; transform: scale(.92); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+// ----------------------------------------------------------------------------
+// Business network (partials/site/home/hero-network): the globe, the chips
+// and the links share one 330×290 grid. The box keeps that aspect ratio, so
+// the SVG (meet) and the percent-positioned chips always agree.
+//
+// Globe: the sphere's meridians are full circles squeezed with scaleX along
+// a cosine, each a sixth of a turn apart, which reads as a slow spin (the
+// desktop detail group adds six more at half steps); the orbit rings'
+// dashes travel; the trend line draws itself once; nodes pulse. Links draw
+// in one after the other, then their dashes drift and a spark rides each
+// path (SMIL animateMotion, hidden under reduced motion). Only
+// transform/opacity/dash-offset animate and everything is gated on
+// no-preference, so reduced motion gets the same picture, still.
+// ----------------------------------------------------------------------------
+.pg-network {
+    --pg-globe-line: #8cc8ff;              // meridians / parallels / orbits / tracks
+    --pg-globe-glow: #4fb3ff;              // neon accent: glow, nodes, trend, links
+    --pg-globe-backdrop: #{$pg-primary-dark}; // halo behind the sphere
+
+    position: relative;
+    aspect-ratio: 330 / 290;
+    width: 100%;
+}
+
+.pg-network__canvas {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.pg-globe {
+    overflow: visible;
+    filter: drop-shadow(0 0 14px rgba(79, 179, 255, .2));
+
+    @include media-breakpoint-up(lg) {
+        filter: drop-shadow(0 0 22px rgba(79, 179, 255, .28));
+    }
+}
+
+.pg-globe__meridian {
+    transform-box: fill-box;
+    transform-origin: center;
+    vector-effect: non-scaling-stroke;
+}
+
+// Desktop-only density: extra parallels, meridians, nodes and the ring.
+.pg-globe__detail,
+.pg-network__ring {
+    display: none;
+
+    @include media-breakpoint-up(lg) {
+        display: initial;
+    }
+}
+
+.pg-network__ring {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.pg-network__spark {
+    filter: drop-shadow(0 0 3px var(--pg-globe-glow));
+
+    @media (prefers-reduced-motion: reduce) {
+        display: none;
+    }
+}
+
+// Nodes ("chips"): the published businesses on the ring. Named pg-node —
+// .pg-chip is the article category tag in pages/_articles. A slot is the chip's inner
+// edge: left/right chips grow outwards, top/bottom chips away from the
+// globe. Positions are percentages of the grid, like the SVG, so they must
+// not be mirrored for RTL — the drawing is not. The label text itself is
+// still RTL (inherited).
+.pg-hero__nodes {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+}
+
+/* rtl:begin:ignore */
+.pg-hero__node-slot {
+    position: absolute;
+    left: calc(var(--cx) * 1%);
+    top: calc(var(--cy) * 1%);
+    transform: translate(-50%, -50%);
+
+    &--left { transform: translate(-100%, -50%); }
+    &--right { transform: translate(0, -50%); }
+    &--top { transform: translate(-50%, -100%); }
+    &--bottom { transform: translate(-50%, 0); }
+}
+/* rtl:end:ignore */
+
+.pg-node {
+    --pg-node-accent: var(--pg-globe-glow);
+
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px 4px 7px;
+    border: 1px solid rgba(140, 200, 255, .35);
+    border-radius: var(--pg-radius-pill);
+    background: rgba(4, 26, 64, .6);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .25), inset 0 1px 0 rgba(255, 255, 255, .08);
+    font-family: var(--pg-font-family-fn);
+    font-size: clamp(.5625rem, 2.7vw, .625rem); // 9px on a 320 phone, 10px from 370
+    font-weight: 500;
+    line-height: 16px;
+    color: #fff;
+    white-space: nowrap;
+    text-decoration: none;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+
+    // 320px phones: the side slots leave ~110px; the longest title needs a
+    // slightly tighter chip there.
+    @media (max-width: 359.98px) {
+        gap: 5px;
+        padding: 3px 6px 3px 5px;
+        font-size: .53125rem; // 8.5px
+    }
+
+    @include media-breakpoint-up(md) {
+        gap: 8px;
+        padding: 5px 11px 5px 9px;
+        font-size: .75rem;
+        line-height: 18px;
+    }
+
+    @include media-breakpoint-up(lg) {
+        padding: 6px 13px 6px 11px;
+        font-size: .8125rem;
+        line-height: 20px;
+    }
+
+    @include media-breakpoint-up(xl) {
+        font-size: .875rem;
+    }
+
+    &:hover,
+    &:focus-visible {
+        border-color: rgba(140, 200, 255, .8);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, .3), 0 0 0 4px rgba(79, 179, 255, .12);
+        color: #fff;
+        transform: translateY(-1px);
+    }
+
+    // Product accent dots (see $pg-products in abstracts/_variables).
+    @each $key, $c in $pg-products {
+        &--#{$key} {
+            --pg-node-accent: #{tint-color(map-get($c, dot), 20%)};
+        }
+    }
+}
+
+.pg-node__dot {
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--pg-node-accent);
+    box-shadow: 0 0 6px var(--pg-node-accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .pg-globe__meridian {
+        // 24s per turn; --i staggers the circles by a sixth (half steps on desktop).
+        animation: pg-globe-spin 24s linear infinite;
+        animation-delay: calc(var(--i, 0) * -4s);
+    }
+
+    .pg-globe__orbit {
+        animation: pg-globe-flow 14s linear infinite;
+    }
+
+    .pg-globe__orbit--reverse {
+        animation-direction: reverse;
+        animation-duration: 18s;
+    }
+
+    .pg-network__ring {
+        animation: pg-network-turn 120s linear infinite;
+    }
+
+    .pg-js .pg-globe__trend {
+        stroke-dasharray: 420;
+        stroke-dashoffset: 420;
+        animation: pg-globe-draw 2.2s .6s cubic-bezier(.22, 1, .36, 1) forwards;
+    }
+
+    .pg-js .pg-globe__candles {
+        animation: pg-hero-rise 1s 1.6s cubic-bezier(.22, 1, .36, 1) both;
+    }
+
+    .pg-globe__pulse {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: pg-globe-pulse 3.2s ease-out infinite;
+    }
+
+    .pg-globe__pulse--late { animation-delay: 1.5s; }
+    .pg-globe__pulse--later { animation-delay: 2.4s; }
+
+    // Links: draw in after the globe settles, one every 120ms.
+    .pg-js .pg-network__link {
+        stroke-dasharray: 90;
+        stroke-dashoffset: 90;
+        animation: pg-link-draw 1s cubic-bezier(.22, 1, .36, 1) forwards;
+        animation-delay: calc(.7s + var(--i, 0) * .12s);
+    }
+
+    .pg-network__track {
+        animation: pg-globe-flow 9s linear infinite;
+    }
+
+    .pg-js .pg-network__spark {
+        animation: pg-fade-in .6s ease-out both;
+        animation-delay: calc(1.5s + var(--i, 0) * .12s);
+    }
+
+    // Chips fade in with their link. Opacity only: their transform is the
+    // slot anchoring and must never move.
+    .pg-js .pg-hero__node-slot {
+        animation: pg-fade-in .8s ease-out both;
+        animation-delay: calc(.9s + var(--i, 0) * .12s);
+    }
+}
+
+// A linear cosine: 1 → 0 → -1 → 0 → 1 (the back half runs mirrored).
+@keyframes pg-globe-spin {
+    0% { transform: scaleX(1); }
+    12.5% { transform: scaleX(.7071); }
+    25% { transform: scaleX(0); }
+    37.5% { transform: scaleX(-.7071); }
+    50% { transform: scaleX(-1); }
+    62.5% { transform: scaleX(-.7071); }
+    75% { transform: scaleX(0); }
+    87.5% { transform: scaleX(.7071); }
+    100% { transform: scaleX(1); }
+}
+
+@keyframes pg-globe-flow {
+    to { stroke-dashoffset: -120; }
+}
+
+@keyframes pg-globe-draw {
+    to { stroke-dashoffset: 0; }
+}
+
+@keyframes pg-link-draw {
+    to { stroke-dashoffset: 0; }
+}
+
+@keyframes pg-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes pg-network-turn {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pg-globe-pulse {
+    0% { opacity: .9; transform: scale(1); }
+    70% { opacity: 0; transform: scale(5); }
+    100% { opacity: 0; transform: scale(5); }
 }

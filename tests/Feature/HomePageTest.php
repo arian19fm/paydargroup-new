@@ -192,6 +192,46 @@ class HomePageTest extends TestCase
         $this->assertSame(Faq::query()->active()->count(), substr_count($html, 'data-bs-toggle="collapse"'));
     }
 
+    public function test_hero_network_links_the_published_businesses_to_the_globe(): void
+    {
+        $html = $this->get('/')->getContent();
+        $businesses = Business::query()->published()->ordered()->get();
+
+        $this->assertStringContainsString('<canvas class="pg-hero__particles" data-hero-particles aria-hidden="true"></canvas>', $html);
+        $this->assertMatchesRegularExpression('~<svg class="pg-network__canvas"[^>]*aria-hidden="true"~', $html);
+        $this->assertSame(12, substr_count($html, 'class="pg-globe__meridian"'));
+        $this->assertStringContainsString('<div class="pg-hero__copy">', $html);
+        $this->assertStringContainsString('<div class="pg-hero__visual">', $html);
+        $this->assertStringNotContainsString('pg-hero__media', $html, 'The hero has no background photo.');
+
+        // One chip, one link and one travelling spark per published business (capped at six slots).
+        $count = min($businesses->count(), 6);
+        $this->assertGreaterThan(0, $count);
+        $this->assertSame($count, substr_count($html, 'class="pg-network__link"'));
+        $this->assertSame($count, substr_count($html, '<mpath href="#pg-link-'));
+        $this->assertSame($count, substr_count($html, 'class="pg-node pg-node--'));
+
+        foreach ($businesses->take(6) as $business) {
+            $this->assertMatchesRegularExpression(
+                '~<a class="pg-node pg-node--'.$business->accentKey().'" href="'.preg_quote(route('businesses.show', $business->slug), '~').'">.*?'.preg_quote($business->title, '~').'~s',
+                $html
+            );
+        }
+
+        // Fewer businesses take a balanced subset of the slots; none, no list.
+        Business::query()->ordered()->get()->slice(3)->each->update(['status' => 'draft']);
+        $html = $this->get('/')->getContent();
+        $this->assertSame(3, substr_count($html, 'class="pg-node pg-node--'));
+        $this->assertSame(1, substr_count($html, 'pg-hero__node-slot--top'));
+        $this->assertSame(1, substr_count($html, 'pg-hero__node-slot--left'));
+        $this->assertSame(1, substr_count($html, 'pg-hero__node-slot--right'));
+
+        Business::query()->update(['status' => 'draft']);
+        $html = $this->get('/')->getContent();
+        $this->assertStringNotContainsString('class="pg-hero__nodes"', $html);
+        $this->assertStringContainsString('class="pg-globe"', $html, 'The globe stays even with nothing to connect.');
+    }
+
     public function test_faq_answers_keep_paragraphs_and_line_breaks(): void
     {
         Faq::query()->update(['is_active' => false]);

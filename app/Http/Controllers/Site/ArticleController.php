@@ -71,7 +71,7 @@ class ArticleController extends Controller
                 'headline' => $article->title,
                 'description' => $article->seoMeta()?->description ?: $article->excerpt,
                 'url' => $article->publicUrl(),
-                'image' => $article->featuredImage?->url(),
+                'image' => $article->featuredImage?->absoluteUrl(),
                 'datePublished' => $article->published_at,
                 'dateModified' => $article->updated_at,
                 'author' => $article->author?->name,

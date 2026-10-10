@@ -161,6 +161,10 @@ Product accents live in the `$pg-products` map and are exposed per card as
   `dropdown`, `offcanvas`, `modal`, `alert`). Add a module only when markup
   uses it; never `import 'bootstrap'` wholesale. No jQuery.
 - `site/navigation.js` — vanilla progressive enhancement for the header.
+- `site/hero-particles.js` — the hero's particle field on a `<canvas
+  data-hero-particles>`: drifting points linked when close, nudged by the
+  pointer. Vanilla, no library; not created under reduced motion, paused
+  off screen / in hidden tabs, DPR capped at 2, pointer-events none.
 - `vue/mount.js` — isolated Vue mounting (below).
 
 - `animations/` — scroll-driven motion on GSAP + ScrollTrigger
@@ -182,6 +186,43 @@ browser and never block rendering.
 - Hooks are explicit: `data-motion="hero | product-stack | reveal |
   reveal-group | reveal-heading | parallax"` plus the `data-motion-exit`
   modifier. Do not animate arbitrary selectors.
+- Hero layout: no background photo on any size — the brand gradient on
+  `.pg-hero` plus the particle canvas. Below `lg` the hero is a flex
+  column: the network (`.pg-hero__visual`, `order: -1`) in flow under the
+  header, then `.pg-hero__copy`. From `lg` `.pg-hero__inner` is a
+  two-column grid: `.pg-hero__copy` at the start, `.pg-hero__visual` in
+  the media column, both vertically centred. The admin video is a framed
+  box (`.pg-hero__video-box`, native controls, no autoplay, the hero image
+  as poster) at the top of `.pg-hero__copy`; `site/hero-video.js` only
+  pauses it off screen. GSAP drifts `.pg-hero__inner` as a whole.
+- Hero network (`partials/site/home/hero-network`, `.pg-network` /
+  `.pg-globe` / `.pg-node` in `pages/home/_hero.scss`): the "fintech
+  ecosystem" visual, fed the home page's `$products` (published
+  businesses, first six). One inline SVG on a 330×290 grid holds the
+  nested globe, the chip ring and a curved link per business; the chips
+  (`.pg-node`, real links — `.pg-chip` is the article tag) are an HTML list
+  laid over the same grid in percentages (`--cx`/`--cy`). Radial geometry:
+  sphere radius 55.9, chip ring radius 84; a slot is the chip's inner edge
+  (left/right chips grow outwards, top/bottom away from the globe), so a
+  chip's width never moves the join, no chip can reach the sphere and the
+  side chips never leave a 320px phone (a narrow-phone rule tightens
+  them). Six slots at 45° plus top/bottom; `$sets` picks a balanced subset
+  for 1–6 chips. The slot rule is wrapped in `rtl:begin:ignore` because
+  the drawing is not mirrored (the label text still inherits RTL). The
+  desktop-only `.pg-globe__detail` group and `.pg-network__ring` add
+  density. Motion is CSS only — meridian circles squeezed with `scaleX`
+  along a cosine keyframe (staggered by `--i`) read as a spin; orbit, ring
+  and track dashes travel; links and the trend line draw once on load;
+  chips fade in with their link (opacity only, their transform is the
+  anchoring) — plus an SMIL `animateMotion` spark riding each link, hidden
+  by CSS under reduced motion. Everything is gated on
+  `prefers-reduced-motion: no-preference`, so the static picture is what
+  reduced-motion visitors get. Colours are the `--pg-globe-*` custom
+  properties on `.pg-network` (derived from the hero accent; not Figma
+  tokens, the element is not in the design file); chip dots take the
+  product accent `dot` colours from `$pg-products`. Layout QA: measure
+  chip/sphere/title bounding boxes headlessly at 320–1440 (see the
+  scratch `check.py` recipe in the project memory) rather than eyeballing.
 - Product stack: CSS does the structure (`position: sticky` per card at
   `--pg-stack-top + --stack-index × --pg-stack-step`, rising `z-index`; the
   list keeps its natural height), GSAP only scrubs scale/opacity of the
@@ -246,6 +287,7 @@ resources/views/
   partials/site/mobile-navigation offcanvas panel (opens from the end edge — left in RTL)
   partials/site/footer           brand + pages ("footer" menu) + services + contact/social (settings) + legal ("legal" menu)
   partials/site/home/*           hero, products, blog, faq, contact sections of the home page
+  partials/site/home/hero-network  hero "business network" on mobile/tablet: line-art globe + chips for the published businesses + animated links
   components/ui/cta              <a> when a destination exists, <span> otherwise (unpublished CMS pages)
   errors/{layout,404,500,503}    branded error pages (noindex)
   site/                          public pages (@extends('layouts.site'))

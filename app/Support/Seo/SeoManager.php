@@ -235,7 +235,7 @@ class SeoManager
     public static function imageFromMedia(Media $media): array
     {
         return array_filter([
-            'url' => $media->url(),
+            'url' => $media->absoluteUrl(),
             'width' => $media->width,
             'height' => $media->height,
             'alt' => $media->alt_text,
@@ -268,7 +268,7 @@ class SeoManager
         $image = $meta?->ogImage ?? $model->seoDefaultImage();
 
         if ($image) {
-            $this->image($image->url(), $image->width, $image->height, $image->alt_text);
+            $this->image($image->absoluteUrl(), $image->width, $image->height, $image->alt_text);
         }
 
         if ($meta?->twitterImage) {

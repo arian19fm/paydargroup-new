@@ -267,13 +267,18 @@ accessibility labels, messages, footer headings).
 ## Home page hero media
 
 Settings → **صفحهٔ اصلی** (`home` group): `hero_video_media_id` (an MP4/WebM
-uploaded to the media library) and `hero_image_media_id` (optional
-replacement for the designed photo). With a video the hero renders a
-muted, looping, `playsinline` `<video>` over the photo; the photo stays as
-poster and as the fallback for reduced motion, no JavaScript, blocked
-autoplay or unsupported formats. The media library accepts `video/mp4` and
-`video/webm` up to 60 MB (images/PDF keep the 10 MB cap). IDs that do not
-resolve to the right media type are ignored, so the page always renders.
+uploaded to the media library) and `hero_image_media_id` (the video's
+cover). The hero has no background photo on any size — only the brand
+gradient (see `FRONTEND.md`). The video renders as a framed 16:9 box at
+the top of the copy column — under the globe on mobile/tablet, above the
+eyebrow on desktop — with native controls; it does not autoplay, the
+image is its poster until the visitor presses play (without one the
+first frame shows), and it pauses when scrolled out of view. The media
+library accepts `video/mp4` and `video/webm` up to 60 MB (images/PDF keep
+the 10 MB cap). IDs that do not resolve to the right media type are
+ignored, so the page always renders. Media URLs in pages are
+root-relative (`Media::url()`), so they load from whatever host serves
+the page; sharing metadata uses `Media::absoluteUrl()`.
 
 ## Page templates
 
