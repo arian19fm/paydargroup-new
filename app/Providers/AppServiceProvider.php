@@ -3,18 +3,22 @@
 namespace App\Providers;
 
 use App\Models\Article;
+use App\Models\ArticleCategory;
 use App\Models\Business;
+use App\Models\JobOpening;
 use App\Models\Menu;
 use App\Models\MenuItem;
 use App\Models\Page;
+use App\Models\SeoMeta;
+use App\Models\TeamMember;
 use App\Policies\RolePolicy;
 use App\Support\Menus\MenuRepository;
 use App\Support\Seo\SeoManager;
+use App\Support\Seo\Sitemap\Sitemap;
 use App\Support\Settings\Settings;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
@@ -64,13 +68,11 @@ class AppServiceProvider extends ServiceProvider
         Business::saved($flushMenus);
         Business::deleted($flushMenus);
 
-        // Sitemap reflects publication changes promptly.
-        $flushSitemap = fn () => Cache::forget(config('seo.sitemap_cache_key', 'seo.sitemap.xml'));
-        Page::saved($flushSitemap);
-        Page::deleted($flushSitemap);
-        Article::saved($flushSitemap);
-        Article::deleted($flushSitemap);
-        Business::saved($flushSitemap);
-        Business::deleted($flushSitemap);
+        // The sitemap reflects publication, SEO (noindex) and listing
+        // changes promptly; its lastmod hints follow jobs and the team too.
+        foreach ([Page::class, Article::class, ArticleCategory::class, Business::class, SeoMeta::class, JobOpening::class, TeamMember::class] as $model) {
+            $model::saved(fn () => Sitemap::flush());
+            $model::deleted(fn () => Sitemap::flush());
+        }
     }
 }

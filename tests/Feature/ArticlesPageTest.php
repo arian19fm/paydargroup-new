@@ -37,12 +37,16 @@ class ArticlesPageTest extends TestCase
         $this->assertMatchesRegularExpression('/مقالهٔ دوم.*مقالهٔ اول/s', $html); // newest first
         $this->assertStringContainsString($cover->url(), $html);
         $this->assertStringNotContainsString('پیش‌نویس', $html);
-        $this->assertSame(9, substr_count($html, 'class="pg-post pg-articles__item"'));
+        // The newest post is featured above the grid on the first page only.
+        $this->assertSame(1, substr_count($html, 'class="pg-feature-post"'));
+        $this->assertMatchesRegularExpression('/pg-feature-post.*مقالهٔ دوم.*pg-articles__grid/s', $html);
+        $this->assertSame(8, substr_count($html, 'class="pg-post pg-articles__item"'));
         $this->assertStringContainsString('class="pg-pager__item is-active" aria-current="page"', $html);
         $this->assertStringContainsString('href="'.route('articles.index', ['page' => 2]).'" rel="next"', $html);
         $this->assertStringContainsString('pg-header--light', $html);
 
-        $this->get('/articles?page=2')->assertOk()->assertSee('مقالهٔ قدیمی');
+        $page2 = $this->get('/articles?page=2')->assertOk()->assertSee('مقالهٔ قدیمی')->getContent();
+        $this->assertStringNotContainsString('pg-feature-post', $page2);
 
         $filtered = $this->get('/articles?category=blockchain')->assertOk()->getContent();
         $this->assertStringContainsString('مقالهٔ اول', $filtered);
@@ -51,7 +55,7 @@ class ArticlesPageTest extends TestCase
         $this->assertStringContainsString('rel="canonical" href="https://paydargroup.test/articles?category=blockchain"', $filtered);
 
         $this->get('/articles?category=missing')->assertNotFound();
-        $this->get('/sitemap.xml')->assertOk()->assertSee('https://paydargroup.test/articles</loc>', false);
+        $this->get('/sitemaps/pages.xml')->assertOk()->assertSee('https://paydargroup.test/articles</loc>', false);
     }
 
     public function test_listing_empty_state(): void
@@ -77,7 +81,8 @@ class ArticlesPageTest extends TestCase
         $this->assertStringContainsString('<p>پاراگراف <b>x</b></p>', $html);
         $this->assertStringNotContainsString('alert(1)', $html);
         $this->assertStringContainsString('<ul><li><p>مورد یک</p></li><li><p>مورد دو</p></li></ul>', $html);
-        $this->assertStringContainsString('<li class="is-lead"><a href="#section-1">دارایی توکنی چیست؟</a></li>', $html);
+        $this->assertStringContainsString('<li><a href="#section-1">دارایی توکنی چیست؟</a></li>', $html);
+        $this->assertStringContainsString('data-article-toc', $html);
         $this->assertStringContainsString('<li><a href="#section-2">سود دوره‌ای</a></li>', $html);
         $this->assertStringContainsString('لید مقاله', $html);
         $this->assertStringContainsString('data-copy-link', $html);

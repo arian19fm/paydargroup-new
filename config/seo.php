@@ -1,5 +1,6 @@
 <?php
 
+use App\Support\Seo\Sitemap\ArticleCategoriesSource;
 use App\Support\Seo\Sitemap\ArticlesSource;
 use App\Support\Seo\Sitemap\BusinessesSource;
 use App\Support\Seo\Sitemap\PagesSource;
@@ -70,20 +71,31 @@ return [
     | Sitemap
     |--------------------------------------------------------------------------
     |
-    | Classes implementing App\Support\Seo\Sitemap\SitemapSource. Each returns
-    | the URLs it owns: static routes, published pages, published articles.
-    | Only published, indexable, canonical content is emitted. See docs/SEO.md.
+    | /sitemap.xml is an index of one sitemap per section below
+    | (/sitemaps/{name}.xml), each built from classes implementing
+    | App\Support\Seo\Sitemap\SitemapSource, plus /sitemap-news.xml for the
+    | last two days of news. Only published, indexable, canonical content is
+    | emitted. See docs/SEO.md §10.
     |
     */
 
-    'sitemap_sources' => [
-        StaticPagesSource::class,
-        PagesSource::class,
-        ArticlesSource::class,
-        BusinessesSource::class,
+    'sitemaps' => [
+        'pages' => [
+            StaticPagesSource::class,
+            PagesSource::class,
+            BusinessesSource::class,
+        ],
+        'articles' => [
+            ArticlesSource::class,
+            ArticleCategoriesSource::class,
+        ],
     ],
 
-    'sitemap_cache_key' => 'seo.sitemap.xml',
+    // <news:language> of the news sitemap (ISO 639).
+    'news_language' => 'fa',
+
+    // Cache key prefix: "<prefix>.index", "<prefix>.<section>", "<prefix>.news".
+    'sitemap_cache_key' => 'seo.sitemap',
 
     'sitemap_cache_seconds' => 3600,
 

@@ -74,11 +74,11 @@ class ArticleController extends Controller
         return redirect()->route('admin.articles.index')->with('success', __('admin.deleted'));
     }
 
-    /** A cover uploaded from the form goes into the media library, named after the article. */
+    /** A cover uploaded from the form goes into the media library (as WebP), named after the article. */
     protected function withUploadedImage(ArticleRequest $request, array $data): array
     {
         if ($request->hasFile('featured_image')) {
-            $data['featured_image_id'] = $this->media->upload($request->file('featured_image'), $request->user(), [
+            $data['featured_image_id'] = $this->media->uploadContentImage($request->file('featured_image'), $request->user(), [
                 'title' => $data['title'],
                 'alt_text' => $data['title'],
             ])->id;

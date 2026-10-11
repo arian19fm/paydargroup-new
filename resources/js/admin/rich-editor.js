@@ -53,6 +53,15 @@ const fingerprint = (html) => {
     return walk(template.content).replace(/\s+/g, ' ').replace(/\s*(<[^>]+>)\s*/g, '$1').trim();
 };
 
+// The markup when pasted text is, as a whole, HTML source (optionally in a
+// ```html fence); null for ordinary text. Mirrors HtmlContent::pastedSource.
+const pastedSource = (text) => {
+    const source = text.trim().replace(/^```[a-z]*[ \t]*\r?\n([\s\S]*?)\r?\n?\s*```$/i, '$1').trim();
+
+    return source.startsWith('<') && source.endsWith('>')
+        && /<(!doctype|html|body|article|section|div|p|h[1-6]|ul|ol|table|figure|blockquote)[\s>]/i.test(source) ? source : null;
+};
+
 // One block per line, so the HTML tab stays readable.
 const formatHtml = (html) => html
     .replace(/(<\/(?:p|h[1-6]|ul|ol|li|blockquote|pre)>|<hr>|<(?:ul|ol)>)/g, '$1\n')
@@ -122,8 +131,13 @@ const setup = (root) => {
     const surface = document.createElement('div');
     surface.className = 'pg-editor__surface';
 
+    const pasted = document.createElement('div');
+    pasted.className = 'alert alert-info small py-2 mb-2';
+    pasted.textContent = t.pasted_html;
+    pasted.hidden = true;
+
     visual.append(toolbar, panel, notice, surface);
-    source.before(modes, visual);
+    source.before(modes, visual, pasted);
 
     // ---- Editor.
     let mode = 'visual';
@@ -144,6 +158,27 @@ const setup = (root) => {
                 role: 'textbox',
                 'aria-multiline': 'true',
                 'aria-label': root.querySelector('label')?.textContent.trim() ?? '',
+            },
+            handlePaste: (view, event) => {
+                const html = pastedSource(event.clipboardData?.getData('text/plain') ?? '');
+                if (html === null) {
+                    return false;
+                }
+                event.preventDefault();
+                if (editor.state.doc.textContent.trim() === '') {
+                    // A whole article: keep every tag it has (HTML mode
+                    // when the visual editor cannot hold them all).
+                    source.value = html;
+                    source.dispatchEvent(new Event('input', { bubbles: true }));
+                    editor.commands.setContent(html, { emitUpdate: false });
+                    editedVisually = false;
+                    setMode(lossy() ? 'html' : 'visual');
+                    pasted.hidden = mode !== 'html';
+                } else {
+                    editor.chain().focus().insertContent(html).run();
+                }
+
+                return true;
             },
         },
         onUpdate: () => {
@@ -172,6 +207,7 @@ const setup = (root) => {
         visualTab.setAttribute('aria-pressed', String(mode === 'visual'));
         htmlTab.setAttribute('aria-pressed', String(mode === 'html'));
         notice.hidden = mode !== 'visual' || editedVisually || !lossy();
+        pasted.hidden = true;
         closePanel();
     };
 

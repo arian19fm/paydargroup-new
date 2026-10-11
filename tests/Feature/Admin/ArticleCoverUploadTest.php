@@ -27,7 +27,9 @@ class ArticleCoverUploadTest extends TestCase
         $article = Article::firstOrFail();
         $cover = Media::findOrFail($article->featured_image_id);
         $this->assertSame('مقالهٔ تازه', $cover->title);
-        Storage::disk('public')->assertExists($cover->path);
+        $this->assertSame([750, 227, 'image/webp'], [$cover->width, $cover->height, $cover->mime_type]);
+        $info = getimagesizefromstring(Storage::disk('public')->get($cover->path));
+        $this->assertSame([750, 227, 'image/webp'], [$info[0], $info[1], $info['mime']]);
 
         $this->actingAs($admin)->get("/admin/articles/{$article->id}/edit")->assertOk()->assertSee('remove_featured_image');
 

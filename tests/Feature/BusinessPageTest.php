@@ -112,7 +112,7 @@ class BusinessPageTest extends TestCase
         $published = Business::factory()->published()->create(['slug' => 'in-sitemap']);
         Business::factory()->create(['slug' => 'not-in-sitemap']);
 
-        $xml = $this->get('/sitemap.xml')->assertOk()->getContent();
+        $xml = $this->get('/sitemaps/pages.xml')->assertOk()->getContent();
 
         $this->assertStringContainsString($published->publicUrl(), $xml);
         $this->assertStringNotContainsString('not-in-sitemap', $xml);

@@ -68,4 +68,22 @@ class HtmlContentTest extends TestCase
         $this->assertSame("<p>خط ۱<br>\nخط ۲ &lt; ۳</p>\n<p>بند دوم</p>", HtmlContent::toHtml("خط ۱\nخط ۲ < ۳\n\nبند دوم"));
         $this->assertSame(['html' => '', 'toc' => []], HtmlContent::render('  '));
     }
+
+    public function test_pasted_html_source_is_used_as_markup(): void
+    {
+        $expected = '<h2>تیتر</h2><p>متن <strong>مهم</strong></p>';
+        $strip = fn (string $html) => preg_replace('/>\s+</', '><', HtmlContent::toHtml($html));
+
+        // Pasted into the visual editor (escaped, one paragraph per line), in a ```html fence.
+        $this->assertSame($expected, $strip('<p>```html</p><p>&lt;h2&gt;تیتر&lt;/h2&gt;</p><p></p><p>&lt;p&gt;متن &lt;strong&gt;مهم&lt;/strong&gt;&lt;/p&gt;</p><p>```</p>'));
+        // Pasted into a code block.
+        $this->assertSame($expected, $strip('<pre><code>&lt;h2&gt;تیتر&lt;/h2&gt;&lt;p&gt;متن &lt;strong&gt;مهم&lt;/strong&gt;&lt;/p&gt;</code></pre>'));
+        // Fenced source in the HTML tab; a whole document.
+        $this->assertSame($expected, $strip("```html\n<h2>تیتر</h2>\n<p>متن <strong>مهم</strong></p>\n```"));
+        $this->assertSame($expected, $strip('<!DOCTYPE html><html lang="fa"><head><title>x</title><style>p{color:red}</style></head><body><h2>تیتر</h2><p>متن <strong>مهم</strong></p></body></html>'));
+
+        // Content that only quotes some markup stays as written.
+        $this->assertSame('<p>تگ &lt;p&gt; یعنی پاراگراف</p>', HtmlContent::toHtml('<p>تگ &lt;p&gt; یعنی پاراگراف</p>'));
+        $this->assertSame('<h2>نمونه</h2><pre><code>&lt;p&gt;x&lt;/p&gt;</code></pre>', HtmlContent::toHtml('<h2>نمونه</h2><pre><code>&lt;p&gt;x&lt;/p&gt;</code></pre>'));
+    }
 }

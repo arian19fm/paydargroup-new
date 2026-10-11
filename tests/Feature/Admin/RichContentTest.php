@@ -62,12 +62,18 @@ class RichContentTest extends TestCase
         $editor = $this->adminUser('editor');
 
         $response = $this->actingAs($editor)->postJson('/admin/media/editor-image', [
-            'file' => UploadedFile::fake()->image('chart.png', 640, 360), 'alt_text' => 'نمودار رشد',
-        ])->assertCreated()->assertJson(['width' => 640, 'height' => 360, 'alt' => 'نمودار رشد']);
+            'file' => UploadedFile::fake()->image('chart.png', 1500, 900), 'alt_text' => 'نمودار رشد',
+        ])->assertCreated()->assertJson(['width' => 750, 'height' => 450, 'alt' => 'نمودار رشد']);
 
         $media = Media::findOrFail($response->json('id'));
         $this->assertSame($media->url(), $response->json('url'));
-        Storage::disk('public')->assertExists($media->path);
+        $this->assertSame(['image/webp', 'webp'], [$media->mime_type, $media->extension]);
+        $this->assertStringEndsWith('.webp', $media->path);
+        $this->assertSame('image/webp', getimagesizefromstring(Storage::disk('public')->get($media->path))['mime']);
+
+        // Smaller images are converted but never enlarged.
+        $this->actingAs($editor)->postJson('/admin/media/editor-image', ['file' => UploadedFile::fake()->image('icon.jpg', 320, 200)])
+            ->assertCreated()->assertJson(['width' => 320, 'height' => 200]);
 
         $this->actingAs($editor)->postJson('/admin/media/editor-image', [
             'file' => UploadedFile::fake()->create('doc.pdf', 10, 'application/pdf'),

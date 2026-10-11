@@ -4,16 +4,20 @@ namespace App\Support\Seo\Sitemap;
 
 use App\Models\Article;
 
-/** Published, indexable articles. */
+/** Published, indexable articles, with their cover image. */
 class ArticlesSource implements SitemapSource
 {
     public function urls(): iterable
     {
-        $query = Article::query()->published()->indexable()->orderBy('id')
-            ->select(['id', 'slug', 'updated_at']);
+        $query = Article::query()->published()->indexable()->with('featuredImage')->orderBy('id')
+            ->select(['id', 'slug', 'featured_image_id', 'updated_at']);
 
         foreach ($query->lazy(500) as $article) {
-            yield new SitemapUrl($article->publicUrl(), $article->updated_at);
+            yield new SitemapUrl(
+                $article->publicUrl(),
+                $article->updated_at,
+                $article->featuredImage?->isImage() ? [$article->featuredImage->absoluteUrl()] : [],
+            );
         }
     }
 }

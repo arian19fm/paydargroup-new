@@ -72,6 +72,6 @@ class CareersPageTest extends TestCase
         $this->assertStringNotContainsString(__('careers.jobs_empty'), $html);
 
         $this->get('/careers?page=2')->assertOk()->assertSee('کارآموز');
-        $this->get('/sitemap.xml')->assertOk()->assertSee('https://paydargroup.test/careers', false);
+        $this->get('/sitemaps/pages.xml')->assertOk()->assertSee('https://paydargroup.test/careers', false);
     }
 }

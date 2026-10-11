@@ -9,7 +9,7 @@ use App\Models\Media;
 use App\Models\NewsRun;
 use App\Models\User;
 use App\Support\Content\HtmlContent;
-use Illuminate\Support\Facades\Cache;
+use App\Support\Seo\Sitemap\Sitemap;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -42,7 +42,7 @@ class NewsPublisher
         }
 
         if ($articles !== []) {
-            Cache::forget(config('seo.sitemap_cache_key', 'seo.sitemap.xml'));
+            Sitemap::flush();
         }
 
         return $articles;

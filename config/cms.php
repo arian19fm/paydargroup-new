@@ -13,7 +13,7 @@ return [
     // application routes or infrastructure paths.
     'reserved_slugs' => [
         'admin', 'api', 'articles', 'build', 'businesses', 'careers', 'contact', 'login', 'logout', 'robots.txt',
-        'sitemap.xml', 'storage', 'team', 'up', 'vendor',
+        'sitemap.xml', 'sitemap-news.xml', 'sitemap.xsl', 'sitemaps', 'storage', 'team', 'up', 'vendor',
     ],
 
     // The site's pages are fixed: they cannot be created or deleted in the
@@ -31,6 +31,14 @@ return [
     'page_templates' => [
         'default' => 'site.pages.show',
         'about' => 'site.pages.templates.about',
+    ],
+
+    // Images used inside content (article covers, images inserted in the
+    // editor) are stored as WebP scaled down to this width — the article
+    // column — at this quality (App\Support\Media\WebpImage).
+    'content_image' => [
+        'width' => 750,
+        'quality' => 82,
     ],
 
     // schema.org types offered in the SEO form.

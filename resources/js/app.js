@@ -14,6 +14,7 @@ import './site/hero-particles';
 import './site/business-video';
 import './site/job-apply';
 import './site/share-link';
+import './site/article-reading';
 import './admin/char-counter';
 import { mountVueComponents } from './vue/mount';
 

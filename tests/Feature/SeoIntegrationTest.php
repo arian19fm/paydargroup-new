@@ -97,14 +97,14 @@ class SeoIntegrationTest extends TestCase
         Article::factory()->published()->create(['slug' => 'story']);
         Article::factory()->create(['slug' => 'draft-story']);
 
-        $this->get('/sitemap.xml')
-            ->assertOk()
-            ->assertSee('<loc>https://paydargroup.test/visible</loc>', false)
-            ->assertSee('<loc>https://paydargroup.test/articles/story</loc>', false)
-            ->assertDontSee('/draft</loc>', false)
-            ->assertDontSee('/scheduled</loc>', false)
-            ->assertDontSee('/hidden</loc>', false)
-            ->assertDontSee('/draft-story</loc>', false)
-            ->assertDontSee('/admin', false);
+        $xml = $this->get('/sitemaps/pages.xml')->getContent().$this->get('/sitemaps/articles.xml')->getContent();
+
+        $this->assertStringContainsString('<loc>https://paydargroup.test/visible</loc>', $xml);
+        $this->assertStringContainsString('<loc>https://paydargroup.test/articles/story</loc>', $xml);
+        $this->assertStringNotContainsString('/draft</loc>', $xml);
+        $this->assertStringNotContainsString('/scheduled</loc>', $xml);
+        $this->assertStringNotContainsString('/hidden</loc>', $xml);
+        $this->assertStringNotContainsString('/draft-story</loc>', $xml);
+        $this->assertStringNotContainsString('/admin', $xml);
     }
 }

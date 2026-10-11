@@ -20,6 +20,10 @@ use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
  * table of contents, images load lazily, new-tab links get rel="noopener" and tables
  * scroll inside a wrapper. Text without any tag (legacy plain text, or a
  * field typed with JavaScript off) is rendered as paragraphs.
+ *
+ * HTML source pasted where text was expected (into the visual editor or
+ * a code block, often copied from ChatGPT inside a ```html fence) is
+ * recognised and used as the markup instead of being shown as code.
  */
 class HtmlContent
 {
@@ -47,6 +51,9 @@ class HtmlContent
         'section' => [], 'aside' => [], 'details' => ['open'], 'summary' => [], 'address' => [],
     ];
 
+    /** Tags the visual editor wraps pasted text in. */
+    private const PASTE_WRAPPERS = ['p', 'br', 'pre', 'code', 'div', 'span'];
+
     /** Wrappers that make no sense inside a body: the tag goes, the text stays. */
     private const UNWRAPPED = ['article', 'header', 'footer', 'main', 'nav', 'font', 'center', 'body', 'html'];
 
@@ -62,11 +69,52 @@ class HtmlContent
             return '';
         }
 
-        $clean = trim(self::sanitizer()->sanitize($html));
+        $clean = trim(self::sanitizer()->sanitize(self::pastedSource($html)));
 
         $visible = trim(html_entity_decode(strip_tags($clean), ENT_QUOTES | ENT_HTML5, 'UTF-8'), " \t\n\r\0\x0B\u{A0}");
 
         return $visible === '' && ! preg_match('/<(img|hr|table|picture)\b/i', $clean) ? '' : $clean;
+    }
+
+    /**
+     * The markup itself when the input is HTML source that ended up as text:
+     * a ```html fence around it, or the whole body escaped (&lt;h2&gt;…)
+     * inside nothing but the paragraphs or code block the editor wrapped
+     * it in. Anything else — an article that merely quotes some code — is
+     * returned unchanged.
+     */
+    public static function pastedSource(string $html): string
+    {
+        $html = self::unfence($html);
+
+        if (! str_contains($html, '&lt;')) {
+            return $html;
+        }
+
+        preg_match_all('/<\/?([a-z][a-z0-9]*)/i', $html, $tags);
+
+        if (array_diff(array_map('strtolower', $tags[1]), self::PASTE_WRAPPERS) !== []) {
+            return $html;
+        }
+
+        $text = preg_replace(['/<br\s*\/?>/i', '/<\/(p|div|pre)>/i'], "\n", $html);
+        $text = self::unfence(html_entity_decode(strip_tags($text), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+
+        return self::looksLikeSource($text) ? $text : $html;
+    }
+
+    private static function unfence(string $text): string
+    {
+        return preg_match('/^\s*```[a-z]*[ \t]*\R(.*?)\R?\s*```\s*$/is', $text, $m) ? trim($m[1]) : $text;
+    }
+
+    /** Text that is, as a whole, an HTML document or block-level fragment. */
+    private static function looksLikeSource(string $text): bool
+    {
+        $text = trim($text, " \t\n\r\0\x0B\u{A0}");
+
+        return str_starts_with($text, '<') && str_ends_with($text, '>')
+            && preg_match('/<(!doctype|html|body|article|section|div|p|h[1-6]|ul|ol|table|figure|blockquote)[\s>]/i', $text) === 1;
     }
 
     public static function isHtml(?string $text): bool

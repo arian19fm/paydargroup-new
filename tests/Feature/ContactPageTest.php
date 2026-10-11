@@ -83,6 +83,6 @@ class ContactPageTest extends TestCase
     public function test_contact_is_a_reserved_slug_and_in_the_sitemap(): void
     {
         $this->assertContains('contact', config('cms.reserved_slugs'));
-        $this->get('/sitemap.xml')->assertOk()->assertSee('https://paydargroup.test/contact', false);
+        $this->get('/sitemaps/pages.xml')->assertOk()->assertSee('https://paydargroup.test/contact', false);
     }
 }

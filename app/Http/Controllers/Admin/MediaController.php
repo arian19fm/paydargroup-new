@@ -53,7 +53,7 @@ class MediaController extends Controller
 
     /**
      * Image upload from the rich editor (resources/js/admin/rich-editor):
-     * stored in the library like any upload, answered with what the editor
+     * stored in the library as a WebP content image, answered with what the editor
      * needs to insert an <img> with its alt text and dimensions.
      */
     public function editorImage(Request $request): JsonResponse
@@ -65,7 +65,7 @@ class MediaController extends Controller
             'alt_text' => ['nullable', 'string', 'max:500'],
         ]);
 
-        $medium = $this->media->upload($request->file('file'), $request->user(), ['alt_text' => $data['alt_text'] ?? null]);
+        $medium = $this->media->uploadContentImage($request->file('file'), $request->user(), ['alt_text' => $data['alt_text'] ?? null]);
 
         return response()->json([
             'id' => $medium->id,

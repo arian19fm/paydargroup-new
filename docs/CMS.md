@@ -97,10 +97,19 @@ plain text.
   mode; in visual mode the textarea is only rewritten once something is
   edited there, so switching modes never loses markup by itself. Without
   JS the textarea is a plain HTML source field.
+- **Pasted HTML source** (e.g. an article ChatGPT wrote as HTML): pasting
+  text that is, as a whole, HTML (optionally in a ```` ```html ```` fence)
+  into the visual editor inserts it as markup; into an empty editor it
+  becomes the whole body (HTML mode when it holds markup the visual editor
+  cannot). `HtmlContent::pastedSource()` does the same on save and render
+  for content that arrived escaped anyway (a fence, or the whole body
+  escaped inside only p/pre/code wrappers); content that merely quotes
+  some markup is untouched.
 - **Images**: the image button uploads to the media library
   (`POST /admin/media/editor-image`, `media` create permission, JPG/PNG/
   WebP/GIF ≤ 10 MB) and inserts `<img>` with alt text, width and height; an
-  image URL can be used instead.
+  image URL can be used instead. Uploads are stored as content images
+  (WebP, ≤ 750 px wide — see §4).
 - **Sanitising** (`App\Support\Content\HtmlContent`, symfony/html-sanitizer):
   on save (`SanitizesRichContent` in the form requests, before validation,
   so empty markup counts as empty) **and** on render. Allow-list: p, br, hr,
@@ -135,6 +144,13 @@ plain text.
   to S3-compatible storage later means changing the disk, nothing else.
 - Uploads go through `App\Support\Media\MediaService::upload()`: random UUID
   filenames, image dimensions detected, uploader recorded.
+- **Content images** (article covers uploaded from the article form, images
+  uploaded from the editor) go through `uploadContentImage()`:
+  `App\Support\Media\WebpImage` re-encodes JPG/PNG/WebP as WebP scaled
+  down to `cms.content_image.width` (750 px, never enlarged, quality 82),
+  applying the JPEG EXIF rotation and keeping transparency. GIFs (animation)
+  and images GD cannot decode (or over 40 MP) are stored unchanged. Uploads
+  in the media library itself keep the original file.
 - Validation (`MediaStoreRequest`): allow-list `jpg, jpeg, png, webp, gif,
   pdf`, MIME sniffed from content (`mimetypes`), max 10 MB. **SVG and any
   executable/archive types are rejected** until an SVG sanitiser is chosen.

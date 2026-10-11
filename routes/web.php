@@ -38,7 +38,9 @@ Route::post('/contact', [ContactRequestController::class, 'store'])
 
 // SEO endpoints (environment aware — see config/seo.php).
 Route::get('/robots.txt', RobotsController::class)->name('robots');
-Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('/sitemaps/{name}.xml', [SitemapController::class, 'section'])->where('name', '[a-z0-9-]+')->name('sitemap.section');
+Route::get('/sitemap-news.xml', [SitemapController::class, 'news'])->name('sitemap.news');
 
 // Managed content. Only published items resolve (see the controllers).
 $slug = '[a-z0-9]+(?:-[a-z0-9]+)*';

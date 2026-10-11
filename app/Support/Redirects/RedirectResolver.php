@@ -16,7 +16,7 @@ class RedirectResolver
 {
     /** Paths that may never be redirected (application infrastructure). */
     public const PROTECTED_PREFIXES = [
-        '/admin', '/build', '/storage', '/up', '/robots.txt', '/sitemap.xml', '/vendor',
+        '/admin', '/build', '/storage', '/up', '/robots.txt', '/sitemap.xml', '/sitemap-news.xml', '/sitemap.xsl', '/sitemaps', '/vendor',
     ];
 
     public const CACHE_TTL_SECONDS = 3600;

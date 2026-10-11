@@ -3,8 +3,8 @@
 {{--
     Blog listing (Figma 276:13365 desktop / 302:8 mobile): the section
     header shared with the home page (Settings → صفحهٔ اصلی → blog), category chips ("همه" + the active
-    categories), a 3-column grid of post cards (stacked on mobile) and the
-    numbered pager.
+    categories), the newest post as a wide featured card (first page only),
+    a 3-column grid of post cards (stacked on mobile) and the numbered pager.
 --}}
 
 @section('body_class', 'pg-page-articles')
@@ -41,13 +41,27 @@
             @if ($articles->isEmpty())
                 <p class="pg-blog__empty pg-articles__empty">{{ $header['empty'] ?: __('articles.empty') }}</p>
             @else
-                <ul class="pg-articles__grid" data-motion="reveal-group">
-                    @foreach ($articles as $article)
-                        <li class="pg-post pg-articles__item">
-                            @include('partials.site.articles.card', ['article' => $article])
-                        </li>
-                    @endforeach
-                </ul>
+                @php
+                    $featured = $articles->onFirstPage() ? $articles->first() : null;
+                    $rest = $featured ? $articles->getCollection()->slice(1) : $articles->getCollection();
+                @endphp
+
+                @if ($featured)
+                    @include('partials.site.articles.featured', ['article' => $featured])
+                @endif
+
+                @if ($rest->isNotEmpty())
+                    @if ($featured)
+                        <h2 class="visually-hidden">{{ __('articles.more') }}</h2>
+                    @endif
+                    <ul class="pg-articles__grid" data-motion="reveal-group">
+                        @foreach ($rest as $article)
+                            <li class="pg-post pg-articles__item">
+                                @include('partials.site.articles.card', ['article' => $article, 'parallax' => false])
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
 
                 @if ($articles->hasPages())
                     @include('partials.site.articles.pager', ['paginator' => $articles])
