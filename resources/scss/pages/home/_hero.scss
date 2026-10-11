@@ -149,6 +149,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    margin: 0 auto;
 }
 
 .pg-hero__text {
@@ -214,6 +215,7 @@
     line-height: 1.75;
     color: rgba(255, 255, 255, .7);
     opacity: .9;
+    margin: 0 auto;
 
     @include media-breakpoint-up(lg) {
         max-width: 440px;
@@ -226,7 +228,7 @@
 
 .pg-hero__cta {
     --bs-btn-border-radius: 10px;
-    width: 100%;
+    width: 100% !important;
     font-size: .8125rem;
     line-height: 20px;
 
