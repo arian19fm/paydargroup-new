@@ -147,10 +147,11 @@ Product accents live in the `$pg-products` map and are exposed per card as
 - `@font-face` rules: `resources/scss/base/_fonts.scss`, `font-display: swap`.
 - Vite fingerprints the files into `public/build/assets/` and rewrites the
   CSS `url()`s; nothing points outside the site.
-- Families (from the Figma homepage frames): **Doran** 400/500/700/800 for
-  display text (`--pg-font-family-display`), **IRANYekan** 400/500 for UI and
-  body copy (`--pg-font-family-base`), **IRANYekanFN** 400/500 where Persian
-  digits are required (`--pg-font-family-fn`), and **Vazir** as the stand-in
+- Families: **IRANYekan** 400/500 for UI and body copy
+  (`--pg-font-family-base`), **IRANYekanFN** 400/500/700/800 where Persian
+  digits are required (`--pg-font-family-fn`) and for display text
+  (`--pg-font-family-display` / `--pg-font-family-dots`, which replaced the
+  Figma's Doran), and **Vazir** as the stand-in
   for the design's Vazirmatn styles (`--pg-font-family-vazir`). Gaps against
   the design are listed in the fonts README.
 - Optional later optimisation: `<link rel="preload" as="font">` for the

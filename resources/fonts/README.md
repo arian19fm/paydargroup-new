@@ -7,10 +7,8 @@ with a content hash at build time.
 
 | Family (CSS name) | Files | Weights | Used for | Source / licence |
 |---|---|---|---|---|
-| `Doran` | `doran/DoranFaNum-{Regular,Medium,Bold,ExtraBold}.woff2` | 400 / 500 / 700 / 800 | Display: headings, eyebrows, buttons, product names (Figma `Doran FaNum`; Persian digit shapes) | Client package `public/fonts/Doran/WebFont/Fa Num/woff2`; `doran/LICENSE.pdf` |
-| `Doran Classic Dots` | `doran/DoranClassicDotsFaNum-Regular.woff2` | 400 | The dotted eyebrows (FAQ, business benefits — Figma `Doran Classic Dots FaNum`) | same package |
 | `IRANYekan` | `iranyekan/IRANYekan-{Regular,Medium}.woff2` | 400 / 500 | UI + body copy with Latin digits | Client package `public/fonts/IranYekan/Source 2 v3.0 Newer/WebFonts` (v3.0); `iranyekan/LICENSE.txt` |
-| `IRANYekanFN` | `iranyekan/IRANYekanFN-{Regular,Medium,ExtraBold}.woff2` | 400 / 500 / 800 | UI + body copy with Persian digits (dates, meta, benefit titles) | same package, `Farsi_numerals/WebFonts` TTFs converted to WOFF2 with fontTools |
+| `IRANYekanFN` | `iranyekan/IRANYekanFN-{Regular,Medium,Bold,ExtraBold}.woff2` | 400 / 500 / 700 / 800 | UI + body copy with Persian digits, and display text (headings, eyebrows, buttons — replaced Doran) | same package, `Farsi_numerals` TTFs converted to WOFF2 with fontTools |
 | `Vazir` | `vazir/Vazir-{Regular,Medium,Bold}.woff2` | 400 / 500 / 700 | Stand-in for the Figma `Vazirmatn` styles (footer tagline, services list, some mobile body text) | Public domain / Apache 2.0 (`vazir/LICENSE`) |
 
 Known gaps against the Figma file (see `docs/FRONTEND.md`):
@@ -27,3 +25,5 @@ Rules:
   text style requires it, and add the matching `@font-face` rule.
 - The licence must permit web embedding; keep the licence file next to the
   fonts.
+
+`doran/` is no longer referenced by the build (Doran was replaced by IRANYekanFN); the files are kept only so the change can be reverted.
