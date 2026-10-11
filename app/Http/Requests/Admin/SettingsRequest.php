@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use App\Support\Settings\Settings;
+use App\Support\Trust\Enamad;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -30,6 +31,11 @@ class SettingsRequest extends FormRequest
                 'email' => ['nullable', 'string', 'email', 'max:255'],
                 'text' => ['nullable', 'string', 'max:5000'],
                 'json' => ['nullable', 'json'],
+                'enamad' => ['nullable', 'string', 'max:3000', function (string $attribute, mixed $value, \Closure $fail) {
+                    if (Enamad::parse($value) === null) {
+                        $fail(__('admin.settings.enamad_invalid'));
+                    }
+                }],
                 default => ['nullable', 'string', 'max:500'],
             };
         }

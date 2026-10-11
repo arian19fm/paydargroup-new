@@ -11,7 +11,8 @@
 | All defaults are intentionally blank — never seed company data here.
 |
 | Types: string, text, boolean, integer, url, link (https URL, /path or
-| #anchor), email, json, media (media id)
+| #anchor), email, json, media (media id), enamad (the Enamad seal snippet,
+| see App\Support\Trust\Enamad)
 |
 */
 
@@ -27,6 +28,7 @@ return [
                 'logo_media_id' => ['type' => 'media', 'public' => true, 'label' => 'settings.general.logo'],
                 'footer_text' => ['type' => 'text', 'public' => true, 'label' => 'settings.general.footer_text'],
                 'copyright_text' => ['type' => 'string', 'public' => true, 'label' => 'settings.general.copyright_text'],
+                'enamad_code' => ['type' => 'enamad', 'public' => false, 'label' => 'settings.general.enamad_code'],
             ],
         ],
 
@@ -162,6 +164,23 @@ return [
                 'x' => ['type' => 'url', 'public' => true, 'label' => 'settings.social.x'],
                 'aparat' => ['type' => 'url', 'public' => true, 'label' => 'settings.social.aparat'],
                 'youtube' => ['type' => 'url', 'public' => true, 'label' => 'settings.social.youtube'],
+            ],
+        ],
+
+        // Automatic news (App\Support\News). `hidden`: edited on its own admin
+        // page (admin → اخبار خودکار, `news.manage`), not under Settings.
+        'news' => [
+            'label' => 'settings.groups.news',
+            'hidden' => true,
+            'keys' => [
+                'enabled' => ['type' => 'boolean', 'label' => 'admin.news.fields.enabled'],
+                'run_at' => ['type' => 'string', 'label' => 'admin.news.fields.run_at'], // HH:MM, config('news.timezone')
+                'articles_per_run' => ['type' => 'integer', 'label' => 'admin.news.fields.articles_per_run'],
+                'auto_publish' => ['type' => 'boolean', 'label' => 'admin.news.fields.auto_publish'],
+                'topics' => ['type' => 'text', 'label' => 'admin.news.fields.topics'], // one per line; blank = config('news.default_topics')
+                'category_id' => ['type' => 'integer', 'label' => 'admin.news.fields.category'],
+                'author_id' => ['type' => 'integer', 'label' => 'admin.news.fields.author'],
+                'cover_media_id' => ['type' => 'media', 'label' => 'admin.news.fields.cover'],
             ],
         ],
 

@@ -51,7 +51,7 @@
                 </ul>
             </aside>
 
-            <div class="pg-article__body" data-motion="reveal">
+            <div class="pg-article__body pg-content" data-motion="reveal">
                 @if ($article->excerpt)
                     <p class="pg-article__lead">{{ $article->excerpt }}</p>
                 @endif

@@ -290,14 +290,16 @@
         color: var(--pg-ink-70);
     }
 
-    // Answers are plain text rendered as paragraphs (PlainText::toHtml):
-    // the wrapper keeps the design offset, the paragraphs space themselves.
-    p {
+    // Answers are editor HTML (HtmlContent): the wrapper keeps the design
+    // offset, the blocks space themselves.
+    p,
+    ul,
+    ol {
         margin: 0;
+    }
 
-        + p {
-            margin-top: .75em;
-        }
+    > * + * {
+        margin-top: .75em;
     }
 }
 

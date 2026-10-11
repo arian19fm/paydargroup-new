@@ -232,22 +232,20 @@ class HomePageTest extends TestCase
         $this->assertStringContainsString('class="pg-globe"', $html, 'The globe stays even with nothing to connect.');
     }
 
-    public function test_faq_answers_keep_paragraphs_and_line_breaks(): void
+    public function test_faq_answers_render_sanitised_html(): void
     {
         Faq::query()->update(['is_active' => false]);
         Faq::create([
             'question' => 'پرسش چندپاراگرافی',
-            'answer' => "پاراگراف اول\nخط دوم همان پاراگراف\n\nپاراگراف دوم <b>بدون</b> HTML",
+            'answer' => '<h2>بخش</h2><p onclick="x()">پاراگراف اول<br>خط دوم</p><p>پاراگراف دوم <b>پررنگ</b><script>alert(1)</script></p>',
             'is_active' => true,
         ]);
 
         $html = $this->get('/')->getContent();
 
-        $this->assertStringContainsString(
-            '<p>پاراگراف اول<br>'."\n".'خط دوم همان پاراگراف</p>'."\n".'<p>پاراگراف دوم &lt;b&gt;بدون&lt;/b&gt; HTML</p>',
-            $html
-        );
-        $this->assertStringNotContainsString('<b>بدون</b>', $html);
+        $this->assertStringContainsString('<h4>بخش</h4><p>پاراگراف اول<br>خط دوم</p><p>پاراگراف دوم <b>پررنگ</b></p>', $html);
+        $this->assertStringNotContainsString('alert(1)', $html);
+        $this->assertStringNotContainsString('onclick', $html);
     }
 
     public function test_theme_is_applied_before_paint_and_switchable(): void

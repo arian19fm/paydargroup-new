@@ -4,9 +4,9 @@
     region; the first item starts open as in the design. The "Ask AI" field
     is visual only — no assistant backend exists yet, so the controls are
     disabled and say so. Questions come from admin → FAQ
-    (HomePage::faqItems()) and are rendered with PlainText::toHtml(), so a
-    blank line in the admin textarea is a new paragraph and a single line
-    break is kept; an unanswered one shows the pending note. The
+    (HomePage::faqItems()); answers are the editor's sanitised HTML
+    (HtmlContent, headings starting at H4) and an unanswered one shows the
+    pending note. The
     section texts and the side card come from Settings → صفحهٔ اصلی; a
     blank one is left out (a blank placeholder hides the "Ask AI" field).
 --}}
@@ -56,7 +56,7 @@
                             <div id="{{ $panelId }}" class="collapse{{ $open ? ' show' : '' }}" data-bs-parent="#faq-accordion" role="region" aria-labelledby="{{ $buttonId }}">
                                 <div class="pg-faq__answer pg-content">
                                     @if ($item['answer'] !== null && trim($item['answer']) !== '')
-                                        {!! \App\Support\Content\PlainText::toHtml($item['answer']) !!}
+                                        {!! \App\Support\Content\HtmlContent::toHtml($item['answer'], topHeading: 4) !!}
                                     @else
                                         <p>{{ __('home.faq.answer_pending') }}</p>
                                     @endif

@@ -31,7 +31,7 @@
 
             @if (trim((string) $page->content) !== '')
                 <div class="pg-about__body pg-content" data-motion="reveal">
-                    {!! \App\Support\Content\PlainText::toHtml($page->content) !!}
+                    {!! \App\Support\Content\HtmlContent::toHtml($page->content) !!}
                 </div>
             @endif
         </div>

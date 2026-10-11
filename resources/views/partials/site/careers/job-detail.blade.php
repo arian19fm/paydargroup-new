@@ -1,7 +1,7 @@
 {{--
     Opening detail (Figma 350:6108): handshake tile, title + category
-    badge, meta, hairline, the description (JobBody: headings, bullets,
-    paragraphs), the spec rows and the "send application" button that
+    badge, meta, hairline, the description (editor HTML via HtmlContent,
+    headings starting at H3), the spec rows and the "send application" button that
     leads to the form. `$applyTarget` is the form modal id (with JS) — the
     button is a plain link to the form on the opening's own page otherwise.
 --}}
@@ -28,7 +28,7 @@
     </div>
     <hr class="pg-job-detail__rule">
     @if (trim((string) $job->body) !== '')
-        <div class="pg-job-detail__body">{!! \App\Support\Content\JobBody::toHtml($job->body) !!}</div>
+        <div class="pg-job-detail__body pg-content">{!! \App\Support\Content\HtmlContent::toHtml($job->body, topHeading: 3) !!}</div>
     @elseif ($job->description)
         <div class="pg-job-detail__body"><p>{{ $job->description }}</p></div>
     @endif

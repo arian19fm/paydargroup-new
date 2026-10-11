@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\Article;
 use App\Models\ArticleCategory;
 use App\Models\Media;
-use App\Support\Content\ArticleBody;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -65,7 +64,7 @@ class ArticlesPageTest extends TestCase
         $cover = Media::factory()->create(['alt_text' => 'کاور']);
         $article = Article::factory()->published()->create([
             'title' => 'مبانی سرمایه‌گذاری', 'slug' => 'basics', 'excerpt' => 'لید مقاله', 'featured_image_id' => $cover->id,
-            'content' => "# دارایی توکنی چیست؟\nپاراگراف <b>x</b>\n\n# سود دوره‌ای\n- مورد یک\n- مورد دو\nپایان",
+            'content' => '<h2>دارایی توکنی چیست؟</h2><p>پاراگراف <b>x</b><script>alert(1)</script></p><h2>سود دوره‌ای</h2><ul><li><p>مورد یک</p></li><li><p>مورد دو</p></li></ul>',
         ]);
         $other = Article::factory()->published()->create(['title' => 'مطلب دیگر']);
         Article::factory()->create(['title' => 'پیش‌نویس مخفی']);
@@ -75,8 +74,9 @@ class ArticlesPageTest extends TestCase
         $this->assertSame(1, preg_match_all('/<h1[\s>]/', $html));
         $this->assertStringContainsString('alt="کاور"', $html);
         $this->assertStringContainsString('<h2 id="section-1">دارایی توکنی چیست؟</h2>', $html);
-        $this->assertStringContainsString('<p>پاراگراف &lt;b&gt;x&lt;/b&gt;</p>', $html);
-        $this->assertStringContainsString('<ul><li>مورد یک</li><li>مورد دو</li></ul>', $html);
+        $this->assertStringContainsString('<p>پاراگراف <b>x</b></p>', $html);
+        $this->assertStringNotContainsString('alert(1)', $html);
+        $this->assertStringContainsString('<ul><li><p>مورد یک</p></li><li><p>مورد دو</p></li></ul>', $html);
         $this->assertStringContainsString('<li class="is-lead"><a href="#section-1">دارایی توکنی چیست؟</a></li>', $html);
         $this->assertStringContainsString('<li><a href="#section-2">سود دوره‌ای</a></li>', $html);
         $this->assertStringContainsString('لید مقاله', $html);
@@ -87,7 +87,5 @@ class ArticlesPageTest extends TestCase
         $this->assertStringContainsString('id="contact"', $html);
         $this->assertStringNotContainsString('پیش‌نویس مخفی', $html);
         $this->assertStringContainsString('"@type":"Article"', $html);
-
-        $this->assertSame(['html' => '', 'toc' => []], ArticleBody::render(''));
     }
 }

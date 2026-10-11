@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\ArticleCategory;
-use App\Support\Content\ArticleBody;
+use App\Support\Content\HtmlContent;
 use App\Support\Home\HomePage;
 use App\Support\Seo\JsonLd;
 use Illuminate\Contracts\View\View;
@@ -77,7 +77,7 @@ class ArticleController extends Controller
                 'author' => $article->author?->name,
             ]));
 
-        $body = ArticleBody::render($article->content);
+        $body = HtmlContent::render($article->content, topHeading: 2);
 
         $latest = Article::query()->published()
             ->whereKeyNot($article->id)

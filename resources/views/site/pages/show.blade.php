@@ -1,9 +1,8 @@
 @extends('layouts.site')
 
 {{--
-    Structural page view (final design pending Figma). Content is stored as
-    plain text/HTML-free until the editor policy is decided, so it is
-    escaped and paragraphed here — see docs/CMS.md → "Editor strategy".
+    Structural page view (final design pending Figma). The body is the
+    editor's sanitised HTML — see docs/CMS.md → "Editor strategy".
 --}}
 @section('content')
     <x-layout.section class="py-4">
@@ -14,7 +13,7 @@
                 <p class="lead">{{ $page->excerpt }}</p>
             @endif
             <div class="pg-content">
-                {!! \App\Support\Content\PlainText::toHtml($page->content) !!}
+                {!! \App\Support\Content\HtmlContent::toHtml($page->content) !!}
             </div>
         </article>
     </x-layout.section>

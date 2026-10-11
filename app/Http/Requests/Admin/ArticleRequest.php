@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Http\Requests\Admin\Concerns\SanitizesRichContent;
 use App\Http\Requests\Admin\Concerns\ValidatesPublishing;
 use App\Http\Requests\Admin\Concerns\ValidatesSeoFields;
 use App\Models\Article;
@@ -14,7 +15,7 @@ use Illuminate\Validation\Rules\File;
 
 class ArticleRequest extends FormRequest
 {
-    use ValidatesPublishing, ValidatesSeoFields;
+    use SanitizesRichContent, ValidatesPublishing, ValidatesSeoFields;
 
     public function authorize(): bool
     {
@@ -33,6 +34,7 @@ class ArticleRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
+        $this->sanitizeRichContent('content');
         $this->merge([
             'slug' => Str::slug($this->input('slug') ?: $this->input('title', '')),
             'featured_image_id' => $this->input('featured_image_id') ?: null,
@@ -47,7 +49,7 @@ class ArticleRequest extends FormRequest
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255', new Slug(checkReserved: false), Rule::unique('articles', 'slug')->ignore($article)->withoutTrashed()],
             'excerpt' => ['nullable', 'string', 'max:1000'],
-            'content' => ['required', 'string'],
+            'content' => $this->richContentRules(required: true),
             'featured_image_id' => ['nullable', 'integer', Rule::exists('media', 'id')],
             'featured_image' => ['nullable', File::types(['jpg', 'jpeg', 'png', 'webp'])->max(MediaService::MAX_KILOBYTES), 'mimetypes:image/jpeg,image/png,image/webp'],
             'remove_featured_image' => ['nullable', 'boolean'],

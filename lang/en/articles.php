@@ -17,4 +17,5 @@ return [
     'copy_link' => 'Copy article link',
     'copied' => 'Copied',
     'share_on' => 'Share on :network',
+    'sources' => 'Sources',
 ];

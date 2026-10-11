@@ -921,7 +921,8 @@ $pg-careers-link: #8a5028;
     line-height: 30px;
     color: var(--pg-text-body);
 
-    h3 {
+    h3,
+    h4 {
         margin: 0;
         font-family: inherit;
         font-size: 1.03rem; // 16.5px
@@ -930,16 +931,21 @@ $pg-careers-link: #8a5028;
         color: var(--pg-text-strong);
     }
 
+    h4 {
+        font-size: inherit;
+    }
+
     p {
         margin: 0;
     }
 
-    ul {
+    ul,
+    ol {
         margin: 0;
         padding-inline-start: 1.5em;
     }
 
-    li::marker {
+    ul > li::marker {
         content: '•   ';
     }
 }

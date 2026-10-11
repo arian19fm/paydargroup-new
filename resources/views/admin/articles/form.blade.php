@@ -14,7 +14,7 @@
                     <x-admin.form.input name="title" :label="__('admin.fields.title')" :value="$article->title" required />
                     <x-admin.form.input name="slug" :label="__('admin.fields.slug')" :value="$article->slug" :help="__('admin.fields.slug_help')" dir="ltr" />
                     <x-admin.form.textarea name="excerpt" :label="__('admin.fields.excerpt')" :value="$article->excerpt" rows="2" />
-                    <x-admin.form.textarea name="content" :label="__('admin.fields.content')" :value="$article->content" :help="__('admin.fields.article_content_help')" rows="16" required />
+                    <x-admin.form.rich-editor name="content" :label="__('admin.fields.content')" :value="$article->content" :help="__('admin.fields.article_content_help')" rows="18" required />
                 </div></div>
                 <x-admin.seo-fields :seo="$article->seo" />
             </div>

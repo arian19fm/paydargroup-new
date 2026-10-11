@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Http\Requests\Admin\Concerns\SanitizesRichContent;
 use App\Http\Requests\Admin\Concerns\ValidatesPublishing;
 use App\Http\Requests\Admin\Concerns\ValidatesSeoFields;
 use App\Models\Page;
@@ -9,7 +10,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class PageRequest extends FormRequest
 {
-    use ValidatesPublishing, ValidatesSeoFields;
+    use SanitizesRichContent, ValidatesPublishing, ValidatesSeoFields;
 
     public function authorize(): bool
     {
@@ -28,6 +29,7 @@ class PageRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
+        $this->sanitizeRichContent('content');
         $this->merge(['is_featured' => $this->boolean('is_featured')]);
     }
 
@@ -37,7 +39,7 @@ class PageRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'excerpt' => ['nullable', 'string', 'max:1000'],
-            'content' => ['nullable', 'string'],
+            'content' => $this->richContentRules(),
             'is_featured' => ['boolean'],
             ...$this->publishingRules(),
             ...$this->seoRules(),

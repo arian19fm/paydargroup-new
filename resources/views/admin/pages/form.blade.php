@@ -17,7 +17,7 @@
                     <x-admin.form.input name="title" :label="__('admin.fields.title')" :value="$page->title" required />
                     <p class="form-text mt-n2 mb-3">{{ __('admin.pages.address') }}: <code dir="ltr">/{{ $page->slug }}</code></p>
                     <x-admin.form.textarea name="excerpt" :label="__('admin.fields.excerpt')" :value="$page->excerpt" rows="2" />
-                    <x-admin.form.textarea name="content" :label="__('admin.fields.content')" :value="$page->content" :help="__('admin.fields.content_help')" rows="14" />
+                    <x-admin.form.rich-editor name="content" :label="__('admin.fields.content')" :value="$page->content" :help="__('admin.fields.content_help')" />
                 </div></div>
                 <x-admin.seo-fields :seo="$page->seo" />
             </div>

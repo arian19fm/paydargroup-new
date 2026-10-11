@@ -24,6 +24,9 @@
     // Same line-up as the home page: the published businesses.
     $services = app(\App\Support\Home\HomePage::class)->products();
     $year = \App\Support\Localization\Jalali::year(now());
+    // Settings → عمومی → کد اینماد; the seal must load from Enamad with an
+    // origin referrer, as in Enamad's own snippet (App\Support\Trust\Enamad).
+    $enamad = \App\Support\Trust\Enamad::fromSettings();
 @endphp
 <footer class="pg-footer mt-auto">
     <div class="pg-footer__inner">
@@ -35,7 +38,11 @@
                 @if ($brandText)
                     <p class="pg-footer__tagline">{{ $brandText }}</p>
                 @endif
-                <img class="pg-footer__trust" src="{{ asset('images/brand/enamad.png') }}" width="60" height="60" alt="{{ __('home.footer.trust_badge_alt') }}" loading="lazy" decoding="async">
+                @if ($enamad)
+                    <a class="pg-footer__trust" href="{{ $enamad['link'] }}" target="_blank" rel="noopener" referrerpolicy="origin">
+                        <img src="{{ $enamad['logo'] }}" width="60" height="60" alt="{{ __('home.footer.trust_badge_alt') }}" referrerpolicy="origin" code="{{ $enamad['code'] }}">
+                    </a>
+                @endif
             </div>
 
             <div class="pg-footer__columns">

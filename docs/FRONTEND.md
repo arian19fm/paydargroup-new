@@ -19,7 +19,10 @@ Node/npm are **build-time only**. A production server needs only PHP and the
 committed/built `public/build` directory.
 
 Rules enforced by review: no `<script src>`/`<link href>` to third-party
-hosts, no `@import url(https://…)`, no `url(https://…)` in SCSS. Verify with:
+hosts, no `@import url(https://…)`, no `url(https://…)` in SCSS. The one
+deliberate exception is the Enamad trust seal image in the footer, which
+Enamad requires to be loaded from `trustseal.enamad.ir` (docs/CMS.md §6).
+Verify with:
 
 ```bash
 grep -rnE "https?://" resources/ public/build/assets/ | grep -vE "schema.org|w3.org|localhost"

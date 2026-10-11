@@ -132,7 +132,8 @@ profile), page title (`@section('title')`), action slot
 (`@section('actions')`), flash messages and validation summary. All styling
 lives in `resources/scss/layout/_admin.scss` on the brand tokens — no
 admin theme package. Form fields use
-`<x-admin.form.input|textarea|select|checkbox>`; content forms embed the
+`<x-admin.form.input|textarea|select|checkbox|rich-editor>` (rich-editor = visual/HTML
+editor for content bodies, see `docs/CMS.md` §3); content forms embed the
 reusable `<x-admin.seo-fields>` section (see `docs/SEO.md`). Lists paginate
 20 rows (`config('cms.per_page')`) with Bootstrap 5 pagination.
 
@@ -146,6 +147,7 @@ reusable `<x-admin.seo-fields>` section (see `docs/SEO.md`). Lists paginate
 | Team | `/admin/team/members`, `/admin/team/groups` | team page groups and members (`team.view` / `team.manage`) |
 | Job openings | `/admin/jobs` | careers page openings (`jobs.view` / `jobs.manage`; editors included) |
 | FAQ | `/admin/faqs` | home page questions and answers (`faqs.view` / `faqs.manage`; editors included) |
+| Automatic news | `/admin/news` | Claude writes daily financial/crypto news from web search; schedule, topics, publish/draft, run now, run log (`news.manage`; admin + super admin) — see `docs/CMS.md` → Automatic news |
 | Applications | `/admin/applications` | résumés from the careers page; unseen count in the sidebar (`applications.view` / `applications.manage`) |
 | Businesses | `/admin/businesses` | group businesses: home page cards + their own pages (`businesses.view` / `businesses.manage` / `businesses.publish`; editors manage drafts only) |
 | Menus | `/admin/menus` | menu + inline item editor (nested via parent; "زیرمنوی خودکار" = children generated from published businesses; default items come from `MenusSeeder`) |

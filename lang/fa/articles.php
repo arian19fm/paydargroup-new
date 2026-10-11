@@ -21,4 +21,5 @@ return [
     'copy_link' => 'کپی لینک مقاله',
     'copied' => 'کپی شد',
     'share_on' => 'اشتراک‌گذاری در :network',
+    'sources' => 'منابع',
 ];

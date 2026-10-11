@@ -17,7 +17,7 @@ class JobApplicationTest extends TestCase
     public function test_careers_page_renders_detail_and_form_modals_for_each_opening(): void
     {
         $job = JobOpening::factory()->create([
-            'title' => 'مدیر فروش استراتژیک', 'apply_url' => null, 'body' => "# شرح موقعیت\n- مورد یک",
+            'title' => 'مدیر فروش استراتژیک', 'apply_url' => null, 'body' => '<h2>شرح موقعیت</h2><ul><li><p>مورد یک</p></li></ul>',
             'specs' => [['label' => 'سطح ارشدیت', 'value' => 'کارشناس ارشد']],
         ]);
         $external = JobOpening::factory()->create(['title' => 'خارجی', 'apply_url' => 'https://example.com/apply']);
@@ -28,7 +28,7 @@ class JobApplicationTest extends TestCase
         $this->assertStringContainsString('id="job-modal-'.$job->id.'"', $html);
         $this->assertStringContainsString('id="job-apply-'.$job->id.'"', $html);
         $this->assertStringContainsString('<h3>شرح موقعیت</h3>', $html);
-        $this->assertStringContainsString('<li>مورد یک</li>', $html);
+        $this->assertStringContainsString('<li><p>مورد یک</p></li>', $html);
         $this->assertStringContainsString('<dt>سطح ارشدیت</dt>', $html);
         $this->assertStringContainsString('action="'.route('careers.apply', $job).'"', $html);
         $this->assertStringContainsString('data-bs-target="#job-apply-'.$job->id.'"', $html);

@@ -138,7 +138,7 @@ defaults in a settings table.
 - Roles/permissions via `spatie/laravel-permission`: `super_admin` (all permissions), `admin`, `editor`; policies map abilities to `resource.action` permissions. Details: [`ADMIN.md`](ADMIN.md).
 - Bootstrap-based Blade UI, same asset pipeline; Vue widgets only where a rich control is truly needed (e.g. a future media picker).
 - Manages: pages, articles/news, categories, media library, SEO fields, redirects, site settings, menus, users.
-- Content editing is a plain textarea until the editor/HTML-sanitisation policy is decided ([`CMS.md`](CMS.md) §3).
+- Rich content is edited with a Tiptap editor that also has a raw-HTML mode; HTML is sanitised against an allow-list on save and on render ([`CMS.md`](CMS.md) §3).
 
 ## 7. Content and media — implemented
 
@@ -164,6 +164,5 @@ defaults in a settings table.
   panel, CMS models (pages, articles, categories, media, menus, settings,
   redirects) with the polymorphic SEO model, `seo()->fromModel()` bridge,
   sitemap sources, `admin:create`, tests and docs. Done.
-- **Later** — Figma token mapping and visual pages, rich editor + HTML
-  sanitisation, media picker and image variants, automatic redirects on slug
+- **Later** — Figma token mapping and visual pages, media picker and image variants, automatic redirects on slug
   change, article listings/category pages, full-page caching.

@@ -5,6 +5,7 @@
         __('admin.nav.content') => [
             ['route' => 'admin.pages.index', 'icon' => 'pages', 'label' => __('admin.nav.pages'), 'can' => 'pages.view', 'active' => 'admin.pages.*'],
             ['route' => 'admin.articles.index', 'icon' => 'articles', 'label' => __('admin.nav.articles'), 'can' => 'articles.view', 'active' => 'admin.articles.*'],
+            ['route' => 'admin.news.edit', 'icon' => 'clock', 'label' => __('admin.nav.news'), 'can' => 'news.manage', 'active' => 'admin.news.*'],
             ['route' => 'admin.categories.index', 'icon' => 'categories', 'label' => __('admin.nav.categories'), 'can' => 'categories.view', 'active' => 'admin.categories.*'],
             ['route' => 'admin.media.index', 'icon' => 'media', 'label' => __('admin.nav.media'), 'can' => 'media.view', 'active' => 'admin.media.*'],
             ['route' => 'admin.businesses.index', 'icon' => 'businesses', 'label' => __('admin.nav.businesses'), 'can' => 'businesses.view', 'active' => 'admin.businesses.*'],

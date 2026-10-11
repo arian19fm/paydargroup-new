@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Http\Requests\Admin\Concerns\SanitizesRichContent;
 use App\Http\Requests\Admin\Concerns\ValidatesPublishing;
 use App\Http\Requests\Admin\Concerns\ValidatesSeoFields;
 use App\Models\Business;
@@ -14,7 +15,7 @@ use Illuminate\Validation\Rules\File;
 
 class BusinessRequest extends FormRequest
 {
-    use ValidatesPublishing, ValidatesSeoFields;
+    use SanitizesRichContent, ValidatesPublishing, ValidatesSeoFields;
 
     public function authorize(): bool
     {
@@ -33,6 +34,7 @@ class BusinessRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
+        $this->sanitizeRichContent('content');
         $this->merge([
             'slug' => Str::slug($this->input('slug') ?: $this->input('title', '')),
             'remove_image' => $this->boolean('remove_image'),
@@ -64,7 +66,7 @@ class BusinessRequest extends FormRequest
             'image_media_id' => ['nullable', 'integer', Rule::exists('media', 'id')],
             'remove_image' => ['boolean'],
             'excerpt' => ['nullable', 'string', 'max:1000'],
-            'content' => ['nullable', 'string'],
+            'content' => $this->richContentRules(),
             'website_url' => ['nullable', 'string', 'url:http,https', 'max:500'],
             'benefits_title' => ['nullable', 'string', 'max:255'],
             'benefits_text' => ['nullable', 'string', 'max:1000'],

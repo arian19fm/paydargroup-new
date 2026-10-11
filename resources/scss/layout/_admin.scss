@@ -825,31 +825,133 @@
     text-align: center;
 }
 
-// Live preview under plain-text content fields (admin/text-preview.js):
-// the text as the site will render it — paragraphs and line breaks.
-.pg-admin-preview {
-    margin-top: .75rem;
-    padding: 1rem 1.25rem;
-    border: 1px dashed var(--pg-border);
-    border-radius: var(--pg-admin-card-radius);
-    background: #fff;
-
-    &__label {
+// Rich content field (admin/rich-editor.js): mode switch, toolbar, an
+// inline link/image panel and the editing surface, styled like the site's
+// .pg-content. Without JS only the HTML textarea shows.
+.pg-editor {
+    &__modes {
+        display: flex;
+        width: max-content;
         margin-bottom: .5rem;
-        font-size: .75rem;
-        font-weight: 600;
-        color: var(--pg-text-muted);
+
+        .pg-editor__btn[aria-pressed="true"] {
+            background: var(--pg-primary);
+            border-color: var(--pg-primary);
+            color: #fff;
+        }
     }
 
-    &__body {
+    &__visual {
+        border: 1px solid var(--pg-border);
+        border-radius: .5rem;
+        background: #fff;
+
+        &:focus-within {
+            border-color: var(--pg-primary);
+        }
+    }
+
+    &__toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .25rem;
+        padding: .375rem;
+        border-bottom: 1px solid var(--pg-border);
+        border-radius: .5rem .5rem 0 0;
+        background: var(--pg-admin-bg);
+    }
+
+    &__btn {
+        min-width: 2rem;
+        padding: .2rem .5rem;
+        border: 1px solid transparent;
+        font-weight: 600;
+        line-height: 1.4;
+
+        &:hover {
+            border-color: var(--pg-border);
+            background: #fff;
+        }
+
+        &.is-active {
+            border-color: var(--pg-primary);
+            background: #fff;
+            color: var(--pg-primary);
+        }
+    }
+
+    &__sep {
+        width: 1px;
+        margin: .2rem .125rem;
+        background: var(--pg-border);
+    }
+
+    &__panel {
+        display: grid;
+        gap: .5rem;
+        padding: .75rem;
+        border-bottom: 1px solid var(--pg-border);
+        background: var(--pg-admin-bg);
+    }
+
+    &__field {
+        display: grid;
+        gap: .25rem;
+        font-size: .875rem;
+    }
+
+    &__check {
+        display: flex;
+        gap: .5rem;
+        align-items: center;
+        font-size: .875rem;
+    }
+
+    &__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .5rem;
+    }
+
+    &__notice {
+        margin: .5rem;
+    }
+
+    &__content {
+        min-height: 16rem;
+        max-height: 70vh;
+        padding: 1rem 1.25rem;
+        overflow-y: auto;
         line-height: 1.9;
+        outline: 0;
+
+        > :first-child {
+            margin-top: 0;
+        }
 
         p {
-            margin: 0;
-
-            + p {
-                margin-top: .75em;
-            }
+            margin: 0 0 .75em;
         }
+
+        h2 {
+            margin: 1.25em 0 .5em;
+            font-size: 1.375rem;
+        }
+
+        img.ProseMirror-selectednode {
+            outline: 2px solid var(--pg-primary);
+        }
+    }
+
+    &__source {
+        font-family: var(--bs-font-monospace);
+        font-size: .8125rem;
+        line-height: 1.6;
+    }
+
+    // The textarea's guidance is about raw HTML: only shown in HTML mode
+    // (and without JS, when the textarea is all there is).
+    &:has(.pg-editor__visual:not([hidden])) &__html-help {
+        display: none !important;
     }
 }

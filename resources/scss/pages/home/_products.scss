@@ -88,7 +88,7 @@
     }
 
     @include media-breakpoint-up(xl) {
-        font-size: 2.5rem; // 40px
+        font-size: 1.8rem; // 40px
         line-height: 64px;
     }
 }
@@ -131,6 +131,7 @@
     --bs-btn-border-radius: var(--pg-radius-md);
     --bs-btn-padding-y: .5rem;
     width: 100%;
+    border-radius: 5px;
 
     @include media-breakpoint-up(md) {
         --bs-btn-bg: var(--pg-primary-dark);
@@ -217,7 +218,7 @@
     grid-template-columns: 1fr;
     grid-template-areas: 'media' 'body';
     overflow: hidden;
-
+    box-shadow: 1px 0px 12px 3px #d0d0d059;
     @include media-breakpoint-up(md) {
         grid-template-columns: 1fr 1fr;
         grid-template-areas: 'media body';
@@ -323,7 +324,7 @@
 
 .pg-product__name {
     margin: 0;
-    font-family: var(--pg-font-family-display);
+    font-family: var(--bs-body-font-family);
     font-size: 1rem;
     font-weight: 800;
     line-height: 22px;

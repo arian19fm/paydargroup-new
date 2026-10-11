@@ -58,7 +58,7 @@
                     </div>
                     @if ($business->content)
                         <div class="pg-business-intro__body pg-content" data-motion="reveal">
-                            {!! \App\Support\Content\PlainText::toHtml($business->content) !!}
+                            {!! \App\Support\Content\HtmlContent::toHtml($business->content, topHeading: 3) !!}
                         </div>
                     @endif
                     @if ($business->website_url)

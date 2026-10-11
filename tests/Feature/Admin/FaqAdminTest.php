@@ -26,15 +26,24 @@ class FaqAdminTest extends TestCase
         $this->assertStringNotContainsString(__('home.faq.answer_pending'), $html);
     }
 
-    public function test_answer_form_has_a_live_preview_of_the_rendered_text(): void
+    public function test_answer_uses_the_rich_editor_and_is_sanitised_on_save(): void
     {
-        $faq = Faq::create(['question' => 'پرسش', 'answer' => "خط اول\n\nخط دوم", 'is_active' => true]);
+        $faq = Faq::create(['question' => 'پرسش', 'answer' => '<p>خط اول</p>', 'is_active' => true]);
+        $editor = $this->adminUser('editor');
 
-        $html = $this->actingAs($this->adminUser('editor'))->get("/admin/faqs/{$faq->id}/edit")->assertOk()->getContent();
+        $html = $this->actingAs($editor)->get("/admin/faqs/{$faq->id}/edit")->assertOk()->getContent();
 
-        $this->assertStringContainsString('data-text-preview="f-answer-preview"', $html);
-        $this->assertStringContainsString('id="f-answer-preview"', $html);
-        $this->assertStringContainsString('<p>خط اول</p>'."\n".'<p>خط دوم</p>', $html);
+        $this->assertStringContainsString('data-rich-editor', $html);
+        $this->assertStringContainsString('data-upload-url="'.route('admin.media.editor-image').'"', $html);
+        $this->assertStringContainsString('&lt;p&gt;خط اول&lt;/p&gt;</textarea>', $html);
+
+        $this->actingAs($editor)->put("/admin/faqs/{$faq->id}", [
+            'question' => 'پرسش', 'answer' => '<p onclick="x()">پاسخ <a href="javascript:alert(1)">بد</a></p><script>alert(1)</script>',
+        ])->assertSessionHasNoErrors();
+        $this->assertSame('<p>پاسخ <a>بد</a></p>', $faq->refresh()->answer);
+
+        $this->actingAs($editor)->put("/admin/faqs/{$faq->id}", ['question' => 'پرسش', 'answer' => '<p></p>'])->assertSessionHasNoErrors();
+        $this->assertNull($faq->refresh()->answer);
     }
 
     public function test_editor_manages_questions(): void

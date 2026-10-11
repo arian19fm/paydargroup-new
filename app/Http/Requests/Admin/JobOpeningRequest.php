@@ -2,12 +2,15 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Http\Requests\Admin\Concerns\SanitizesRichContent;
 use App\Models\JobOpening;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class JobOpeningRequest extends FormRequest
 {
+    use SanitizesRichContent;
+
     public function authorize(): bool
     {
         $job = $this->route('job');
@@ -17,6 +20,7 @@ class JobOpeningRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
+        $this->sanitizeRichContent('body');
         $this->merge([
             'is_active' => $this->boolean('is_active'),
             'apply_url' => trim((string) $this->input('apply_url')) ?: null,
@@ -31,7 +35,7 @@ class JobOpeningRequest extends FormRequest
             'category' => ['nullable', 'string', 'max:100'],
             'tone' => ['required', Rule::in(array_keys(JobOpening::TONES))],
             'description' => ['nullable', 'string', 'max:500'],
-            'body' => ['nullable', 'string', 'max:20000'],
+            'body' => $this->richContentRules(),
             'specs' => ['nullable', 'array', 'max:12'],
             'specs.*.label' => ['required', 'string', 'max:100'],
             'specs.*.value' => ['nullable', 'string', 'max:255'],

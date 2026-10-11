@@ -17,7 +17,7 @@
                     <x-admin.form.input name="tagline" :label="__('admin.fields.tagline')" :value="$business->tagline" :help="__('admin.fields.tagline_help')" />
                     <x-admin.form.textarea name="features_text" :label="__('admin.fields.features')" :value="old('features_text', implode(PHP_EOL, $business->featureList()))" :help="__('admin.fields.features_help')" rows="5" />
                     <x-admin.form.textarea name="excerpt" :label="__('admin.fields.excerpt')" :value="$business->excerpt" :help="__('admin.fields.business_excerpt_help')" rows="3" />
-                    <x-admin.form.textarea name="content" :label="__('admin.fields.content')" :value="$business->content" :help="__('admin.fields.content_help')" rows="14" />
+                    <x-admin.form.rich-editor name="content" :label="__('admin.fields.content')" :value="$business->content" :help="__('admin.fields.content_help')" />
                     <x-admin.form.input name="website_url" type="url" :label="__('admin.fields.website_url')" :value="$business->website_url" :help="__('admin.fields.website_url_help')" dir="ltr" />
                 </div></div>
                 <fieldset class="card mb-4">

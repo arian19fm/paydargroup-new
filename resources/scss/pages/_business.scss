@@ -255,7 +255,9 @@
         letter-spacing: .015em;
     }
 
-    p {
+    p,
+    ul,
+    ol {
         margin: 0;
     }
 }

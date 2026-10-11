@@ -6,6 +6,7 @@
 @section('content')
     <ul class="nav nav-tabs mb-3">
         @foreach ($groups as $key => $definition)
+            @continue($definition['hidden'] ?? false)
             <li class="nav-item"><a class="nav-link @if ($key === $group) active @endif" href="{{ route('admin.settings.edit', $key) }}" @if ($key === $group) aria-current="page" @endif>{{ __($definition['label']) }}</a></li>
         @endforeach
     </ul>
@@ -46,6 +47,12 @@
                         @break
                     @case('link')
                         <x-admin.form.input :name="$name" :label="$label" :value="$value" dir="ltr" :help="__('admin.settings.link_help')" />
+                        @break
+                    @case('enamad')
+                        <x-admin.form.textarea :name="$name" :label="$label" :value="$value" rows="4" dir="ltr" spellcheck="false" class="font-monospace small" :help="__('admin.settings.enamad_help')" />
+                        @if ($seal = \App\Support\Trust\Enamad::parse($value))
+                            <p class="form-text text-success mt-n2 mb-3">{{ __('admin.settings.enamad_ok', ['id' => $seal['id']]) }}</p>
+                        @endif
                         @break
                     @case('email')
                         <x-admin.form.input :name="$name" type="email" :label="$label" :value="$value" dir="ltr" />

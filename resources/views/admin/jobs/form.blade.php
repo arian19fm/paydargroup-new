@@ -15,7 +15,7 @@
                 <div class="col-md-5"><x-admin.form.select name="tone" :label="__('admin.fields.job_tone')" :options="collect(array_keys(App\Models\JobOpening::TONES))->mapWithKeys(fn ($t) => [$t => __('admin.fields.job_tones.'.$t)])->all()" :selected="$job->tone ?? 'blue'" required /></div>
             </div>
             <x-admin.form.textarea name="description" :label="__('admin.fields.job_description')" :value="$job->description" :help="__('admin.fields.job_description_help')" rows="3" />
-            <x-admin.form.textarea name="body" :label="__('admin.fields.job_body')" :value="$job->body" :help="__('admin.fields.job_body_help')" rows="14" />
+            <x-admin.form.rich-editor name="body" :label="__('admin.fields.job_body')" :value="$job->body" :help="__('admin.fields.job_body_help')" />
             <x-admin.form.textarea name="specs_text" :label="__('admin.fields.job_specs')" :value="old('specs_text', $job->specsAsText())" :help="__('admin.fields.job_specs_help')" rows="5" />
             <div class="row">
                 <div class="col-md-6"><x-admin.form.input name="employment_type" :label="__('admin.fields.employment_type')" :value="$job->employment_type" /></div>

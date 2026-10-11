@@ -42,10 +42,10 @@ media ID), `status`, `published_at`, `author_id` → users, `created_by`,
 - **Article** `GET /articles/{slug}` (313:13 / 315:1483): eyebrow + H1,
   the cover, then the body beside a sidebar with the publication date, a
   table of contents and share links (copy link, X, Facebook, LinkedIn);
-  the latest other posts and the contact card follow. `content` is plain
-  text rendered by `App\Support\Content\ArticleBody`: `# …` lines become
-  `<h2>` sections with anchor ids (these feed the table of contents),
-  `- …` lines bullets, blank lines paragraphs. Article JSON-LD is emitted
+  the latest other posts and the contact card follow. `content` is editor
+  HTML (§3) rendered by `HtmlContent::render()`: headings start at `<h2>`
+  (an `<h1>` is shifted down) and each top-level one gets an anchor id
+  (its own `id`, else `section-N`) that feeds the table of contents. Article JSON-LD is emitted
   here only.
 
 ### ArticleCategory — `article_categories`
@@ -81,15 +81,49 @@ sitemap, so drafts and future-dated ("scheduled") items can never leak.
 - Soft deletes: pages and articles are trashed, not destroyed, so menu
   items, SEO rows and audit fields never dangle.
 
-## 3. Editor strategy (intentional limitation)
+## 3. Editor strategy
 
-`content` is a **plain textarea** in this phase. No CKEditor/TinyMCE yet,
-because the HTML policy (allowed tags, sanitisation library, image uploads
-inside content, embed rules) must be decided first. Until then stored
-content is treated as text: `App\Support\Content\PlainText::toHtml()`
-escapes everything and turns blank lines into paragraphs. When a rich editor
-is introduced, stored HTML must be sanitised server-side before rendering
-with `{!! !!}`.
+Rich bodies — `articles.content`, `businesses.content`, `pages.content`,
+`job_openings.body`, `faqs.answer` — are **HTML** written in the admin with
+`<x-admin.form.rich-editor>`. Excerpts, taglines and other short fields stay
+plain text.
+
+- **Editor** (`resources/js/admin/rich-editor.js`, Tiptap, vanilla, its own
+  lazy chunk): the textarea holds the HTML and is what the form submits.
+  Two modes — **ویرایشگر** (visual: paragraph, H2–H4, bold/italic/
+  underline/strike, lists, quote, code block, rule, link, image, undo) and
+  **HTML** (the textarea, for hand-written markup). Content holding markup
+  the visual editor does not model (tables, classes, figure…) opens in HTML
+  mode; in visual mode the textarea is only rewritten once something is
+  edited there, so switching modes never loses markup by itself. Without
+  JS the textarea is a plain HTML source field.
+- **Images**: the image button uploads to the media library
+  (`POST /admin/media/editor-image`, `media` create permission, JPG/PNG/
+  WebP/GIF ≤ 10 MB) and inserts `<img>` with alt text, width and height; an
+  image URL can be used instead.
+- **Sanitising** (`App\Support\Content\HtmlContent`, symfony/html-sanitizer):
+  on save (`SanitizesRichContent` in the form requests, before validation,
+  so empty markup counts as empty) **and** on render. Allow-list: p, br, hr,
+  div, span, h1–h6, inline text tags, blockquote/q, pre/code, lists (incl.
+  dl), a (`href` http/https/mailto/tel/relative, `target`, `rel`), img/
+  picture/source (http/https/relative, `alt`, `width`, `height`…), figure/
+  figcaption, tables, section, aside, details/summary, address, time; global
+  `id`, `class`, `dir`, `lang`, `title`. Dropped: script, style elements and
+  `style` attributes, iframe/embeds, forms, event handlers, `javascript:` /
+  `data:` URLs. Layout wrappers (article, header, footer, main, nav, font,
+  center) are unwrapped, their content kept. Input is capped at 1 MB
+  (FAQ answers at the TEXT column's 64 KB).
+- **Rendering**: `HtmlContent::toHtml($html, topHeading)` /
+  `render()` (with TOC anchors, articles only). Headings are shifted so the
+  shallowest sits at `topHeading`, keeping the hierarchy — articles and
+  pages 2, business intro and job dialog 3, FAQ answers 4 — so the page
+  keeps one H1 and a logical outline. Images get `loading="lazy"
+  decoding="async"`, `target="_blank"` links `rel="noopener"`, tables a
+  scrolling `.pg-content__table` wrapper. Text without any tag (legacy, or
+  typed without JS) renders as paragraphs via `PlainText::toHtml()`. Shared
+  element styles live under `.pg-content` (`base/_typography.scss`).
+- The `2026_10_11_100000_convert_content_to_html` migration converted the
+  stored plain text (`#` headings, `-` bullets, blank-line paragraphs).
 
 ## 4. Media library — `media`
 
@@ -155,6 +189,14 @@ All values are cached as one array and the cache is invalidated on every
 write. `SeoManager` reads site name, tagline, default title/description,
 default OG image and Twitter handle from settings first, then
 `config/site.php` / `config/seo.php`.
+
+**Enamad seal** — `general.enamad_code` (type `enamad`): the admin pastes
+the snippet Enamad issues (or its link). `App\Support\Trust\Enamad`
+validates it (must contain `trustseal.enamad.ir` with `id` and `Code`) and
+extracts those two values; the footer renders its own markup from them
+(`<a referrerpolicy="origin">` + logo image from `trustseal.enamad.ir`,
+with the `code` attribute Enamad's checker expects), so pasted HTML is
+never output. Blank or invalid = no seal in the footer.
 
 ## 7. Redirects — `redirects`
 
@@ -336,7 +378,7 @@ palettes in `$pg-products`; its deep tone colours the name, intro heading
 and button), `image_media_id` (uploaded from the form or picked by media
 ID; the home card image, the page's hero image and the video poster),
 `excerpt` (hero paragraph + SEO description fallback), `content` (intro
-paragraphs, plain text until the editor policy is decided), `website_url`
+body, editor HTML §3, headings from H3), `website_url`
 ("مشاهده سایت" button), `benefits_title` (blank = "«name» چه مزایایی
 دارد؟"), `benefits_text`, `benefits` (JSON `[{title, description}]`,
 entered one per line as `title | description`, max 8),
@@ -384,9 +426,7 @@ is a reserved page slug, listed in the sitemap). Three blocks:
   location, `apply_url` — an `https://` page or an e-mail address, rendered
   as the "ارسال رزومه" link/mailto **instead of** the built-in form — sort
   order, active flag, audit fields, plus `body` (the full description shown
-  in the detail dialog: plain text where `# …` lines are section headings,
-  `- …` lines bullets, blank lines separate paragraphs — rendered by
-  `App\Support\Content\JobBody`) and `specs` (JSON `[{label, value}]`,
+  in the detail dialog: editor HTML (§3), headings from H3) and `specs` (JSON `[{label, value}]`,
   entered one per line as `label | value`, the table under the
   description). Managed under admin → **فرصت‌های شغلی** (`jobs.view` /
   `jobs.manage`, editors included). Active openings render in sort order,
@@ -412,15 +452,11 @@ is a reserved page slug, listed in the sitemap). Three blocks:
 ## Home page FAQ
 
 Admin → **سؤالات متداول** (`/admin/faqs`, `faqs.view` / `faqs.manage`,
-editors included) manages the `faqs` table: `question`, `answer` (plain
-text, optional), `sort_order`, `is_active`. `HomePage::faqItems()` feeds
+editors included) manages the `faqs` table: `question`, `answer` (editor
+HTML §3, optional), `sort_order`, `is_active`. `HomePage::faqItems()` feeds
 the home page accordion with the active questions in order (the first one
-starts open). The answer is rendered with `PlainText::toHtml()` (§3): a
-blank line in the textarea is a new paragraph, a single line break is kept,
-nothing else is interpreted. The admin form shows a live preview under the
-textarea (`<x-admin.form.textarea :preview="true">` +
-`resources/js/admin/text-preview.js`, which mirrors the same rules
-client-side) so authors see the answer as the site will render it. An
+starts open). The answer is rendered with `HtmlContent::toHtml()` (§3),
+headings from H4, without generated anchors. An
 unanswered question shows `home.faq.answer_pending` and is flagged in the
 admin list. With no active question the list is omitted and
 the rest of the section (heading, contact card) stays. The five designed
@@ -429,3 +465,46 @@ questions were moved into the table by the
 empty) — there is no hardcoded fallback, so the site shows exactly what the
 admin lists. The section's headings and card copy are still the designed
 text in `home.faq.*`.
+
+## Automatic news (اخبار خودکار)
+
+Admin → **اخبار خودکار** (`/admin/news`, `news.manage`: admin and super
+admin, not editors) lets Claude write news articles from the latest
+financial, investment and crypto news.
+
+- **Setup**: put `ANTHROPIC_API_KEY` in the server's `.env` (read through
+  `config('services.anthropic.key')`, so `config:cache` is fine; optional
+  `ANTHROPIC_BASE_URL` for a relay — the API is not reachable from Iranian
+  IPs directly). The Laravel scheduler must run:
+  `* * * * * cd /path && php artisan schedule:run >> /dev/null 2>&1`. The
+  admin page warns when the key or the scheduler is missing.
+- **Settings** (hidden `news` settings group, edited only on that page): on/off,
+  time of day (`config('news.timezone')`, default Asia/Tehran), articles per
+  run (1–5), publish automatically or keep as draft, topics (one per line;
+  blank = `config('news.default_topics')`), category, author, default cover
+  media ID (no images are generated).
+- **When it runs**: `news:tick` every minute (`routes/console.php`,
+  `withoutOverlapping`). `App\Support\News\NewsRunner::tick()` marks runs
+  stuck in "running" for 30 min as failed, executes a run queued by
+  "اجرا همین حالا", otherwise creates the day's scheduled run once the
+  configured time has passed (a missed minute still runs that day; one
+  scheduled run per day). `php artisan news:run` runs once immediately.
+- **Writing** (`NewsWriter`, official `anthropic-ai/sdk`): one Messages
+  request to `config('news.model')` (default `claude-opus-5-5`, adaptive
+  thinking, effort `config('news.effort')`) with the server-side
+  `web_search_20260209` tool (`max_searches`) and a strict
+  `submit_articles` tool whose schema is the article (title, English slug,
+  excerpt, seo_title, seo_description, content_html, sources). `pause_turn`
+  is resumed up to `max_continuations` times; the server-side refusal
+  fallback (`fallbacks: "default"`) is enabled. The prompt carries the date
+  and the last 7 days' headlines to avoid repeats.
+- **Publishing** (`NewsPublisher`): body sanitised by `HtmlContent`; sources
+  kept only if their host appeared in the run's search results; an item
+  without a verifiable source or with under ~300 characters of text is
+  skipped. A "منابع" list (`rel="nofollow noopener"`) is appended,
+  `seo_meta` gets the SEO title/description and `schema_type = NewsArticle`,
+  the slug is made unique, the sitemap cache is cleared. Articles keep
+  `news_run_id` and `sources` (JSON) and show a «خودکار» badge in the list.
+- **Log**: `news_runs` (trigger, status, error, token usage, searches); the
+  admin page lists runs with their articles and an estimated cost from
+  `config('news.pricing')`.

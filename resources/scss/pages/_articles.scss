@@ -521,12 +521,29 @@
         margin-bottom: 0;
     }
 
-    ul {
+    h3,
+    h4 {
+        margin: 20px 0 0;
+        font-family: var(--pg-font-family-display);
+        font-size: .9375rem;
+        font-weight: 500;
+        line-height: 1.5;
+        color: var(--pg-ink);
+        scroll-margin-top: 96px;
+
+        @include media-breakpoint-up(lg) {
+            margin-top: 24px;
+            font-size: 1.0625rem; // not in Figma: between the body and H2
+        }
+    }
+
+    ul,
+    ol {
         margin: 0;
         padding-inline-start: 1.5em;
     }
 
-    li::marker {
+    ul > li::marker {
         content: '•   ';
     }
 }

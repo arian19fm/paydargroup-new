@@ -20,7 +20,7 @@ class SettingsController extends Controller
     {
         $groups = config('settings.groups');
 
-        abort_unless(isset($groups[$group]), 404);
+        abort_unless(isset($groups[$group]) && ! ($groups[$group]['hidden'] ?? false), 404);
 
         return view('admin.settings.edit', [
             'group' => $group,
@@ -32,6 +32,8 @@ class SettingsController extends Controller
 
     public function update(SettingsRequest $request, string $group): RedirectResponse
     {
+        abort_if(config("settings.groups.{$group}.hidden", false), 404);
+
         $this->settings->setGroup($group, $request->values());
 
         return redirect()->route('admin.settings.edit', $group)->with('success', __('admin.saved'));

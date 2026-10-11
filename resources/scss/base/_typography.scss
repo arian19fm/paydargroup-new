@@ -33,6 +33,91 @@ body {
 // Editor content can hold anything; break even mid-word before overflowing.
 .pg-content {
     overflow-wrap: anywhere;
+
+    // Rich content written in the admin editor (docs/CMS.md §3). Kept at
+    // zero specificity (:where) so each page's own body styles win.
+    :where(h3, h4, h5, h6) {
+        margin-top: 1.5em;
+        margin-bottom: .5em;
+        font-size: 1.125em;
+        line-height: 1.5;
+    }
+
+    :where(h4, h5, h6) {
+        font-size: 1em;
+    }
+
+    :where(li > p) {
+        margin: 0;
+    }
+
+    :where(img) {
+        max-width: 100%;
+        height: auto;
+    }
+
+    :where(figure) {
+        margin: 1.5em 0;
+    }
+
+    :where(figcaption) {
+        margin-top: .5em;
+        font-size: .875em;
+        color: var(--pg-text-muted);
+        text-align: center;
+    }
+
+    :where(blockquote) {
+        margin: 1.5em 0;
+        padding-inline-start: 1em;
+        border-inline-start: 3px solid var(--pg-border);
+        color: var(--pg-text-muted);
+    }
+
+    :where(pre) {
+        padding: 1em;
+        overflow-x: auto;
+        border-radius: .5rem;
+        background: var(--pg-surface);
+        /* rtl:ignore */
+        direction: ltr;
+        text-align: start;
+    }
+
+    :where(hr) {
+        margin: 2em 0;
+    }
+
+    :where(table) {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    :where(th, td) {
+        padding: .5em .75em;
+        border: 1px solid var(--pg-border);
+        text-align: start;
+        vertical-align: top;
+    }
+
+    :where(th) {
+        background: var(--pg-surface);
+        font-weight: 600;
+    }
+
+    :where(caption) {
+        padding-bottom: .5em;
+        caption-side: top;
+        color: var(--pg-text-muted);
+    }
+}
+
+// Tables scroll sideways inside this wrapper on narrow screens
+// (added by App\Support\Content\HtmlContent).
+.pg-content__table {
+    max-width: 100%;
+    margin: 1.5em 0;
+    overflow-x: auto;
 }
 
 // Latin/numeric snippets inside Persian text (phone numbers, codes) should be

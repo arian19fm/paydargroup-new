@@ -15,10 +15,15 @@ import './site/business-video';
 import './site/job-apply';
 import './site/share-link';
 import './admin/char-counter';
-import './admin/text-preview';
 import { mountVueComponents } from './vue/mount';
 
 mountVueComponents();
+
+// The admin rich editor (Tiptap) is a separate chunk fetched only on forms
+// with a [data-rich-editor] field.
+if (document.querySelector('[data-rich-editor]')) {
+    import('./admin/rich-editor').then(({ initRichEditors }) => initRichEditors());
+}
 
 // Scroll-driven motion (GSAP + ScrollTrigger) is a separate chunk fetched
 // only when the page opts in with [data-motion] elements (the home page).

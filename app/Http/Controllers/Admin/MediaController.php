@@ -8,8 +8,10 @@ use App\Http\Requests\Admin\MediaUpdateRequest;
 use App\Models\Media;
 use App\Support\Media\MediaService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\File;
 
 class MediaController extends Controller
 {
@@ -47,6 +49,31 @@ class MediaController extends Controller
         );
 
         return redirect()->route('admin.media.edit', $medium)->with('success', __('admin.media.uploaded'));
+    }
+
+    /**
+     * Image upload from the rich editor (resources/js/admin/rich-editor):
+     * stored in the library like any upload, answered with what the editor
+     * needs to insert an <img> with its alt text and dimensions.
+     */
+    public function editorImage(Request $request): JsonResponse
+    {
+        $this->authorize('create', Media::class);
+
+        $data = $request->validate([
+            'file' => ['required', File::types(['jpg', 'jpeg', 'png', 'webp', 'gif'])->max(MediaService::MAX_KILOBYTES), 'mimetypes:image/jpeg,image/png,image/webp,image/gif'],
+            'alt_text' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $medium = $this->media->upload($request->file('file'), $request->user(), ['alt_text' => $data['alt_text'] ?? null]);
+
+        return response()->json([
+            'id' => $medium->id,
+            'url' => $medium->url(),
+            'width' => $medium->width,
+            'height' => $medium->height,
+            'alt' => $medium->alt_text,
+        ], 201);
     }
 
     public function edit(Media $medium): View

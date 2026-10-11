@@ -35,7 +35,7 @@
             <tbody>
                 @forelse ($articles as $article)
                     <tr>
-                        <td><a href="{{ route('admin.articles.edit', $article) }}">{{ $article->title }}</a><br><code class="small" dir="ltr">/articles/{{ $article->slug }}</code></td>
+                        <td><a href="{{ route('admin.articles.edit', $article) }}">{{ $article->title }}</a>@if ($article->news_run_id) <span class="badge text-bg-info ms-1">{{ __('admin.news.badge') }}</span>@endif<br><code class="small" dir="ltr">/articles/{{ $article->slug }}</code></td>
                         <td class="small">{{ $article->categories->pluck('name')->join('، ') ?: __('admin.none') }}</td>
                         <td class="small">{{ $article->author?->name ?? __('admin.none') }}</td>
                         <td><x-admin.status-badge :model="$article" /></td>
