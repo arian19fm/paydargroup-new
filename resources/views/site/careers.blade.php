@@ -30,7 +30,12 @@
             </div>
         </section>
 
-        <section class="pg-careers-benefits" aria-labelledby="careers-benefits-heading">
+        <section class="pg-careers-benefits pg-float-host" aria-labelledby="careers-benefits-heading">
+            <x-ui.float-shapes :mobile="0" :shapes="[
+                ['top' => '18%', 'start' => '6%', 'size' => 130, 'dur' => 36, 'delay' => -11, 'rot' => -6],
+                ['bottom' => '1%', 'end' => '4%', 'size' => 64, 'dur' => 28, 'delay' => -5, 'rot' => 8, 'reverse' => true],
+                ['top' => '38%', 'end' => '30%', 'size' => 52, 'dur' => 24, 'delay' => -17, 'rot' => 3],
+            ]" />
             <div class="pg-container pg-careers-benefits__inner">
                 <div class="pg-careers-benefits__intro">
                     <p class="pg-careers-benefits__eyebrow" data-motion="reveal">{{ $copy['benefits_eyebrow'] }}</p>

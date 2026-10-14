@@ -1,65 +1,144 @@
-// Buttons (Figma "Buttons/Button → _Button base"): 48px tall, padding
-// 10px 18px, Doran Medium 16/24, radius 8, Shadow/xs. Variants map to the
-// solid colours the sections use; Bootstrap's .btn provides the reset.
+// Buttons — one neumorphic system for every public action (mechanics in
+// abstracts/_mixins `pg-neu-button`, tokens in abstracts/_variables).
+//
+//   .pg-btn                       regular: the surface it sits on, raised
+//   .pg-btn--secondary            alias of regular
+//   .pg-btn--primary / --solid    filled with the brand button colour
+//   .pg-btn--light                white (on the dark hero)
+//   .pg-btn--outline              regular with an accent edge and text
+//   .pg-btn--icon                 square/round, icon only (needs aria-label)
+//   .pg-btn--sm                   compact
+//   :disabled / .disabled / [aria-disabled="true"]   flat, dimmed
+//
+// Used with Bootstrap's .btn (reset) or on its own. Section components that
+// are not .pg-btn (product, blog, careers, business, share, header
+// buttons) include the same mixin and set only the custom properties.
+//
+// The admin panel keeps plain Bootstrap buttons: nothing here touches .btn.
+
+@keyframes pg-neu-morph {
+    0%,
+    100% {
+        border-radius: var(--pg-neu-r, #{$pg-neu-radius});
+    }
+
+    50% {
+        border-radius: var(--pg-neu-r-morph, #{$pg-neu-radius-morph});
+    }
+}
+
+// Shadow pairs for dark backdrops (the hero gradient, the glass header on
+// the hero, the footer); the dark theme sets the same pair on :root.
+.pg-hero,
+.pg-header--overlay,
+.pg-footer {
+    --pg-neu-shadow-dark:  #{$pg-neu-on-dark-shadow-dark};
+    --pg-neu-shadow-light: #{$pg-neu-on-dark-shadow-light};
+    --pg-neu-focus: #fff;
+}
 
 .pg-btn {
+    // Regular: the page surface, navy label.
+    --pg-neu-bg: var(--pg-background-alt);
+    --pg-neu-fg: var(--pg-primary);
+    // Bootstrap's .btn reads these; keep its states on the same colours.
     --bs-btn-padding-y: .625rem;
-    --bs-btn-padding-x: 1.125rem;
+    --bs-btn-padding-x: 1.25rem;
     --bs-btn-font-size: 1rem;
     --bs-btn-line-height: 1.5;
-    --bs-btn-border-radius: var(--pg-radius-md);
-    --bs-btn-box-shadow: var(--pg-shadow-sm);
-    --bs-btn-focus-box-shadow: none;
+    --bs-btn-bg: var(--pg-neu-bg);
+    --bs-btn-color: var(--pg-neu-fg);
+    --bs-btn-border-color: transparent;
+    --bs-btn-hover-bg: var(--pg-neu-bg);
+    --bs-btn-hover-color: var(--pg-neu-fg);
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-active-bg: var(--pg-neu-bg);
+    --bs-btn-active-color: var(--pg-neu-fg);
+    --bs-btn-active-border-color: transparent;
+    --bs-btn-disabled-bg: var(--pg-neu-bg);
+    --bs-btn-disabled-color: var(--pg-neu-fg);
+    --bs-btn-disabled-border-color: transparent;
+    --bs-btn-disabled-opacity: .5;
+    --bs-btn-focus-box-shadow: var(--pg-neu-raised);
+    @include pg-neu-button;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
     font-family: var(--pg-font-family-display);
     font-weight: 500;
-    box-shadow: var(--bs-btn-box-shadow);
-    transition: background-color .15s ease, color .15s ease, border-color .15s ease, opacity .15s ease;
 
-    // Solid: heading-highlight colour (navy on desktop, blue on the mobile frame).
+    [data-bs-theme="dark"] & {
+        --pg-neu-fg: var(--pg-text);
+    }
+
+    &--secondary {
+        --pg-neu-bg: var(--pg-background-alt);
+    }
+
+    // Filled. The pressed shadows are cut from the fill itself.
+    &--primary,
     &--solid {
-        --bs-btn-bg: var(--pg-button-bg);
-        --bs-btn-border-color: var(--pg-button-bg);
-        --bs-btn-color: #fff;
-        --bs-btn-hover-bg: var(--pg-primary);
-        --bs-btn-hover-border-color: var(--pg-primary);
-        --bs-btn-hover-color: #fff;
-        --bs-btn-active-bg: var(--pg-primary-dark);
-        --bs-btn-active-border-color: var(--pg-primary-dark);
-        --bs-btn-active-color: #fff;
+        --pg-neu-bg: var(--pg-button-bg);
+        --pg-neu-fg: #fff;
+        --pg-neu-inset-dark: rgba(0, 0, 0, .35);
+        --pg-neu-inset-light: rgba(255, 255, 255, .14);
+
+        [data-bs-theme="dark"] & {
+            --pg-neu-fg: #fff;
+        }
     }
 
-    // Primary/dark square button (products section CTA).
     &--primary {
-        --bs-btn-bg: var(--pg-primary-dark);
-        --bs-btn-border-color: var(--pg-primary-dark);
-        --bs-btn-color: #fff;
-        --bs-btn-hover-bg: var(--pg-primary);
-        --bs-btn-hover-border-color: var(--pg-primary);
-        --bs-btn-hover-color: #fff;
-        --bs-btn-active-bg: var(--pg-primary-deep);
-        --bs-btn-active-border-color: var(--pg-primary-deep);
-        --bs-btn-active-color: #fff;
-        --bs-btn-border-radius: 0;
+        --pg-neu-bg: var(--pg-primary-dark);
+
+        [data-bs-theme="dark"] & {
+            --pg-neu-bg: var(--pg-button-bg);
+        }
     }
 
-    // White button with a primary outline (hero CTA). It sits on the photo
-    // in both themes, so its colours are fixed rather than theme tokens.
+    // White on the dark hero, in both themes.
     &--light {
-        --bs-btn-bg: #fff;
-        --bs-btn-border-color: var(--pg-primary);
-        --bs-btn-color: #{$pg-text};
-        --bs-btn-hover-bg: #{$pg-surface};
-        --bs-btn-hover-border-color: var(--pg-primary);
-        --bs-btn-hover-color: var(--pg-primary);
-        --bs-btn-active-bg: #{$pg-surface};
-        --bs-btn-active-border-color: var(--pg-primary-dark);
-        --bs-btn-active-color: var(--pg-primary-dark);
+        --pg-neu-bg: #fff;
+        --pg-neu-fg: #{$pg-primary-dark};
+        --pg-neu-inset-dark: #{rgba($pg-primary, .25)};
+        --pg-neu-inset-light: #fff;
         font-weight: 700;
+
+        [data-bs-theme="dark"] & {
+            --pg-neu-fg: #{$pg-primary-dark};
+        }
+    }
+
+    &--outline {
+        --pg-neu-border: color-mix(in srgb, var(--pg-neu-accent, var(--pg-primary)) 40%, transparent);
+        --pg-neu-fg: var(--pg-neu-accent, var(--pg-primary));
+    }
+
+    &--sm {
+        --pg-neu-r: #{$pg-neu-radius-sm};
+        --pg-neu-r-morph: #{$pg-neu-radius-sm-morph};
+        --bs-btn-padding-y: .375rem;
+        --bs-btn-padding-x: 1rem;
+        --bs-btn-font-size: .875rem;
+        min-height: 40px;
+    }
+
+    // Icon only: a circle never morphs.
+    &--icon {
+        --pg-neu-r: 50%;
+        --pg-neu-r-morph: 50%;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        animation: none;
     }
 }
 
 // A CTA rendered as <span> (destination not published yet) keeps the look
-// but is inert; keep the cursor honest.
+// but is inert; keep the cursor honest and the button still.
 span.pg-btn {
     cursor: default;
+    pointer-events: none;
 }

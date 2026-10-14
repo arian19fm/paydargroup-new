@@ -10,6 +10,10 @@ return [
         'read_time' => ':minutes min read',
     ],
 
+    'products' => [
+        'index_label' => 'Product index',
+    ],
+
     'faq' => [
         'ask_label' => 'Ask the Paydar assistant',
         'ask_pending' => 'The smart assistant is coming soon.',

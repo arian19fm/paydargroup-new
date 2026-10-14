@@ -11,7 +11,12 @@
     blank one is left out (a blank placeholder hides the "Ask AI" field).
 --}}
 @php $section = $sections['faq']; @endphp
-<section class="pg-faq" id="faq" aria-labelledby="faq-heading">
+<section class="pg-faq pg-float-host" id="faq" aria-labelledby="faq-heading">
+    <x-ui.float-shapes :mobile="0" :shapes="[
+        ['top' => '2%', 'end' => '3%', 'size' => 120, 'dur' => 34, 'delay' => -12, 'rot' => -7],
+        ['top' => '17%', 'end' => '9%', 'size' => 100, 'dur' => 40, 'delay' => -21, 'rot' => 6, 'reverse' => true],
+        ['top' => '2.5%', 'start' => '6%', 'size' => 56, 'dur' => 24, 'delay' => -6, 'rot' => 10],
+    ]" />
     <div class="pg-container">
         <div class="pg-faq__header" data-motion="reveal">
             @if ($section['eyebrow'])

@@ -226,13 +226,11 @@
 }
 
 .pg-hero__cta {
-    --bs-btn-border-radius: 10px;
     width: 100% !important;
     font-size: .8125rem;
     line-height: 20px;
 
     @include media-breakpoint-up(lg) {
-        --bs-btn-border-radius: var(--pg-radius-md);
         width: 199px;
         font-size: 1rem;
         line-height: 1.5;

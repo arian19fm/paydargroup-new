@@ -97,6 +97,25 @@ $pg-products: (
     bot:      (accent: #313e3e, dot: #2d3b3b, badge-text: #2d3b3b, badge-bg: #c4cdd5, badge-bg-mobile: #c4cdd5),
 ) !default;
 
+// Neumorphic buttons — the "Regular Button" of the Neumorphic UI
+// reference (codepen.io/oathanrex/pen/gbOYKYg): raised by two opposing
+// soft shadows, corners breathing between two radii, lifted on hover,
+// inset when pressed, 400ms on the standard easing. The reference's grey
+// (#e0e5ec) and its blue-grey shadow (#a3b1c6) are not used: the dark
+// shadow is the brand navy at low strength and the surface is the page
+// colour the button sits on, so the effect follows the theme. Contexts
+// (dark hero, glass header, dark theme) swap the shadow pair.
+$pg-neu-radius:         15px !default;
+$pg-neu-radius-morph:   22px !default;
+$pg-neu-radius-sm:      12px !default;
+$pg-neu-radius-sm-morph: 17px !default;
+$pg-neu-duration:       .4s !default;
+$pg-neu-ease:           cubic-bezier(.4, 0, .2, 1) !default;
+$pg-neu-shadow-dark:    rgba($pg-primary, .2) !default;
+$pg-neu-shadow-light:   rgba(#fff, .95) !default;
+$pg-neu-on-dark-shadow-dark:  rgba(#000, .4) !default;   // dark sections / dark theme
+$pg-neu-on-dark-shadow-light: rgba(#fff, .07) !default;
+
 // Glass header
 $pg-glass-bg:        rgba(255, 255, 255, .12) !default;
 $pg-glass-border:    rgba(255, 255, 255, .22) !default;
@@ -156,7 +175,7 @@ $pg-gutter-lg:     56px   !default;
 $enable-rfs:               false;  // sizes are set per component from the Figma frames
 $enable-dark-mode:         true;   // <html data-bs-theme="dark">; tokens in base/_root.scss
 $enable-negative-margins:  false;
-$enable-smooth-scroll:     true;   // respects prefers-reduced-motion internally
+$enable-smooth-scroll:     false;  // smooth only for in-page links — see base/_utilities
 $enable-shadows:           false;
 
 // Colours — mapped to tokens so nothing looks "Bootstrap blue" by accident.

@@ -30,6 +30,7 @@ class HomePage
     {
         return $this->businesses()->values()->map(fn (Business $business, int $index) => [
             'key' => $business->accentKey(),
+            'slug' => $business->slug,
             'number' => str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT),
             'media' => $business->image?->isImage() ? $business->image : null,
             'url' => route('businesses.show', $business->slug),

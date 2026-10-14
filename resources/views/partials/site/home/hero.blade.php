@@ -24,13 +24,6 @@
 
     <div class="pg-hero__inner">
         <div class="pg-hero__copy">
-            @if ($video)
-                <div class="pg-hero__video-box">
-                    <video class="pg-hero__video" controls playsinline preload="metadata" @if ($image) poster="{{ $image->url() }}" @endif aria-label="{{ __('home.hero.video_label') }}" data-hero-video>
-                        <source src="{{ $video->url() }}" type="{{ $video->mime_type }}">
-                    </video>
-                </div>
-            @endif
             <div class="pg-hero__text">
                 @if ($hero['eyebrow'])
                     <p class="pg-hero__eyebrow">{{ $hero['eyebrow'] }}</p>

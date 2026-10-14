@@ -169,10 +169,53 @@ Product accents live in the `$pg-products` map and are exposed per card as
   data-hero-particles>`: drifting points linked when close, nudged by the
   pointer. Vanilla, no library; not created under reduced motion, paused
   off screen / in hidden tabs, DPR capped at 2, pointer-events none.
+- `site/products-showcase.js` — the home products showcase
+  (`[data-products-showcase]`). The server renders a stacked list (index
+  of anchor links, one article + screenshot frame per product): the no-JS
+  and reduced-motion layout. The script re-arranges the same elements
+  (moved, never cloned) into one of two modes sharing the same index and
+  active state: **staged** (≥`lg`) — frames and index in a sticky aside, an
+  IntersectionObserver marks the product crossing the viewport middle;
+  **pinned** (<`lg`) — index and cards move into the same aside, which
+  becomes a scroll track (`100svh` + one `75svh` step per product); its
+  panel is sticky and one viewport tall, and the scroll position along the
+  track (one passive listener, rAF-throttled) sets each card's
+  transform/opacity so the next card rises from the bottom over the
+  previous one; scrolling up reverses it, the page continues after the
+  track. Deep links (`#product-{slug}`) land on their product after
+  `load`; focusing a link inside a card brings that card in.
+- Buttons: one neumorphic system (`components/_buttons.scss`, mechanics in
+  the `pg-neu-button` mixin, tokens `$pg-neu-*`). Public actions use
+  `.pg-btn` (+ `--primary`/`--solid`/`--secondary`/`--light`/`--outline`/
+  `--icon`/`--sm`) or include the mixin and set `--pg-neu-*` custom
+  properties. Dark backdrops (hero, overlay header, footer, dark theme)
+  swap the shadow pair. Hover only under `(hover: hover)`; the pressed
+  state works on touch (an empty passive `touchstart` listener in `app.js`
+  enables `:active` on iOS). The admin keeps plain Bootstrap buttons.
+- Floating geometry (`components/ui/float-shapes`, `components/_float.scss`,
+  `site/float-shapes.js`): a few faint squares (10% opacity, navy; the
+  dark theme uses the highlight blue, the footer's `dark` variant white)
+  drifting ±24px/±10px with a few degrees of rotation over 20–40s, CSS
+  keyframes on transform only. The host section gets `pg-float-host`
+  (relative + `isolation: isolate`) and the component as its first child;
+  the layer is `z-index: -1` inside that context, clips itself and takes
+  no pointer events, so section overflow and content stacking are
+  untouched. Shapes are configured per call site (position in logical
+  `top/bottom` + `start/end`, size, duration, delay, rotation, direction),
+  `mobile` says how many stay below `lg` (sizes ×.55 and drift ×.5 there),
+  `variant`/`opacity`/`speed` tune the layer. Reduced motion keeps the
+  squares still; the script only pauses the animation off screen. Used on
+  the home FAQ, the footer, the careers benefits band and the contact
+  page — never on the hero, the products showcase, photo sections or card
+  grids.
+- Smooth scrolling is only `html:focus-within` (in-page links), not the
+  root: a smooth root animated back/forward scroll restoration and
+  ScrollTrigger's refresh captured it half-way (`base/_utilities`,
+  `$enable-smooth-scroll: false`).
 - `vue/mount.js` — isolated Vue mounting (below).
 
 - `animations/` — scroll-driven motion on GSAP + ScrollTrigger
-  (`index.js` bootstraps `hero.js`, `products-stack.js`, `reveal.js`,
+  (`index.js` bootstraps `hero.js`, `reveal.js`,
   `parallax.js`). It is a separate Vite chunk that `app.js` imports lazily
   only when the page contains a `[data-motion]` element (the home page);
   other pages never download GSAP.
@@ -187,7 +230,7 @@ browser and never block rendering.
   and the hero load-in is a CSS keyframe gated on `<html class="pg-js">`
   (set inline in the home page head), so without JavaScript every section
   is static and visible.
-- Hooks are explicit: `data-motion="hero | product-stack | reveal |
+- Hooks are explicit: `data-motion="hero | reveal |
   reveal-group | reveal-heading | parallax"` plus the `data-motion-exit`
   modifier. Do not animate arbitrary selectors.
 - Hero layout: no background photo on any size — the brand gradient on

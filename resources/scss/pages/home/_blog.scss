@@ -89,21 +89,21 @@
     }
 }
 
+// "See all": small regular neumorphic button (components/_buttons).
 .pg-blog__more {
+    --pg-neu-bg: var(--pg-background);
+    --pg-neu-fg: var(--pg-text-strong);
+    --pg-neu-r: #{$pg-neu-radius-sm};
+    --pg-neu-r-morph: #{$pg-neu-radius-sm-morph};
+    @include pg-neu-button;
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    min-height: 44px;
+    padding: 8px 18px;
     font-family: var(--pg-font-family-fn);
-    font-size: 1.03125rem; // 16.5px
+    font-size: .9375rem;
     line-height: 25px;
-    color: var(--pg-text-strong);
-    text-decoration: none;
-
-    &:hover,
-    &:focus-visible {
-        color: var(--pg-primary);
-        text-decoration: underline;
-    }
 
     img {
         width: 16px;

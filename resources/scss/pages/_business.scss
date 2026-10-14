@@ -265,6 +265,12 @@
 // "مشاهده سایت": 175×48 accent button with the exported chevron at the
 // end (forward in reading direction). Pinned to the start edge.
 .pg-business-intro__cta {
+    --pg-neu-bg: var(--pg-business-accent);
+    --pg-neu-fg: #fff;
+    --pg-neu-inset-dark: rgba(0, 0, 0, .3);
+    --pg-neu-inset-light: rgba(255, 255, 255, .16);
+    --pg-neu-focus: var(--pg-business-accent);
+    @include pg-neu-button;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -274,26 +280,14 @@
     height: 48px;
     margin-top: 24px;
     padding: 10px 18px;
-    border: 1px solid var(--pg-business-accent);
-    background: var(--pg-business-accent);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
     font-family: var(--pg-font-family-display);
     font-size: 1rem;
     font-weight: 500;
     line-height: 24px;
-    color: #fff;
-    text-decoration: none;
     white-space: nowrap;
-    transition: opacity .15s ease;
 
     @include media-breakpoint-up(lg) {
         margin-top: 0;
-    }
-
-    &:hover,
-    &:focus-visible {
-        color: #fff;
-        opacity: .9;
     }
 
     img {
@@ -303,12 +297,7 @@
     // Dark theme: the lifted accent is light, so the label and the white
     // chevron flip to the page background colour.
     [data-bs-theme="dark"] & {
-        color: var(--pg-background);
-
-        &:hover,
-        &:focus-visible {
-            color: var(--pg-background);
-        }
+        --pg-neu-fg: var(--pg-background);
 
         img {
             filter: invert(1) brightness(.2);

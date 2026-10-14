@@ -730,17 +730,19 @@
     list-style: none;
 }
 
+// Share: round neumorphic icon buttons (components/_buttons).
 .pg-article__share-btn {
-    position: relative;
+    --pg-neu-bg: var(--pg-background);
+    --pg-neu-fg: var(--pg-text);
+    --pg-neu-r: 50%;
+    --pg-neu-r-morph: 50%;
+    @include pg-neu-button;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 38px;
-    height: 38px;
-    border: 1px solid var(--pg-divider-2);
-    border-radius: 50%;
-    background: var(--pg-background);
-    transition: border-color .15s ease, background-color .15s ease;
+    width: 44px;
+    height: 44px;
+    animation: none;
 
     img {
         width: 18px;
@@ -749,12 +751,6 @@
 
     [data-bs-theme="dark"] & img {
         filter: invert(1);
-    }
-
-    &:hover,
-    &:focus-visible {
-        border-color: var(--pg-highlight);
-        background: var(--pg-surface);
     }
 
     // "Copied" toast for the link button (site/share-link.js).

@@ -411,7 +411,9 @@ blank = the business image), `status` / `published_at`, `sort_order`.
   (`BusinessesSource`), whose cache is flushed on every change.
 - Home page "our products" section (`partials/site/home/products`):
   the published businesses in sort order — there is no hardcoded
-  fallback; with none published the card list is omitted. The five
+  fallback; with none published the showcase is omitted. Each product
+  shows its tagline and its first three features (the rest stay on the
+  business page). The five
   designed businesses (Fund, Exchange, Broker, AI, Bot, with their card
   images copied into the media library under `media/designed/`) were
   moved into the table by the `2026_09_28_120000_import_designed_businesses`

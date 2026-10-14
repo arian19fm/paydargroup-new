@@ -15,7 +15,11 @@
             text-align: right !important;
         }
     </style>
-    <div class="pg-contact-page">
+    <div class="pg-contact-page pg-float-host">
+        <x-ui.float-shapes :mobile="0" :shapes="[
+            ['top' => '73%', 'end' => '8%', 'size' => 100, 'dur' => 36, 'delay' => -8, 'rot' => 6],
+            ['top' => '71%', 'start' => '10%', 'size' => 76, 'dur' => 28, 'delay' => -19, 'rot' => -9, 'reverse' => true],
+        ]" />
         <section class="pg-contact-page__hero pg-container" aria-labelledby="contact-heading">
             <figure class="pg-contact-page__photo">
                 {{-- Parallax drives the wrapper: the <img> carries the CSS mirror, which a transform tween would undo. --}}

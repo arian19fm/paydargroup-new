@@ -27,3 +27,91 @@
         @content;
     }
 }
+
+// Neumorphic button mechanics (components/_buttons.scss). Colours come
+// from custom properties so variants and contexts only swap values:
+//   --pg-neu-bg / --pg-neu-fg / --pg-neu-border   surface, text, edge
+//   --pg-neu-shadow-dark / --pg-neu-shadow-light   raised pair (from the
+//       surface the button sits on; set by context, see base/_root)
+//   --pg-neu-inset-dark / --pg-neu-inset-light     pressed pair (filled
+//       variants use their own, the button colour is not the page's)
+//   --pg-neu-r / --pg-neu-r-morph                  corner radius pair
+// Hover only where hover exists; touch gets the pressed state on :active
+// (iOS needs a touchstart listener for that — see app.js).
+@mixin pg-neu-button {
+    --pg-neu-raised:
+        5px 5px 10px var(--pg-neu-shadow-dark),
+        -5px -5px 10px var(--pg-neu-shadow-light);
+    position: relative;
+    border: 1px solid var(--pg-neu-border, transparent);
+    border-radius: var(--pg-neu-r, #{$pg-neu-radius});
+    background-color: var(--pg-neu-bg);
+    color: var(--pg-neu-fg);
+    box-shadow: var(--pg-neu-raised);
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition:
+        transform $pg-neu-duration $pg-neu-ease,
+        box-shadow $pg-neu-duration $pg-neu-ease,
+        border-radius $pg-neu-duration $pg-neu-ease,
+        background-color $pg-neu-duration $pg-neu-ease,
+        color $pg-neu-duration $pg-neu-ease,
+        border-color $pg-neu-duration $pg-neu-ease;
+    animation: pg-neu-morph 4s ease-in-out infinite;
+
+    @media (hover: hover) {
+        &:hover {
+            color: var(--pg-neu-fg);
+            text-decoration: none;
+            background-color: var(--pg-neu-bg);
+            border-color: var(--pg-neu-border, transparent);
+            box-shadow:
+                8px 8px 16px var(--pg-neu-shadow-dark),
+                -8px -8px 16px var(--pg-neu-shadow-light);
+            transform: translateY(-3px);
+            animation: none;
+        }
+    }
+
+    &:focus-visible {
+        color: var(--pg-neu-fg);
+        background-color: var(--pg-neu-bg);
+        box-shadow: var(--pg-neu-raised);
+        outline: 2px solid var(--pg-neu-focus, var(--pg-primary));
+        outline-offset: 3px;
+    }
+
+    &:active,
+    &.active {
+        color: var(--pg-neu-fg);
+        background-color: var(--pg-neu-bg);
+        border-color: var(--pg-neu-border, transparent);
+        box-shadow:
+            inset 4px 4px 8px var(--pg-neu-inset-dark, var(--pg-neu-shadow-dark)),
+            inset -4px -4px 8px var(--pg-neu-inset-light, var(--pg-neu-shadow-light));
+        transform: translateY(0) scale(.985);
+        animation: none;
+        transition-duration: .15s;
+    }
+
+    &:disabled,
+    &.disabled,
+    &[aria-disabled="true"] {
+        box-shadow: none;
+        transform: none;
+        animation: none;
+        opacity: .5;
+        cursor: not-allowed;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+
+        &:hover,
+        &:active {
+            transform: none;
+        }
+    }
+}

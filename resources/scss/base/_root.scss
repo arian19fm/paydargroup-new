@@ -58,6 +58,11 @@
         --pg-button-bg: #{$pg-secondary};
     }
 
+    // Neumorphic buttons: the raised shadow pair for light surfaces
+    // (components/_buttons; dark contexts override it).
+    --pg-neu-shadow-dark:  #{$pg-neu-shadow-dark};
+    --pg-neu-shadow-light: #{$pg-neu-shadow-light};
+
     // Glass header
     --pg-glass-bg:        #{$pg-glass-bg};
     --pg-glass-border:    #{$pg-glass-border};
@@ -103,6 +108,9 @@
 // them, and Bootstrap's own dark variables cover forms, dropdowns and the
 // offcanvas.
 [data-bs-theme="dark"] {
+    --pg-neu-shadow-dark:  #{$pg-neu-on-dark-shadow-dark};
+    --pg-neu-shadow-light: #{$pg-neu-on-dark-shadow-light};
+
     --pg-background:     #{$pg-dark-background};
     --pg-background-alt: #{$pg-dark-background-alt};
     --pg-surface:        #{$pg-dark-surface};

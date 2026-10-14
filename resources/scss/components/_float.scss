@@ -1,0 +1,138 @@
+// Floating geometry (components/ui/float-shapes): a few faint squares
+// suspended behind a section, drifting slowly. Inspired by the rising
+// squares of codepen.io/tokyoweb/pen/ZjdYVj, restrained to a hover in
+// place: ±24px vertical, ±10px horizontal, a few degrees of rotation, 20–40s
+// per loop, start and end states identical so the loop never jumps.
+//
+// Layering: the host is its own stacking context and the layer sits at
+// z-index -1 inside it, so the squares paint above the section background
+// and below every piece of content without touching the content's
+// stacking. The layer clips itself — the section's overflow is untouched
+// (sticky children, dropdowns and the mobile card scrollers keep working).
+//
+// Cost: transform/opacity only, no filters, no will-change (the running
+// transform animation is composited by itself); site/float-shapes.js
+// pauses the animation while the layer is off screen.
+
+.pg-float-host {
+    position: relative;
+    isolation: isolate;
+}
+
+.pg-float {
+    // Navy on light surfaces (the brand primary); the dark theme uses its
+    // highlight blue so the squares stay faintly visible on grey/900.
+    --pg-float-accent: var(--pg-primary);
+    --pg-float-opacity: .1;
+    // Below lg the squares are smaller and drift less.
+    --pg-float-scale: .55;
+    --pg-float-drift: .5;
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+
+    @include media-breakpoint-up(md) {
+        --pg-float-scale: .75;
+        --pg-float-drift: .75;
+    }
+
+    @include media-breakpoint-up(lg) {
+        --pg-float-scale: 1;
+        --pg-float-drift: 1;
+    }
+
+    [data-bs-theme="dark"] & {
+        --pg-float-accent: #{$pg-dark-highlight};
+        --pg-float-opacity: .12;
+    }
+
+    // On dark surfaces (the footer): white, warmed a touch toward the
+    // highlight blue.
+    &--dark,
+    [data-bs-theme="dark"] &--dark {
+        --pg-float-accent: #{mix(#fff, $pg-accent, 80%)};
+        --pg-float-opacity: .09;
+    }
+
+    &.is-paused .pg-float__shape {
+        animation-play-state: paused;
+    }
+}
+
+/* rtl:begin:ignore */
+// The drift is decorative; it is not mirrored for RTL (RTLCSS would flip
+// translate/rotate values, which calc()/var() values can't take).
+.pg-float__shape {
+    --size: 96px;
+    --dur: 30s;
+    --delay: 0s;
+    --rot: 0deg;
+    --dx: 10px;
+    --dy: 24px;
+    position: absolute;
+    width: calc(var(--size) * var(--pg-float-scale));
+    height: calc(var(--size) * var(--pg-float-scale));
+    border: 1px solid color-mix(in srgb, var(--pg-float-accent) 70%, transparent);
+    border-radius: 18%;
+    background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--pg-float-accent) 32%, transparent),
+        color-mix(in srgb, var(--pg-float-accent) 4%, transparent) 75%
+    );
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, .35),
+        0 24px 48px -28px color-mix(in srgb, var(--pg-float-accent) 70%, transparent);
+    opacity: var(--pg-float-opacity);
+    transform: rotate(var(--rot));
+    animation: pg-float-drift var(--dur) ease-in-out var(--delay) infinite;
+
+    &--reverse {
+        animation-direction: reverse;
+    }
+
+    // Desktop-only squares (beyond the component's `mobile` count).
+    &--wide {
+        display: none;
+
+        @include media-breakpoint-up(lg) {
+            display: block;
+        }
+    }
+}
+
+@keyframes pg-float-drift {
+    0%,
+    100% {
+        transform: translate3d(0, 0, 0) rotate(var(--rot));
+    }
+
+    32% {
+        transform:
+            translate3d(
+                calc(var(--dx) * var(--pg-float-drift)),
+                calc(var(--dy) * -1 * var(--pg-float-drift)),
+                0
+            )
+            rotate(calc(var(--rot) + 5deg));
+    }
+
+    66% {
+        transform:
+            translate3d(
+                calc(var(--dx) * -.6 * var(--pg-float-drift)),
+                calc(var(--dy) * -.4 * var(--pg-float-drift)),
+                0
+            )
+            rotate(calc(var(--rot) - 4deg));
+    }
+}
+/* rtl:end:ignore */
+
+// Reduced motion: the squares stay, still.
+@media (prefers-reduced-motion: reduce) {
+    .pg-float__shape {
+        animation: none;
+    }
+}

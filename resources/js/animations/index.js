@@ -5,7 +5,6 @@
 
 import { ScrollTrigger, prefersReducedMotion } from './motion';
 import { initHero } from './hero';
-import { initProductsStack } from './products-stack';
 import { initReveal } from './reveal';
 import { initParallax } from './parallax';
 
@@ -17,10 +16,16 @@ function scheduleRefresh() {
 }
 
 export function initMotion(root = document) {
-    // Order matters for start/end measurements: the stack first (it sets
-    // sticky-related state), then everything that only reads positions.
+    // A refresh scrolls to the top to measure and then back; Bootstrap's
+    // `scroll-behavior: smooth` on <html> would animate that way back, and
+    // ScrollTrigger would keep the half-way position — losing the place
+    // restored by back/forward navigation or reached through a #hash.
+    // Scroll instantly while a refresh runs; anchors stay smooth otherwise.
+    const html = document.documentElement;
+    ScrollTrigger.addEventListener('refreshInit', () => { html.style.scrollBehavior = 'auto'; });
+    ScrollTrigger.addEventListener('refresh', () => { html.style.removeProperty('scroll-behavior'); });
+
     initHero(root);
-    initProductsStack(root);
     initReveal(root);
     initParallax(root);
 

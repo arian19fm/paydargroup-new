@@ -28,7 +28,12 @@
     // origin referrer, as in Enamad's own snippet (App\Support\Trust\Enamad).
     $enamad = \App\Support\Trust\Enamad::fromSettings();
 @endphp
-<footer class="pg-footer mt-auto">
+<footer class="pg-footer pg-float-host mt-auto">
+    <x-ui.float-shapes variant="dark" :mobile="1" :shapes="[
+        ['top' => '4%', 'end' => '14%', 'size' => 64, 'dur' => 26, 'delay' => -3, 'rot' => -8, 'reverse' => true],
+        ['top' => '22%', 'start' => '60%', 'size' => 140, 'dur' => 38, 'delay' => -15, 'rot' => 7],
+        ['bottom' => '24%', 'start' => '29%', 'size' => 96, 'dur' => 32, 'delay' => -20, 'rot' => 4],
+    ]" />
     <div class="pg-footer__inner">
         <div class="pg-footer__top" data-motion="reveal">
             <div class="pg-footer__brand">

@@ -44,16 +44,14 @@
         }
 
         .pg-nav__chevron,
-        .pg-header__toggle img,
-        .pg-theme-toggle {
+        .pg-header__toggle img {
             filter: invert(1) brightness(.15);
         }
 
-        .pg-header__toggle:hover,
-        .pg-header__toggle:focus-visible,
-        .pg-theme-toggle:hover,
-        .pg-theme-toggle:focus-visible {
-            background: rgba(0, 0, 0, .06);
+        .pg-header__toggle,
+        .pg-theme-toggle {
+            --pg-neu-bg: var(--pg-background);
+            --pg-neu-fg: var(--pg-text);
         }
 
         .pg-header__bar {
@@ -78,8 +76,7 @@
             }
 
             .pg-nav__chevron,
-            .pg-header__toggle img,
-            .pg-theme-toggle {
+            .pg-header__toggle img {
                 filter: none;
             }
         }
@@ -147,50 +144,35 @@
     }
 }
 
-.pg-header__toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px;
-    border: 0;
-    border-radius: var(--pg-radius-md);
-    background: transparent;
-    line-height: 0;
-
-    &:hover,
-    &:focus-visible {
-        background: rgba(255, 255, 255, .12);
-    }
-}
-
-// Mobile: theme switch + hamburger sit together at the end of the pill.
-.pg-header__actions {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-// Light/dark switch (components/ui/theme-toggle). Same footprint as the
-// hamburger; the moon shows in light mode, the sun in dark mode.
+// Hamburger and theme switch: round neumorphic icon buttons
+// (components/_buttons) in a translucent wash of the glass pill.
+.pg-header__toggle,
 .pg-theme-toggle {
+    --pg-neu-bg: rgba(255, 255, 255, .08);
+    --pg-neu-fg: #fff;
+    --pg-neu-r: 50%;
+    --pg-neu-r-morph: 50%;
+    @include pg-neu-button;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 40px;
     height: 40px;
     padding: 0;
-    border: 0;
-    border-radius: var(--pg-radius-pill);
-    background: transparent;
-    color: #fff;
     line-height: 0;
-    transition: background-color .15s ease, opacity .15s ease;
+    animation: none;
+}
 
-    &:hover,
-    &:focus-visible {
-        background: rgba(255, 255, 255, .12);
-    }
+// Mobile: theme switch + hamburger sit together at the end of the pill.
+.pg-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
+// Light/dark switch (components/ui/theme-toggle). Same footprint as the
+// hamburger; the moon shows in light mode, the sun in dark mode.
+.pg-theme-toggle {
     .pg-header__group--end & {
         margin-inline-start: 8px;
     }

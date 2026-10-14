@@ -1,5 +1,17 @@
 // Project-wide utilities and accessibility foundations.
 
+// Smooth scrolling for in-page links only. A clicked link holds focus, so
+// :focus-within is true while the anchor scrolls; scroll restoration on
+// back/forward navigation and script-driven jumps (ScrollTrigger's
+// measuring, the products showcase) stay instant. A smooth root would
+// animate the restored position up from the top and the motion layer
+// would capture it half-way.
+@media (prefers-reduced-motion: no-preference) {
+    html:focus-within {
+        scroll-behavior: smooth;
+    }
+}
+
 // Skip link: visually hidden until focused, then shown at the top.
 .pg-skip-link {
     position: absolute;

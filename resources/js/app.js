@@ -11,12 +11,18 @@ import './site/theme';
 import './site/drag-scroll';
 import './site/hero-video';
 import './site/hero-particles';
+import './site/products-showcase';
+import './site/float-shapes';
 import './site/business-video';
 import './site/job-apply';
 import './site/share-link';
 import './site/article-reading';
 import './admin/char-counter';
 import { mountVueComponents } from './vue/mount';
+
+// iOS Safari applies :active (the neumorphic pressed state of buttons)
+// only when a touchstart listener exists; an empty passive one is enough.
+document.addEventListener('touchstart', () => {}, { passive: true });
 
 mountVueComponents();
 

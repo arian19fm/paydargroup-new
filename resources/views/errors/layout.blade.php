@@ -10,6 +10,6 @@
         <p class="text-body-secondary mb-2">{{ $code }}</p>
         <h1>{{ __('errors.'.$code.'.title') }}</h1>
         <p class="lead">{{ __('errors.'.$code.'.message') }}</p>
-        <a class="btn btn-primary mt-3" href="{{ route('home') }}">{{ __('errors.back_home') }}</a>
+        <a class="btn pg-btn pg-btn--solid mt-3" href="{{ route('home') }}">{{ __('errors.back_home') }}</a>
     </x-layout.section>
 @endsection
