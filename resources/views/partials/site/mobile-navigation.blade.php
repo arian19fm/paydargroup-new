@@ -8,7 +8,8 @@
 <div class="offcanvas offcanvas-end pg-offcanvas d-lg-none" tabindex="-1" id="site-nav" aria-labelledby="site-nav-label">
     <div class="offcanvas-header">
         <a class="pg-offcanvas__brand" href="{{ route('home') }}">
-            <img src="{{ asset('images/brand/paydar-logo-navy.png') }}" width="32" height="44" alt="{{ \App\Support\Seo\SeoManager::siteName() }}">
+            <img class="pg-logo pg-logo--light" src="{{ asset('images/brand/paydar-logo-navy.png') }}" width="32" height="44" alt="{{ \App\Support\Seo\SeoManager::siteName() }}">
+            <img class="pg-logo pg-logo--dark" src="{{ asset('images/brand/paydar-logo-white.png') }}" width="32" height="44" alt="{{ \App\Support\Seo\SeoManager::siteName() }}">
         </a>
         <span class="offcanvas-title visually-hidden" id="site-nav-label">{{ __('nav.menu') }}</span>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#site-nav" aria-label="{{ __('nav.close_menu') }}"></button>

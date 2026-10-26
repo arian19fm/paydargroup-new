@@ -12,6 +12,7 @@ import './site/drag-scroll';
 import './site/hero-video';
 import './site/hero-particles';
 import './site/products-showcase';
+import './site/tap-links';
 import './site/float-shapes';
 import './site/business-video';
 import './site/job-apply';

@@ -29,17 +29,18 @@ return [
     | Icons
     |--------------------------------------------------------------------------
     |
-    | <link> tags emitted by <x-seo.head>. Add an SVG icon, apple-touch-icon
-    | and web manifest here once the brand assets exist (all self-hosted
-    | under public/).
+    | <link> tags emitted by <x-seo.head>. All self-hosted under public/:
+    | the favicon set is the brand emblem (navy on the brand cream square,
+    | public/images/brand/Logo BIG PaydarGroup.ir.jpg) at 16/32/48 in the
+    | .ico, 180 for iOS, 192/512 for the manifest.
     |
     */
 
     'icons' => [
-        ['rel' => 'icon', 'href' => '/favicon.ico', 'sizes' => 'any'],
-        // ['rel' => 'icon', 'href' => '/icon.svg', 'type' => 'image/svg+xml'],
-        // ['rel' => 'apple-touch-icon', 'href' => '/apple-touch-icon.png'],
-        // ['rel' => 'manifest', 'href' => '/site.webmanifest'],
+        ['rel' => 'icon', 'href' => '/favicon.ico', 'sizes' => '48x48'],
+        ['rel' => 'icon', 'href' => '/icon-192.png', 'type' => 'image/png', 'sizes' => '192x192'],
+        ['rel' => 'apple-touch-icon', 'href' => '/apple-touch-icon.png'],
+        ['rel' => 'manifest', 'href' => '/site.webmanifest'],
     ],
 
     /*

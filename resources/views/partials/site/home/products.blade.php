@@ -76,17 +76,20 @@
                         </article>
                         <div class="pg-product__slot">
                             <figure class="pg-product__media pg-product--{{ $product['key'] }}" data-showcase-media>
-                                <div class="pg-product__frame">
-                                    <div class="pg-product__bar" aria-hidden="true">
-                                        <span class="pg-product__bar-mark"></span>
-                                        <span class="pg-product__bar-name">{{ $product['name'] }}</span>
+                                {{-- The whole frame opens the business page (a span when it has none). data-tap-link: site/tap-links.js drops taps that were really scrolls. --}}
+                                <x-ui.cta class="pg-product__link" :href="$product['url']" aria-label="{{ $product['name'] }}" data-tap-link>
+                                    <div class="pg-product__frame">
+                                        <div class="pg-product__bar" aria-hidden="true">
+                                            <span class="pg-product__bar-mark"></span>
+                                            <span class="pg-product__bar-name">{{ $product['name'] }}</span>
+                                        </div>
+                                        @if ($product['media'])
+                                            <img src="{{ $product['media']->url() }}" width="{{ $product['media']->width ?: 1024 }}" height="{{ $product['media']->height ?: 768 }}" alt="{{ $product['image_alt'] }}" loading="lazy" decoding="async">
+                                        @else
+                                            <div class="pg-product__placeholder" aria-hidden="true"></div>
+                                        @endif
                                     </div>
-                                    @if ($product['media'])
-                                        <img src="{{ $product['media']->url() }}" width="{{ $product['media']->width ?: 1024 }}" height="{{ $product['media']->height ?: 768 }}" alt="{{ $product['image_alt'] }}" loading="lazy" decoding="async">
-                                    @else
-                                        <div class="pg-product__placeholder" aria-hidden="true"></div>
-                                    @endif
-                                </div>
+                                </x-ui.cta>
                             </figure>
                         </div>
                     </li>

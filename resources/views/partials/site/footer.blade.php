@@ -38,7 +38,8 @@
         <div class="pg-footer__top" data-motion="reveal">
             <div class="pg-footer__brand">
                 <a class="pg-footer__logo" href="{{ route('home') }}">
-                    <img src="{{ asset('images/brand/paydar-logo-blue.png') }}" width="40" height="52" alt="{{ $siteName }}">
+                    <img class="pg-logo pg-logo--light" src="{{ asset('images/brand/paydar-logo-blue.png') }}" width="40" height="52" alt="{{ $siteName }}">
+                    <img class="pg-logo pg-logo--dark" src="{{ asset('images/brand/paydar-logo-white.png') }}" width="40" height="52" alt="{{ $siteName }}">
                 </a>
                 @if ($brandText)
                     <p class="pg-footer__tagline">{{ $brandText }}</p>

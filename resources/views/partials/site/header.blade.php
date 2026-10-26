@@ -25,7 +25,8 @@
     $siteName = \App\Support\Seo\SeoManager::siteName();
     $overlay = \Illuminate\Support\Facades\View::hasSection('hero');
     // Navy emblem in both header variants (over the hero photo, and on the
-    // light pill of inner pages); the blue emblem on the mobile frame.
+    // light pill of inner pages); the blue emblem on the mobile frame. The
+    // dark theme shows the white mark instead (components/_logo.scss).
     $desktopLogo = 'paydar-logo-navy';
 @endphp
 <header class="pg-header {{ $overlay ? 'pg-header--overlay' : 'pg-header--light' }}">
@@ -36,10 +37,11 @@
             </div>
 
             <a class="pg-header__brand" href="{{ route('home') }}">
-                <picture>
+                <picture class="pg-logo pg-logo--light">
                     <source media="(max-width: 991.98px)" srcset="{{ asset('images/brand/paydar-logo-blue.png') }}">
                     <img src="{{ asset('images/brand/'.$desktopLogo.'.png') }}" width="45" height="60" alt="{{ $siteName }}">
                 </picture>
+                <img class="pg-logo pg-logo--dark" src="{{ asset('images/brand/paydar-logo-white.png') }}" width="45" height="60" alt="{{ $siteName }}">
             </a>
 
             <div class="pg-header__group pg-header__group--end d-none d-lg-flex">

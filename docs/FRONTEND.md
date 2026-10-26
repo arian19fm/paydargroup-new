@@ -183,7 +183,15 @@ Product accents live in the `$pg-products` map and are exposed per card as
   transform/opacity so the next card rises from the bottom over the
   previous one; scrolling up reverses it, the page continues after the
   track. Deep links (`#product-{slug}`) land on their product after
-  `load`; focusing a link inside a card brings that card in.
+  `load`; focusing a link inside a card brings that card in. Each
+  screenshot frame is a link to its business page (`.pg-product__link`,
+  a `<span>` via `x-ui.cta` when the business has no URL).
+- `site/tap-links.js` — tap filter for links on moving surfaces
+  (`a[data-tap-link]`, used on the showcase frames). Touch/pen only: a
+  press that travels more than 10px, lasts over 700ms, lands within 150ms
+  of a scroll event (momentum, the pinned cards sliding), or whose link
+  moved between press and release is cancelled instead of opening the
+  page. Mouse, keyboard and no-JS keep plain anchors.
 - Buttons: one neumorphic system (`components/_buttons.scss`, mechanics in
   the `pg-neu-button` mixin, tokens `$pg-neu-*`). Public actions use
   `.pg-btn` (+ `--primary`/`--solid`/`--secondary`/`--light`/`--outline`/
@@ -372,6 +380,18 @@ page is published.
 
 - Formats: WebP (AVIF where the pipeline supports it) with a JPEG/PNG
   fallback via `<picture>` when needed; SVG for icons/logos.
+- Brand mark (`components/_logo.scss`): wherever the logo appears
+  (header, offcanvas, footer) the markup carries both the light mark
+  (`.pg-logo--light`, navy/blue emblem + wordmark) and the dark mark
+  (`.pg-logo--dark`, the white emblem `images/brand/paydar-logo-white.png`,
+  cut from the supplied `darkMode.png` at the same emblem scale as the
+  navy file; it keeps the light mark's 175×240 box via `aspect-ratio` +
+  `object-fit: contain`, so nothing shifts when the theme flips).
+  `[data-bs-theme="dark"]` swaps them with `display`; no `filter: invert`
+  on the logo. Favicons (`favicon.ico` 16/32/48,
+  `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`,
+  `site.webmanifest`, listed in `config/site.php` → `icons`) are the brand
+  emblem on its cream square, generated from `Logo BIG PaydarGroup.ir.jpg`.
 - Always `width` and `height` attributes (or CSS `aspect-ratio`) to prevent
   layout shift. `img { max-width: 100%; height: auto }` is global.
 - Responsive: `srcset` + `sizes` for content images; generate variants on
