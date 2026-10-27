@@ -94,6 +94,7 @@
     align-items: center;
     justify-content: space-between;
     max-width: 1040px;
+    min-height: 58px;
     margin-inline: auto;
     padding: 8px 24px;
     border: 1px solid var(--pg-glass-border);
@@ -103,7 +104,9 @@
     backdrop-filter: blur(var(--pg-glass-blur));
     -webkit-backdrop-filter: blur(var(--pg-glass-blur));
 
+    // The frame's 88 / 58px pill heights, independent of the emblem's size.
     @include media-breakpoint-up(lg) {
+        min-height: 88px;
         padding: 14px 48px;
     }
 

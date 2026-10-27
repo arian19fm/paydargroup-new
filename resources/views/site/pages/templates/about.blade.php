@@ -52,17 +52,15 @@
         @if ($about['history']['title'] || $about['history']['text'] || $about['stats']->isNotEmpty())
             <section class="pg-about__history" aria-labelledby="about-history-heading">
                 <div class="pg-container pg-about__history-grid">
-                    <p class="pg-about__history-eyebrow">{{ __('about.history_eyebrow') }}</p>
+                    <div class="pg-about__history-aside" data-motion="reveal">
+                        <p class="pg-about__history-eyebrow">{{ __('about.history_eyebrow') }}</p>
+                        @if ($about['history']['title'])
+                            <h2 id="about-history-heading" class="pg-about__history-title">{{ $about['history']['title'] }}</h2>
+                        @endif
+                    </div>
                     <div class="pg-about__history-main">
-                        @if ($about['history']['title'] || $about['history']['text'])
-                            <div class="pg-about__history-copy" data-motion="reveal">
-                                @if ($about['history']['title'])
-                                    <h2 id="about-history-heading" class="pg-about__history-title">{{ $about['history']['title'] }}</h2>
-                                @endif
-                                @if ($about['history']['text'])
-                                    <div class="pg-about__history-text pg-content">{!! \App\Support\Content\PlainText::toHtml($about['history']['text']) !!}</div>
-                                @endif
-                            </div>
+                        @if ($about['history']['text'])
+                            <div class="pg-about__history-text pg-content" data-motion="reveal">{!! \App\Support\Content\PlainText::toHtml($about['history']['text']) !!}</div>
                         @endif
                         <figure class="pg-about__history-photo">
                             @if ($about['history']['image'])

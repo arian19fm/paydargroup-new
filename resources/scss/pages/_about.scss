@@ -7,6 +7,12 @@
 // column (856) at the end with the photo (856×364) and a 3-up stat row.
 // Mobile: 16px gutters, intro on #fbfbfa, photos stacked (193px), body
 // 16/24, partner logos in two columns, history stacked, stats 2 + 1.
+//
+// Polish on top of the frames (existing tokens only): rounded photos, a
+// short accent rule under the intro heading, the body held to a readable
+// measure with a stronger first paragraph, the history eyebrow + heading
+// sharing the start column (sticky on desktop) and the statistics as
+// soft cards with the figure above its label.
 
 .pg-about {
     padding-top: 26px;
@@ -44,7 +50,9 @@
 }
 
 .pg-about__title {
+    position: relative;
     margin: 0;
+    padding-bottom: 14px;
     font-family: var(--pg-font-family-display);
     font-size: 1.1875rem; // 19px
     font-weight: 500;
@@ -61,6 +69,18 @@
         font-size: 2rem;
         font-weight: 700;
         line-height: 48px;
+        padding-bottom: 18px;
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        inset-inline-start: 0;
+        bottom: 0;
+        width: 48px;
+        height: 3px;
+        border-radius: var(--pg-radius-pill);
+        background: var(--pg-primary);
     }
 }
 
@@ -95,13 +115,9 @@
 
 .pg-about__photo {
     margin: 0;
-    aspect-ratio: 343 / 193;
     overflow: hidden;
+    border-radius: var(--pg-radius-lg);
     background: #cfcfcf;
-
-    @include media-breakpoint-up(md) {
-        aspect-ratio: 632 / 281;
-    }
 
     img {
         width: 100%;
@@ -133,6 +149,7 @@
 }
 
 .pg-about__body {
+    max-width: 920px;
     padding: 32px 0 56px;
     font-family: var(--pg-font-family-fn);
     font-size: 1rem;
@@ -142,13 +159,26 @@
     color: var(--pg-text-strong);
 
     @include media-breakpoint-up(lg) {
-        padding: 40px 0 25px;
+        padding: 56px 0 72px;
         font-size: 1.125rem;
         line-height: 40px;
     }
 
     p {
         margin: 0 0 16px;
+        color: var(--pg-text-body);
+
+        &:first-child {
+            font-family: var(--pg-font-family-display);
+            font-size: 1.125rem;
+            line-height: 1.75;
+            color: var(--pg-text-strong);
+
+            @include media-breakpoint-up(lg) {
+                font-size: 1.375rem; // 22px
+                line-height: 42px;
+            }
+        }
 
         &:last-child {
             margin-bottom: 0;
@@ -233,10 +263,11 @@
 
 // History + statistics.
 .pg-about__history {
-    padding: 32px 0;
+    padding: 40px 0;
+    border-top: 1px solid var(--pg-border);
 
     @include media-breakpoint-up(lg) {
-        padding: 56px 0 81px;
+        padding: 72px 0 96px;
     }
 }
 
@@ -253,6 +284,25 @@
     }
 }
 
+// Eyebrow + heading share the start column; on desktop it stays in view
+// while the text, photo and figures scroll past.
+.pg-about__history-aside {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    @include media-breakpoint-up(lg) {
+        flex: 0 0 260px;
+        position: sticky;
+        top: 140px; // clears the floating header
+        gap: 12px;
+    }
+
+    @include media-breakpoint-up(xl) {
+        flex-basis: 381px;
+    }
+}
+
 .pg-about__history-eyebrow {
     margin: 0;
     font-family: var(--pg-font-family-display);
@@ -262,7 +312,6 @@
     opacity: .85;
 
     @include media-breakpoint-up(lg) {
-        flex: 0 0 381px;
         font-size: 1rem;
     }
 }
@@ -277,16 +326,6 @@
     @include media-breakpoint-up(lg) {
         flex: 0 1 856px;
         gap: 32px;
-    }
-}
-
-.pg-about__history-copy {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-
-    @include media-breakpoint-up(lg) {
-        gap: 20px;
     }
 }
 
@@ -332,6 +371,7 @@
     margin: 0;
     aspect-ratio: 856 / 364;
     overflow: hidden;
+    border-radius: var(--pg-radius-lg);
     background: #cfcfcf;
 
     img {
@@ -346,53 +386,68 @@
 .pg-about__stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px 24px;
+    gap: 12px;
     margin: 0;
 
     @include media-breakpoint-up(md) {
-        grid-template-columns: repeat(3, auto);
-        justify-content: space-between;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
     }
 
-    // Mobile frame: clients + years side by side, companies centred below.
+    // Mobile frame: clients + years side by side, companies below.
     .pg-about__stat--companies {
         grid-column: 1 / -1;
-        text-align: center;
 
         @include media-breakpoint-up(md) {
             grid-column: auto;
-            text-align: start;
         }
     }
 
     dt {
         font-family: var(--pg-font-family-fn);
-        font-size: 1rem;
+        font-size: .875rem;
         font-weight: 500;
-        line-height: 38px;
+        line-height: 22px;
         letter-spacing: .015em;
         color: var(--pg-text-body);
 
         @include media-breakpoint-up(lg) {
-            font-size: 1.125rem;
+            font-size: 1rem;
+            line-height: 26px;
         }
     }
 
     dd {
-        margin: 4px 0 0;
+        margin: 0;
         font-family: var(--pg-font-family-display);
-        font-size: 1.5rem;
-        font-weight: 700;
-        line-height: 36px;
+        font-size: 1.75rem;
+        font-weight: 800;
+        line-height: 1.3;
         letter-spacing: .015em;
-        color: var(--pg-text-strong);
+        white-space: nowrap;
+        color: var(--pg-primary-deep);
 
-        @include media-breakpoint-up(lg) {
-            margin-top: 9px;
-            font-size: 2rem;
-            font-weight: 800;
-            line-height: 48px;
+        @include media-breakpoint-up(xl) {
+            font-size: 2.5rem;
         }
+    }
+}
+
+// A soft card per figure: the number leads, its label sits below (the
+// DOM keeps dt before dd).
+.pg-about__stat {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 6px;
+    min-width: 0;
+    padding: 18px 20px;
+    border: 1px solid var(--pg-border);
+    border-radius: var(--pg-radius-lg);
+    background: var(--pg-background-alt);
+
+    @include media-breakpoint-up(xl) {
+        padding: 24px 28px;
     }
 }
 
@@ -405,5 +460,9 @@
 
     .pg-about__partners-text {
         color: var(--pg-text-body);
+    }
+
+    .pg-about__stats dd {
+        color: #{$pg-dark-highlight};
     }
 }

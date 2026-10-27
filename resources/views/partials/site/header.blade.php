@@ -24,10 +24,9 @@
     $endItems = array_slice($items, $split);
     $siteName = \App\Support\Seo\SeoManager::siteName();
     $overlay = \Illuminate\Support\Facades\View::hasSection('hero');
-    // Navy emblem in both header variants (over the hero photo, and on the
-    // light pill of inner pages); the blue emblem on the mobile frame. The
-    // dark theme shows the white mark instead (components/_logo.scss).
-    $desktopLogo = 'paydar-logo-navy';
+    // The home header floats over the dark hero in both themes, so it
+    // always shows the white emblem; inner pages pair the navy emblem with
+    // the white one for the dark theme (components/_logo.scss).
 @endphp
 <header class="pg-header {{ $overlay ? 'pg-header--overlay' : 'pg-header--light' }}">
     <div class="pg-header__inner">
@@ -37,11 +36,12 @@
             </div>
 
             <a class="pg-header__brand" href="{{ route('home') }}">
-                <picture class="pg-logo pg-logo--light">
-                    <source media="(max-width: 991.98px)" srcset="{{ asset('images/brand/paydar-logo-blue.png') }}">
-                    <img src="{{ asset('images/brand/'.$desktopLogo.'.png') }}" width="45" height="60" alt="{{ $siteName }}">
-                </picture>
-                <img class="pg-logo pg-logo--dark" src="{{ asset('images/brand/paydar-logo-white.png') }}" width="45" height="60" alt="{{ $siteName }}">
+                @if ($overlay)
+                    <img class="pg-logo" src="{{ asset('images/brand/darkMode.png') }}" width="45" height="51" alt="{{ $siteName }}">
+                @else
+                    <img class="pg-logo pg-logo--light" src="{{ asset('images/brand/lightMode.png') }}" width="45" height="51" alt="{{ $siteName }}">
+                    <img class="pg-logo pg-logo--dark" src="{{ asset('images/brand/darkMode.png') }}" width="45" height="51" alt="{{ $siteName }}">
+                @endif
             </a>
 
             <div class="pg-header__group pg-header__group--end d-none d-lg-flex">

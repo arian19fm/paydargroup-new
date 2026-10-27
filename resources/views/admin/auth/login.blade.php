@@ -10,13 +10,13 @@
 <body class="pg-admin pg-login">
     <main id="main" class="pg-login__layout">
         <aside class="pg-login__brand" aria-hidden="true">
-            <img src="{{ asset('images/brand/paydar-logo-blue.png') }}" width="64" height="88" alt="">
+            <img src="{{ asset('images/brand/darkMode.png') }}" width="64" height="73" alt="">
             <p class="pg-login__brand-title">{{ \App\Support\Seo\SeoManager::siteName() }}</p>
             <p class="pg-login__brand-text">{{ __('admin.title') }}</p>
         </aside>
         <div class="pg-login__panel">
             <div class="pg-login__card">
-                <img class="pg-login__logo d-lg-none" src="{{ asset('images/brand/paydar-logo-navy.png') }}" width="36" height="49" alt="">
+                <img class="pg-login__logo d-lg-none" src="{{ asset('images/brand/lightMode.png') }}" width="36" height="41" alt="">
                 <h1 class="pg-login__title">{{ __('admin.auth.login') }}</h1>
                 <p class="pg-login__text">{{ __('admin.auth.intro') }}</p>
                 <x-ui.flash-messages class="mb-3" />

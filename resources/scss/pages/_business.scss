@@ -154,7 +154,6 @@
     @include media-breakpoint-up(md) {
         max-width: none;
         height: auto;
-        aspect-ratio: 1294 / 366;
     }
 
     @include media-breakpoint-up(lg) {
@@ -328,17 +327,28 @@
 }
 
 // Heading column at the start, check-list at the end; stacked on mobile.
+// The list is a wrapping grid, so long text or extra items add rows
+// instead of pushing the row off-screen and crushing the heading. With
+// more than three items (--stacked) the heading sits above the list.
 .pg-business-benefits__top {
     display: flex;
     flex-direction: column;
     gap: 17px;
 
     @include media-breakpoint-up(lg) {
-        flex-direction: row;
+        display: grid;
+        grid-template-columns: minmax(280px, 453px) minmax(0, 1fr);
         align-items: center;
-        justify-content: space-between;
         gap: 40px;
         padding-inline-end: 20px;
+    }
+
+    &--stacked {
+        @include media-breakpoint-up(lg) {
+            grid-template-columns: minmax(0, 1fr);
+            gap: 40px;
+            padding-inline-end: 0;
+        }
     }
 }
 
@@ -346,10 +356,16 @@
     display: flex;
     flex-direction: column;
     gap: 17px;
+    min-width: 0;
 
     @include media-breakpoint-up(lg) {
-        flex: 0 1 453px;
         gap: 19px;
+    }
+
+    .pg-business-benefits__top--stacked & {
+        @include media-breakpoint-up(lg) {
+            max-width: 720px;
+        }
     }
 }
 
@@ -403,18 +419,31 @@
 }
 
 .pg-business-benefits__list {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 17px;
+    min-width: 0;
     margin: 0;
     padding: 0;
     list-style: none;
 
+    @include media-breakpoint-up(md) {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 32px 40px;
+    }
+
     @include media-breakpoint-up(lg) {
-        flex: 0 0 auto;
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 62px;
+        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    }
+
+    @include media-breakpoint-up(xl) {
+        column-gap: 62px;
+    }
+
+    .pg-business-benefits__top--stacked & {
+        @include media-breakpoint-up(lg) {
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        }
     }
 }
 
@@ -440,10 +469,12 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    min-width: 0;
     max-width: 305px;
+    overflow-wrap: anywhere;
 
-    @include media-breakpoint-up(lg) {
-        max-width: 224px;
+    @include media-breakpoint-up(md) {
+        max-width: none;
     }
 }
 

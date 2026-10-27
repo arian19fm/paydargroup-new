@@ -74,7 +74,7 @@
         @if ($hasBenefits)
             <section class="pg-business-benefits" aria-labelledby="business-benefits-heading">
                 <div class="pg-container pg-business-benefits__inner">
-                    <div class="pg-business-benefits__top">
+                    <div @class(['pg-business-benefits__top', 'pg-business-benefits__top--stacked' => count($benefits) > 3])>
                         <div class="pg-business-benefits__head" data-motion="reveal">
                             <p class="pg-business-benefits__eyebrow">{{ __('businesses.benefits_eyebrow', ['name' => $business->title]) }}</p>
                             <h2 id="business-benefits-heading" class="pg-business-benefits__title" data-motion="reveal-heading">{{ $business->benefits_title ?: __('businesses.benefits_title', ['name' => $business->title]) }}</h2>

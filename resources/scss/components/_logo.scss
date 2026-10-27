@@ -1,21 +1,19 @@
 // Brand mark, theme-aware.
 //
-// Each place the logo appears renders two marks: the light-theme one
-// (`.pg-logo--light`: the navy or blue emblem with the wordmark, a <picture>
-// or an <img>) and the dark-theme one (`.pg-logo--dark`: the white emblem,
-// public/images/brand/paydar-logo-white.png). The theme attribute decides
+// Where the surface follows the theme, the logo renders two marks: the
+// light-theme one (`.pg-logo--light`: the navy emblem,
+// public/images/brand/lightMode.png) and the dark-theme one
+// (`.pg-logo--dark`: the white emblem, darkMode.png). Surfaces that are dark
+// in both themes (home header over the hero, footer) render only the white
+// emblem, without a modifier. The theme attribute decides
 // which one is in the document; the other is display: none, so it is out
 // of the accessibility tree and never announced twice. No filters: the
 // dark mark is the real brand asset, not an inverted copy.
 
-// The white emblem has no wordmark, so it is shorter than the light mark;
-// it keeps the light mark's box (175×240) and sits centred in it, so the
-// header, offcanvas and footer do not change height when the theme flips.
+// Both emblems share the same proportions, so nothing shifts when the
+// theme flips.
 .pg-logo--dark {
     display: none;
-    aspect-ratio: 175 / 240;
-    object-fit: contain;
-    object-position: center;
 }
 
 [data-bs-theme="dark"] {

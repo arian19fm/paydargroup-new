@@ -34,7 +34,7 @@
     </div>
     <div class="offcanvas-body pg-admin__sidebar-body">
         <a class="pg-admin__brand" href="{{ route('admin.dashboard') }}">
-            <img src="{{ asset('images/brand/paydar-logo-blue.png') }}" width="28" height="38" alt="">
+            <img src="{{ asset('images/brand/darkMode.png') }}" width="28" height="32" alt="">
             <span>
                 <strong>{{ \App\Support\Seo\SeoManager::siteName() }}</strong>
                 <small>{{ __('admin.title') }}</small>

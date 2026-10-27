@@ -380,15 +380,15 @@ page is published.
 
 - Formats: WebP (AVIF where the pipeline supports it) with a JPEG/PNG
   fallback via `<picture>` when needed; SVG for icons/logos.
-- Brand mark (`components/_logo.scss`): wherever the logo appears
-  (header, offcanvas, footer) the markup carries both the light mark
-  (`.pg-logo--light`, navy/blue emblem + wordmark) and the dark mark
-  (`.pg-logo--dark`, the white emblem `images/brand/paydar-logo-white.png`,
-  cut from the supplied `darkMode.png` at the same emblem scale as the
-  navy file; it keeps the light mark's 175×240 box via `aspect-ratio` +
-  `object-fit: contain`, so nothing shifts when the theme flips).
+- Brand mark (`components/_logo.scss`, files in `public/images/brand/`:
+  `lightMode.png` navy emblem, `darkMode.png` white emblem, `black.png`
+  monochrome, all ≈ 0.88 wide/high): where the surface follows the theme
+  (inner-page header, offcanvas, admin login card) the markup carries both
+  the light mark (`.pg-logo--light`) and the dark mark (`.pg-logo--dark`);
   `[data-bs-theme="dark"]` swaps them with `display`; no `filter: invert`
-  on the logo. Favicons (`favicon.ico` 16/32/48,
+  on the logo. Surfaces dark in both themes — the home header over the
+  hero, the footer, the admin sidebar and login brand panel — show only
+  `darkMode.png`. Favicons (`favicon.ico` 16/32/48,
   `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`,
   `site.webmanifest`, listed in `config/site.php` → `icons`) are the brand
   emblem on its cream square, generated from `Logo BIG PaydarGroup.ir.jpg`.
