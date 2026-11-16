@@ -148,6 +148,8 @@ return [
                 'phone' => ['type' => 'string', 'public' => true, 'label' => 'settings.contact.phone'],
                 'address' => ['type' => 'text', 'public' => true, 'label' => 'settings.contact.address'],
                 'working_hours' => ['type' => 'string', 'public' => true, 'label' => 'settings.contact.working_hours'],
+                // Contact page photo beside the form; blank = the designed photo.
+                'photo_media_id' => ['type' => 'media', 'public' => true, 'label' => 'settings.contact.photo'],
                 // Contact page map: a Google Maps link (embedded live via App\Support\Contact\GoogleMapsEmbed),
                 // with a static image from the media library as the fallback.
                 'map_url' => ['type' => 'text', 'public' => true, 'label' => 'settings.contact.map_url'],

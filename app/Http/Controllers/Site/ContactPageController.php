@@ -28,20 +28,7 @@ class ContactPageController extends Controller
                 ['label' => __('contact.title')],
             ]);
 
-        $mapId = (int) settings('contact.map_image_media_id');
-        $map = null;
-
-        if ($mapId > 0) {
-            try {
-                $map = Media::query()->find($mapId);
-            } catch (QueryException) {
-                $map = null;
-            }
-
-            if ($map && ! $map->isImage()) {
-                $map = null;
-            }
-        }
+        $map = $this->image('contact.map_image_media_id');
 
         $mapUrl = trim((string) settings('contact.map_url')) ?: null;
 
@@ -51,9 +38,28 @@ class ContactPageController extends Controller
             'email' => settings('contact.email'),
             'phone' => settings('contact.phone'),
             'hours' => settings('contact.working_hours'),
+            'photo' => $this->image('contact.photo_media_id'),
             'map' => $map,
             'mapUrl' => $mapUrl,
             'mapEmbed' => $mapUrl ? GoogleMapsEmbed::fromUrl($mapUrl) : null,
         ]);
+    }
+
+    /** An image from the media library chosen in settings, else null. */
+    protected function image(string $key): ?Media
+    {
+        $id = (int) settings($key);
+
+        if ($id <= 0) {
+            return null;
+        }
+
+        try {
+            $media = Media::query()->find($id);
+        } catch (QueryException) {
+            return null;
+        }
+
+        return $media?->isImage() ? $media : null;
     }
 }

@@ -24,8 +24,12 @@
             <figure class="pg-contact-page__photo">
                 {{-- Parallax drives the wrapper: the <img> carries the CSS mirror, which a transform tween would undo. --}}
                 <picture data-motion="parallax">
-                    <source type="image/webp" srcset="{{ asset('images/home/contact.webp') }}">
-                    <img src="{{ asset('images/home/contact.jpg') }}" width="1737" height="905" alt="" fetchpriority="high" decoding="async">
+                    @if ($photo)
+                        <img src="{{ $photo->url() }}" width="{{ $photo->width ?: 1737 }}" height="{{ $photo->height ?: 905 }}" alt="{{ $photo->alt_text }}" fetchpriority="high" decoding="async">
+                    @else
+                        <source type="image/webp" srcset="{{ asset('images/home/contact.webp') }}">
+                        <img src="{{ asset('images/home/contact.jpg') }}" width="1737" height="905" alt="" fetchpriority="high" decoding="async">
+                    @endif
                 </picture>
             </figure>
 

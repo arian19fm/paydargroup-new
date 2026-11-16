@@ -27,6 +27,21 @@ class ContactPageTest extends TestCase
         $this->assertStringNotContainsString('pg-contact-page__map', $html);
     }
 
+    public function test_photo_beside_the_form_comes_from_settings(): void
+    {
+        $html = $this->get('/contact')->getContent();
+        $this->assertStringContainsString('images/home/contact.jpg', $html);
+
+        $photo = Media::factory()->create(['alt_text' => 'دفتر پایدار']);
+        app(Settings::class)->set('contact.photo_media_id', $photo->id);
+
+        $html = $this->get('/contact')->getContent();
+
+        $this->assertStringContainsString('src="'.$photo->url().'"', $html);
+        $this->assertStringContainsString('alt="دفتر پایدار"', $html);
+        $this->assertStringNotContainsString('images/home/contact.jpg', $html);
+    }
+
     public function test_channels_and_map_come_from_settings(): void
     {
         $map = Media::factory()->create(['alt_text' => 'نقشه']);

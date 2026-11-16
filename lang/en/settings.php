@@ -77,7 +77,7 @@ return [
         'jobs_eyebrow' => 'Openings: eyebrow', 'jobs_title_highlight' => 'Openings: highlighted part of the title', 'jobs_title' => 'Openings: rest of the title',
         'jobs_text' => 'Openings: text', 'jobs_empty' => 'Text shown when no opening is active',
     ],
-    'contact' => ['email' => 'E-mail', 'phone' => 'Phone', 'address' => 'Address', 'working_hours' => 'Working hours',
+    'contact' => ['email' => 'E-mail', 'phone' => 'Phone', 'address' => 'Address', 'photo' => 'Contact page photo beside the form (media ID; blank = designed photo)', 'working_hours' => 'Working hours',
         'map_url' => 'Google Maps link (share link, place page URL or embed code); shown as a live map on the contact page', 'map_image' => 'Fallback map image (media ID; used only when the Google Maps link is blank or cannot be embedded)'],
     'social' => ['instagram' => 'Instagram', 'linkedin' => 'LinkedIn', 'telegram' => 'Telegram', 'x' => 'X (Twitter)', 'aparat' => 'Aparat', 'youtube' => 'YouTube'],
 ];
