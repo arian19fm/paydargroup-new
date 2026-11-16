@@ -50,7 +50,7 @@
                 </div>
 
                 @if ($benefits)
-                    <ul class="pg-careers-benefits__cards" data-motion="reveal-group">
+                    <ul class="pg-careers-benefits__cards" data-motion="reveal-group" data-benefits-cycle>
                         @foreach ($benefits as $benefit)
                             <li class="pg-benefit-card @if ($loop->first) pg-benefit-card--lead @endif">
                                 <span class="pg-benefit-card__icon" aria-hidden="true">

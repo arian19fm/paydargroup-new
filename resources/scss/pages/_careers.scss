@@ -21,6 +21,7 @@
 // with 17px icons, "send résumé" 14.4 with an 18px arrow.
 
 $pg-careers-brown: #a97c50;
+$pg-benefit-ease: cubic-bezier(.22, 1, .36, 1);
 $pg-careers-link: #8a5028;
 
 .pg-careers {
@@ -298,9 +299,64 @@ $pg-careers-link: #8a5028;
         }
     }
 
-    &--lead {
+    // Highlighted card: the lead card when rendered (no JS), then each card
+    // in turn (site/benefits-cycle.js moves .is-active along in a loop).
+    &--lead,
+    &.is-active {
+        z-index: 1;
         border-color: #919eab;
         background: var(--pg-background);
+    }
+
+    // Cycling: the active card lifts with a soft shadow, its icon grows,
+    // and a hairline along the top edge fills over --pg-cycle — when it is
+    // full the script moves on, so pausing the line pauses the cycle.
+    [data-benefits-cycle].is-cycling & {
+        transition:
+            top .7s $pg-benefit-ease,
+            box-shadow .7s $pg-benefit-ease,
+            border-color .5s ease,
+            background-color .5s ease;
+
+        &::after {
+            content: "";
+            position: absolute;
+            inset: -1px -1px auto;
+            height: 2px;
+            background: $pg-careers-brown;
+            transform: scaleX(0);
+            transform-origin: left; // reading start; RTLCSS flips it for RTL
+            pointer-events: none;
+        }
+
+        // top, not transform/translate: the reveal motion (GSAP) owns both
+        // inline; the card is already position: relative, so nothing reflows.
+        &.is-active {
+            top: -6px;
+            box-shadow: 0 22px 40px -26px $pg-neu-shadow-dark;
+
+            &::after {
+                animation: pg-benefit-progress var(--pg-cycle, 3.2s) linear forwards;
+            }
+
+            .pg-benefit-card__icon {
+                transform: scale(1.08);
+            }
+        }
+    }
+
+    [data-benefits-cycle].is-cycling.is-paused &.is-active::after {
+        animation-play-state: paused;
+    }
+}
+
+[data-benefits-cycle].is-cycling .pg-benefit-card__icon {
+    transition: transform .7s $pg-benefit-ease;
+}
+
+@keyframes pg-benefit-progress {
+    to {
+        transform: scaleX(1);
     }
 }
 
@@ -736,7 +792,8 @@ $pg-careers-link: #8a5028;
 }
 
 [data-bs-theme="dark"] {
-    .pg-benefit-card--lead {
+    .pg-benefit-card--lead,
+    .pg-benefit-card.is-active {
         background: var(--pg-surface);
         border-color: var(--pg-border);
     }

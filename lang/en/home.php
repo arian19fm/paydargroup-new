@@ -11,7 +11,6 @@ return [
     ],
 
     'products' => [
-        'index_label' => 'Product index',
     ],
 
     'faq' => [

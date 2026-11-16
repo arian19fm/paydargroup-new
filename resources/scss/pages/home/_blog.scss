@@ -4,7 +4,7 @@
 // link (end, vertically centred); then a row of 389-wide cards, 32px apart,
 // flowing past the end edge (the frame shows three cards and the edge of a
 // fourth) — rendered as a scroll-snap track. Mobile: 32px 16px, cards
-// stacked full width, "see more" centred under them.
+// stacked full width, "see more" at the end edge under them.
 
 .pg-blog {
     padding: 32px 0;
@@ -89,25 +89,34 @@
     }
 }
 
-// "See all": small regular neumorphic button (components/_buttons).
+// "See all": a text button — no surface or shadow, flush with the end
+// edge of the container (the header row's end on desktop, under the cards
+// on mobile). Padding is block-only so the label lines up with the cards.
 .pg-blog__more {
-    --pg-neu-bg: var(--pg-background);
-    --pg-neu-fg: var(--pg-text-strong);
-    --pg-neu-r: #{$pg-neu-radius-sm};
-    --pg-neu-r-morph: #{$pg-neu-radius-sm-morph};
-    @include pg-neu-button;
     display: inline-flex;
     align-items: center;
     gap: 8px;
     min-height: 44px;
-    padding: 8px 18px;
+    padding: 8px 0;
     font-family: var(--pg-font-family-fn);
     font-size: .9375rem;
+    font-weight: 500;
     line-height: 25px;
+    color: var(--pg-text-strong);
+    text-decoration: none;
+    text-underline-offset: 6px;
+    background: none;
+    border: 0;
 
-    img {
-        width: 16px;
-        height: 16px;
+    &:hover {
+        color: var(--pg-text-strong);
+        text-decoration: underline;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--pg-primary);
+        outline-offset: 4px;
+        border-radius: 4px;
     }
 
     &--header {
@@ -120,11 +129,24 @@
     }
 
     &--footer {
-        align-self: center;
+        align-self: flex-end;
 
         @include media-breakpoint-up(lg) {
             display: none;
         }
+    }
+}
+
+.pg-blog__more-icon {
+    flex: 0 0 auto;
+    transition: transform .25s ease;
+
+    .pg-blog__more:hover & {
+        transform: translate(-2px, -2px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
     }
 }
 

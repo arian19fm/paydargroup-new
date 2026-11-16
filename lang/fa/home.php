@@ -24,7 +24,6 @@ return [
     ],
 
     'products' => [
-        'index_label' => 'فهرست محصولات',
     ],
 
     'faq' => [

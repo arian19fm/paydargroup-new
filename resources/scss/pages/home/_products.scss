@@ -35,7 +35,7 @@ $pg-showcase-ease: cubic-bezier(.2, .7, .2, 1);
     }
 }
 
-// Accent per product (index tabs, articles and the moved frames all carry
+// Accent per product (articles and the moved frames all carry
 // the class).
 .pg-product {
     @each $key, $c in $pg-products {
@@ -124,76 +124,6 @@ $pg-showcase-ease: cubic-bezier(.2, .7, .2, 1);
 
 .pg-products__cta {
     min-width: 175px;
-}
-
-// ---------------------------------------------------------------- Index
-
-.pg-showcase__nav {
-    margin-block: 24px 8px;
-}
-
-// Phones/tablets: a row of pills, scrolled sideways inside itself so the
-// page never overflows. Plain anchors — works without JS.
-.pg-showcase__index {
-    display: flex;
-    gap: 8px;
-    margin: 0;
-    padding: 2px 2px 8px;
-    list-style: none;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x proximity;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-        display: none;
-    }
-
-    > li {
-        flex: 0 0 auto;
-        scroll-snap-align: start;
-    }
-}
-
-.pg-showcase__tab {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    min-height: 44px;
-    padding: 8px 16px;
-    border: 1px solid var(--pg-divider);
-    border-radius: var(--pg-radius-pill);
-    background: var(--pg-card-bg);
-    font-family: var(--pg-font-family-base);
-    font-size: .875rem;
-    line-height: 1.4;
-    color: var(--pg-text-body);
-    text-decoration: none;
-    white-space: nowrap;
-    transition: border-color .25s ease, color .25s ease, background-color .25s ease;
-
-    &:hover {
-        border-color: var(--pg-product-accent);
-        color: var(--pg-text);
-    }
-
-    &:focus-visible {
-        outline: 2px solid var(--pg-product-accent);
-        outline-offset: 3px;
-        box-shadow: none;
-    }
-
-    &[aria-current="true"] {
-        border-color: var(--pg-product-accent);
-        color: var(--pg-text-strong);
-    }
-}
-
-.pg-showcase__tab-number {
-    font-family: var(--pg-font-family-fn);
-    font-size: .75rem;
-    font-weight: 500;
-    color: var(--pg-product-accent);
 }
 
 // ---------------------------------------------------------------- Products
@@ -513,40 +443,6 @@ $pg-showcase-ease: cubic-bezier(.2, .7, .2, 1);
         opacity: 1;
     }
 
-    // Index under the preview: five equal segments with a rule on top.
-    .pg-showcase__nav {
-        margin: 0;
-    }
-
-    .pg-showcase__index {
-        display: grid;
-        grid-auto-columns: minmax(0, 1fr);
-        grid-auto-flow: column;
-        gap: 12px;
-        padding: 0;
-        overflow: visible;
-    }
-
-    .pg-showcase__tab {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-        width: 100%;
-        padding: 14px 0 4px;
-        border: 0;
-        border-top: 2px solid var(--pg-divider);
-        border-radius: 0;
-        background: none;
-        font-size: .8125rem;
-        white-space: normal;
-        transition: border-color .4s ease, color .4s ease;
-
-        &:hover,
-        &[aria-current="true"] {
-            border-top-color: var(--pg-product-accent);
-        }
-    }
 }
 
 .pg-showcase__aside[hidden] {
@@ -666,49 +562,6 @@ $pg-showcase-ease: cubic-bezier(.2, .7, .2, 1);
 
     .pg-showcase__stage {
         display: none;
-    }
-
-    // Index: five equal segments with a progress rule, as on desktop;
-    // numbers only on phones (names stay for assistive tech).
-    .pg-showcase__nav {
-        flex: 0 0 auto;
-        margin: 0;
-    }
-
-    .pg-showcase__index {
-        display: grid;
-        grid-auto-columns: minmax(0, 1fr);
-        grid-auto-flow: column;
-        gap: 6px;
-        padding: 0;
-        overflow: visible;
-    }
-
-    .pg-showcase__tab {
-        justify-content: center;
-        width: 100%;
-        min-height: 44px;
-        padding: 10px 0 6px;
-        border: 0;
-        border-top: 2px solid var(--pg-divider);
-        border-radius: 0;
-        background: none;
-        transition: border-color .3s ease, color .3s ease;
-
-        &[aria-current="true"] {
-            border-top-color: var(--pg-product-accent);
-        }
-
-        @include media-breakpoint-up(md) {
-            gap: 8px;
-            font-size: .8125rem;
-        }
-    }
-
-    .pg-showcase__tab-name {
-        @include media-breakpoint-down(md) {
-            @include pg-visually-hidden;
-        }
     }
 
     // Deck: every card in the same cell.

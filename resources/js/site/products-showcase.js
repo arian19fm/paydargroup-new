@@ -1,15 +1,14 @@
 // Home products showcase ([data-products-showcase], partials/site/home/products).
 //
-// The server renders a stacked list: an index of anchor links, then one
-// article per product with its own screenshot — complete without
+// The server renders a stacked list: one article per product with its own screenshot — complete without
 // JavaScript and the fallback under reduced motion. This script picks one
 // of three modes and re-arranges the same elements (moved, never cloned,
 // so every alt text exists once):
 //
-// - staged (≥lg): the screenshots and the index move into the sticky
+// - staged (≥lg): the screenshots move into the sticky
 //   aside next to the text; an IntersectionObserver marks the product
 //   crossing the middle of the viewport as active (frame cross-fades in).
-// - pinned (<lg, motion allowed): the index and the product cards move
+// - pinned (<lg, motion allowed): the product cards move
 //   into the same sticky aside, which is one viewport tall inside a track
 //   a few viewports tall. The scroll position along the track drives the
 //   cards: each next card rises from the bottom of the viewport over the
@@ -25,13 +24,11 @@ const root = document.querySelector('[data-products-showcase]');
 if (root && 'IntersectionObserver' in window) {
     const wide = window.matchMedia('(min-width: 992px)');
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const nav = root.querySelector('[data-showcase-nav]');
     const list = root.querySelector('.pg-showcase__list');
     const aside = root.querySelector('[data-showcase-aside]');
     const sticky = aside.firstElementChild;
     const stage = root.querySelector('[data-showcase-stage]');
     const items = Array.from(root.querySelectorAll('[data-showcase-item]'));
-    const tabs = Array.from(root.querySelectorAll('[data-showcase-tab]'));
     const media = items.map((item) => item.querySelector('[data-showcase-media]'));
     const last = items.length - 1;
 
@@ -57,7 +54,6 @@ if (root && 'IntersectionObserver' in window) {
         active = index;
         items.forEach((item, i) => item.classList.toggle('is-active', i === index));
         media.forEach((figure, i) => figure.classList.toggle('is-active', i === index));
-        tabs.forEach((tab, i) => (i === index ? tab.setAttribute('aria-current', 'true') : tab.removeAttribute('aria-current')));
         stage.style.setProperty('--pg-showcase-accent', getComputedStyle(media[index]).getPropertyValue('--pg-product-accent'));
     };
 
@@ -114,7 +110,6 @@ if (root && 'IntersectionObserver' in window) {
     const reset = () => {
         root.classList.remove('is-staged', 'is-pinned');
         aside.hidden = true;
-        root.insertBefore(nav, aside);
         root.insertBefore(list, aside);
         items.forEach((item, i) => {
             item.style.removeProperty('transform');
@@ -136,10 +131,9 @@ if (root && 'IntersectionObserver' in window) {
 
         if (mode === 'staged') {
             stage.append(...media);
-            sticky.append(nav);
         } else {
             aside.style.setProperty('--pg-showcase-span', String(span));
-            sticky.append(nav, list);
+            sticky.append(list);
             measure();
         }
     };
@@ -179,50 +173,6 @@ if (root && 'IntersectionObserver' in window) {
                 window.requestAnimationFrame(() => goTo(i, 'instant'));
             }
         });
-    });
-
-    // Index: the links stay real anchors; this adds a smooth scroll (unless
-    // reduced motion), moves focus to the product and keeps the hash in the
-    // address bar without adding history entries.
-    tabs.forEach((tab, i) => {
-        tab.addEventListener('click', (event) => {
-            event.preventDefault();
-            activate(i);
-            goTo(i, reduced.matches ? 'instant' : 'smooth');
-            items[i].focus({ preventScroll: true });
-            history.replaceState(history.state, '', tab.hash);
-        });
-    });
-
-    // Arrow keys / Home / End move between index links (Tab still works).
-    nav.addEventListener('keydown', (event) => {
-        const current = tabs.indexOf(document.activeElement);
-
-        if (current === -1) {
-            return;
-        }
-
-        const rtl = getComputedStyle(nav).direction === 'rtl';
-        const step = {
-            ArrowDown: 1,
-            ArrowUp: -1,
-            ArrowRight: rtl ? -1 : 1,
-            ArrowLeft: rtl ? 1 : -1,
-        }[event.key];
-        let next;
-
-        if (step) {
-            next = (current + step + tabs.length) % tabs.length;
-        } else if (event.key === 'Home') {
-            next = 0;
-        } else if (event.key === 'End') {
-            next = last;
-        } else {
-            return;
-        }
-
-        event.preventDefault();
-        tabs[next].focus();
     });
 
     layout();

@@ -4,10 +4,10 @@
     none is published). The section copy comes from Settings → صفحهٔ اصلی
     (a blank text is left out).
 
-    Server-rendered as a plain stacked list — numbered index, then one
-    article per product with its own screenshot — so every word and image
-    is there without JavaScript. On wide screens site/products-showcase.js
-    moves the screenshots and the index into a sticky preview beside the
+    Server-rendered as a plain stacked list — one article per product with
+    its own screenshot — so every word and image is there without
+    JavaScript. On wide screens site/products-showcase.js moves the
+    screenshots into a sticky preview beside the
     text and marks the product being read as active (IntersectionObserver;
     native scrolling only). Accents come from the business's accent key.
 --}}
@@ -38,19 +38,6 @@
 
         @if (count($products))
         <div class="pg-showcase" data-products-showcase>
-            <nav class="pg-showcase__nav" aria-label="{{ __('home.products.index_label') }}" data-showcase-nav>
-                <ol class="pg-showcase__index">
-                    @foreach ($products as $product)
-                        <li class="pg-product--{{ $product['key'] }}">
-                            <a class="pg-showcase__tab" href="#product-{{ $product['slug'] }}" data-showcase-tab>
-                                <span class="pg-showcase__tab-number" aria-hidden="true">{{ fa_digits($product['number']) }}</span>
-                                <span class="pg-showcase__tab-name">{{ $product['name'] }}</span>
-                            </a>
-                        </li>
-                    @endforeach
-                </ol>
-            </nav>
-
             <ol class="pg-showcase__list">
                 @foreach ($products as $product)
                     <li class="pg-product pg-product--{{ $product['key'] }}" id="product-{{ $product['slug'] }}" data-showcase-item>

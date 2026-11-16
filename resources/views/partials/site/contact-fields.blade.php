@@ -14,13 +14,13 @@
     <p class="pg-contact__status pg-contact__status--error" role="alert">{{ __('home.contact.failed') }}</p>
 @endif
 
-<div class="pg-field pg-field--inset">
+<div class="pg-field">
     <label class="pg-field__label" for="{{ $idPrefix }}-name">{{ __('home.contact.name') }}</label>
     <input class="pg-field__control @error('name') is-invalid @enderror" id="{{ $idPrefix }}-name" name="name" type="text" value="{{ old('name') }}" autocomplete="name" maxlength="120" @error('name') aria-describedby="{{ $idPrefix }}-name-error" aria-invalid="true" @enderror>
     @error('name')<span id="{{ $idPrefix }}-name-error" class="pg-field__error">{{ $message }}</span>@enderror
 </div>
 
-<div class="pg-field pg-field--inset">
+<div class="pg-field">
     <label class="pg-field__label" for="{{ $idPrefix }}-phone">{{ __('home.contact.phone') }} <span class="pg-field__required">{{ __('home.contact.required') }}</span></label>
     <input class="pg-field__control @error('phone') is-invalid @enderror" id="{{ $idPrefix }}-phone" name="phone" type="tel" value="{{ old('phone') }}" autocomplete="tel" inputmode="tel" dir="ltr" required @error('phone') aria-describedby="{{ $idPrefix }}-phone-error" aria-invalid="true" @enderror>
     @error('phone')<span id="{{ $idPrefix }}-phone-error" class="pg-field__error">{{ $message }}</span>@enderror

@@ -30,3 +30,4 @@ Thumbs.db
 /public/fonts/Doran/
 /public/fonts/IranYekan/
 .claude/worktrees/
+.claude/settings.local.json

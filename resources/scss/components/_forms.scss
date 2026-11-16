@@ -1,7 +1,6 @@
 // Underlined field (contact form): a 13px Doran label above the control,
 // a 1px hairline below, no box. Errors sit under the line in the required
-// colour. `--inset` reproduces the slight start offset of the first two
-// fields in the design.
+// colour. `--inset` adds a small start offset (careers apply form).
 
 .pg-field {
     display: flex;

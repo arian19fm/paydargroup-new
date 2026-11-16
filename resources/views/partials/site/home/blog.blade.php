@@ -23,7 +23,7 @@
             @if ($section['cta'] && $section['cta_url'])
                 <a class="pg-blog__more pg-blog__more--header" href="{{ $section['cta_url'] }}">
                     <span>{{ $section['cta'] }}</span>
-                    <img src="{{ asset('images/icons/blog-arrow.svg') }}" width="16" height="16" alt="" aria-hidden="true">
+                    <svg class="pg-blog__more-icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.6 10.4V4H11M4.6 4L12 11.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </a>
             @endif
         </div>
@@ -45,7 +45,7 @@
         @if ($section['cta'] && $section['cta_url'])
             <a class="pg-blog__more pg-blog__more--footer" href="{{ $section['cta_url'] }}">
                 <span>{{ $section['cta'] }}</span>
-                <img src="{{ asset('images/icons/blog-arrow.svg') }}" width="16" height="16" alt="" aria-hidden="true">
+                <svg class="pg-blog__more-icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.6 10.4V4H11M4.6 4L12 11.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
         @endif
     </div>
