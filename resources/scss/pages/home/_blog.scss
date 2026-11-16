@@ -2,8 +2,8 @@
 //
 // Desktop: white, 90px 56px; header row = intro (803, start) + "see more"
 // link (end, vertically centred); then a row of 389-wide cards, 32px apart,
-// flowing past the end edge (the frame shows three cards and the edge of a
-// fourth) — rendered as a scroll-snap track. Mobile: 32px 16px, cards
+// clipped at the container's end edge (in line with the link) — rendered as
+// a scroll-snap track. Mobile: 32px 16px, cards
 // stacked full width, "see more" at the end edge under them.
 
 .pg-blog {
@@ -176,12 +176,11 @@
         display: flex;
         flex-direction: row;
         gap: 32px;
-        margin-inline: calc(-1 * var(--pg-gutter));
-        padding-inline: var(--pg-gutter);
+        // The row stays inside the container so its end edge lines up with
+        // the "see more" link above it; the clipped last card still peeks.
         overflow-x: auto;
         overscroll-behavior-x: contain;
         scroll-snap-type: x proximity;
-        scroll-padding-inline: var(--pg-gutter);
         // The row is dragged with the mouse (site/drag-scroll.js) or moved
         // with a trackpad; the peeking fourth card is the affordance, so the
         // bar itself is hidden.
