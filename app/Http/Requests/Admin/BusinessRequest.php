@@ -45,6 +45,17 @@ class BusinessRequest extends FormRequest
             'benefits_poster_media_id' => $this->input('benefits_poster_media_id') ?: null,
             'benefits' => Business::parseBenefits((string) $this->input('benefits_text_lines', '')),
             'website_url' => trim((string) $this->input('website_url')) ?: null,
+            'app_enabled' => $this->boolean('app_enabled'),
+            'app_android_url' => trim((string) $this->input('app_android_url')) ?: null,
+            'app_ios_url' => trim((string) $this->input('app_ios_url')) ?: null,
+            'app_name' => trim((string) $this->input('app_name')) ?: null,
+            'app_color' => strtolower(trim((string) $this->input('app_color'))) ?: null,
+            'app_link_color' => strtolower(trim((string) $this->input('app_link_color'))) ?: null,
+            'app_logo_media_id' => $this->input('app_logo_media_id') ?: null,
+            'remove_app_logo' => $this->boolean('remove_app_logo'),
+            'app_qr_media_id' => $this->input('app_qr_media_id') ?: null,
+            'remove_app_qr' => $this->boolean('remove_app_qr'),
+            'remove_app_android_file' => $this->boolean('remove_app_android_file'),
             // One feature per line in the form.
             'features' => array_values(array_filter(array_map('trim', preg_split('/\R/u', (string) $this->input('features_text', ''))))),
         ]);
@@ -68,6 +79,22 @@ class BusinessRequest extends FormRequest
             'excerpt' => ['nullable', 'string', 'max:1000'],
             'content' => $this->richContentRules(),
             'website_url' => ['nullable', 'string', 'url:http,https', 'max:500'],
+            'app_enabled' => ['boolean'],
+            // APKs are zip archives, so the sniffed MIME type varies; the extension is what Android needs.
+            'app_android_file' => ['nullable', 'file', 'extensions:apk', 'mimetypes:application/vnd.android.package-archive,application/zip,application/java-archive,application/octet-stream,application/x-zip-compressed', 'max:'.Business::APP_MAX_KILOBYTES],
+            'remove_app_android_file' => ['boolean'],
+            'app_name' => ['nullable', 'string', 'max:255'],
+            'app_description' => ['nullable', 'string', 'max:1000'],
+            'app_color' => ['nullable', 'string', 'regex:/^#[0-9a-f]{6}$/'],
+            'app_link_color' => ['nullable', 'string', 'regex:/^#[0-9a-f]{6}$/'],
+            'app_logo' => ['nullable', File::types(['png', 'webp'])->max(MediaService::MAX_KILOBYTES), 'mimetypes:image/png,image/webp'],
+            'app_logo_media_id' => ['nullable', 'integer', Rule::exists('media', 'id')],
+            'remove_app_logo' => ['boolean'],
+            'app_android_url' => ['nullable', 'string', 'url:http,https', 'max:500'],
+            'app_ios_url' => ['nullable', 'string', 'url:http,https', 'max:500'],
+            'app_qr' => ['nullable', File::types(['jpg', 'jpeg', 'png', 'webp'])->max(MediaService::MAX_KILOBYTES), 'mimetypes:image/jpeg,image/png,image/webp'],
+            'app_qr_media_id' => ['nullable', 'integer', Rule::exists('media', 'id')],
+            'remove_app_qr' => ['boolean'],
             'benefits_title' => ['nullable', 'string', 'max:255'],
             'benefits_text' => ['nullable', 'string', 'max:1000'],
             'benefits' => ['nullable', 'array', 'max:8'],
@@ -89,7 +116,7 @@ class BusinessRequest extends FormRequest
     public function businessData(): array
     {
         $data = [
-            ...$this->safe()->only(['title', 'slug', 'eyebrow', 'tagline', 'features', 'accent', 'image_media_id', 'excerpt', 'content', 'website_url', 'benefits_title', 'benefits_text', 'benefits', 'benefits_media_id', 'benefits_poster_media_id']),
+            ...$this->safe()->only(['title', 'slug', 'eyebrow', 'tagline', 'features', 'accent', 'image_media_id', 'excerpt', 'content', 'website_url', 'benefits_title', 'benefits_text', 'benefits', 'benefits_media_id', 'benefits_poster_media_id', 'app_enabled', 'app_name', 'app_description', 'app_color', 'app_link_color', 'app_android_url', 'app_ios_url', 'app_logo_media_id', 'app_qr_media_id']),
             ...$this->publishingData(),
         ];
         $data['features'] = array_values($data['features'] ?? []);
@@ -102,6 +129,14 @@ class BusinessRequest extends FormRequest
 
         if ($this->boolean('remove_benefits_media')) {
             $data['benefits_media_id'] = null;
+        }
+
+        if ($this->boolean('remove_app_logo')) {
+            $data['app_logo_media_id'] = null;
+        }
+
+        if ($this->boolean('remove_app_qr')) {
+            $data['app_qr_media_id'] = null;
         }
 
         if ($this->boolean('remove_benefits_poster')) {

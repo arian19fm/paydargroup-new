@@ -56,6 +56,61 @@
                         <x-admin.form.input name="benefits_poster_media_id" type="number" min="0" :label="__('admin.fields.image_media_id')" :value="$business->benefits_poster_media_id" />
                     </div>
                 </fieldset>
+                <fieldset class="card mb-4" id="app-download">
+                    <legend class="card-header h6 mb-0 py-2">{{ __('admin.businesses.app_section') }}</legend>
+                    <div class="card-body">
+                        <p class="form-text mt-0">{{ __('admin.businesses.app_help') }} <a href="{{ route('apps') }}" target="_blank" rel="noopener">{{ __('admin.businesses.app_page_link') }}</a></p>
+                        <x-admin.form.checkbox name="app_enabled" :label="__('admin.fields.app_enabled')" :checked="(bool) $business->app_enabled" />
+
+                        <x-admin.form.input name="app_name" :label="__('admin.fields.app_name')" :value="$business->app_name" :help="__('admin.fields.app_name_help')" />
+                        <x-admin.form.textarea name="app_description" :label="__('admin.fields.app_description')" :value="$business->app_description" :help="__('admin.fields.app_description_help')" rows="3" />
+                        <div class="row">
+                            <div class="col-sm-6"><x-admin.form.input name="app_color" :label="__('admin.fields.app_color')" :value="$business->app_color" :help="__('admin.fields.app_color_help')" placeholder="#2a4676" maxlength="7" dir="ltr" /></div>
+                            <div class="col-sm-6"><x-admin.form.input name="app_link_color" :label="__('admin.fields.app_link_color')" :value="$business->app_link_color" :help="__('admin.fields.app_link_color_help')" placeholder="#2a4676" maxlength="7" dir="ltr" /></div>
+                        </div>
+
+                        <h3 class="h6 mt-4">{{ __('admin.businesses.app_logo') }}</h3>
+                        @if ($business->appLogo)
+                            <div class="d-flex align-items-center gap-3 mb-2">
+                                <img src="{{ $business->appLogo->url() }}" width="52" height="52" alt="" class="rounded border object-fit-contain bg-white p-1">
+                                <div class="small">
+                                    <div>{{ __('admin.fields.app_logo_current') }}: <a href="{{ route('admin.media.edit', $business->appLogo) }}">{{ $business->appLogo->original_filename }}</a></div>
+                                    <x-admin.form.checkbox name="remove_app_logo" :label="__('admin.fields.remove_app_logo')" />
+                                </div>
+                            </div>
+                        @endif
+                        <x-admin.form.input name="app_logo" type="file" accept="image/png,image/webp" :label="__('admin.fields.app_logo_upload')" :help="__('admin.fields.app_logo_help')" />
+                        <x-admin.form.input name="app_logo_media_id" type="number" min="0" :label="__('admin.fields.image_media_id')" :value="$business->app_logo_media_id" />
+
+                        <h3 class="h6 mt-4">{{ __('admin.businesses.app_android') }}</h3>
+                        @if ($business->app_android_path)
+                            <div class="small mb-2">
+                                <div>{{ __('admin.fields.app_android_current') }}: <a href="{{ $business->androidUrl() }}" dir="ltr">{{ basename($business->app_android_path) }}</a>
+                                    @if ($business->androidSizeInMegabytes()) <span class="text-body-secondary">({{ $business->androidSizeInMegabytes() }} MB)</span> @endif
+                                </div>
+                                <x-admin.form.checkbox name="remove_app_android_file" :label="__('admin.fields.remove_app_android_file')" />
+                            </div>
+                        @endif
+                        <x-admin.form.input name="app_android_file" type="file" accept=".apk,application/vnd.android.package-archive" :label="__('admin.fields.app_android_file')" :help="__('admin.fields.app_android_file_help')" />
+                        <x-admin.form.input name="app_android_url" type="url" :label="__('admin.fields.app_android_url')" :value="$business->app_android_url" :help="__('admin.fields.app_android_url_help')" dir="ltr" />
+
+                        <h3 class="h6 mt-4">{{ __('admin.businesses.app_ios') }}</h3>
+                        <x-admin.form.input name="app_ios_url" type="url" :label="__('admin.fields.app_ios_url')" :value="$business->app_ios_url" :help="__('admin.fields.app_ios_url_help')" dir="ltr" />
+
+                        <h3 class="h6 mt-4">{{ __('admin.businesses.app_qr') }}</h3>
+                        @if ($business->appQr)
+                            <div class="d-flex align-items-center gap-3 mb-2">
+                                <img src="{{ $business->appQr->url() }}" width="72" height="72" alt="" class="rounded border object-fit-contain bg-white">
+                                <div class="small">
+                                    <div>{{ __('admin.fields.app_qr_current') }}: <a href="{{ route('admin.media.edit', $business->appQr) }}">{{ $business->appQr->original_filename }}</a></div>
+                                    <x-admin.form.checkbox name="remove_app_qr" :label="__('admin.fields.remove_app_qr')" />
+                                </div>
+                            </div>
+                        @endif
+                        <x-admin.form.input name="app_qr" type="file" accept="image/png,image/jpeg,image/webp" :label="__('admin.fields.app_qr_upload')" :help="__('admin.fields.app_qr_help')" />
+                        <x-admin.form.input name="app_qr_media_id" type="number" min="0" :label="__('admin.fields.image_media_id')" :value="$business->app_qr_media_id" />
+                    </div>
+                </fieldset>
                 <x-admin.seo-fields :seo="$business->seo" />
             </div>
             <div class="col-lg-4">

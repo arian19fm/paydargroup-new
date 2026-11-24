@@ -48,6 +48,41 @@ media ID), `status`, `published_at`, `author_id` → users, `created_by`,
   (its own `id`, else `section-N`) that feeds the table of contents. Article JSON-LD is emitted
   here only.
 
+### App downloads — `/apps`
+
+`GET /apps` (`Site\AppsPageController`, Figma 558:766 / 578:1074) lists the
+`published()` businesses whose app is switched on, in `sort_order`. The data
+sits on the business (admin → کسب‌وکارها → «اپلیکیشن»):
+
+- `app_enabled` — show on the page. A business with the switch on but no
+  file or address is still left out (`Business::scopeWithApp()`).
+- Card identity: `app_name` (the large name, e.g. «پایلو»; blank = the
+  business title — the quick-jump chip always uses the title), the
+  business `tagline` under it, `app_description` (blank = `excerpt`),
+  `app_logo_media_id` (transparent PNG/WebP: the white tile and, as a CSS
+  mask at 10% white, the cover watermark), `app_color` / `app_link_color`
+  (six-digit hex for the cover and the "visit website" link, emitted as
+  `--pg-app-color` / `--pg-app-link`; blank = primary/main, link = cover).
+  The website row is the business `website_url` (host shown without `www.`).
+- `app_android_path` / `app_android_size` — the uploaded `.apk` (≤ 300 MB,
+  `Business::APP_MAX_KILOBYTES`), stored on the public disk as
+  `apps/{slug}-{random}.apk`, **not** in the media library. A new upload or
+  the remove box deletes the previous file. `app_android_url` is an outside
+  link used only when no file is uploaded.
+- `app_ios_url` — the web app address for iPhone. The «آیفون» button opens
+  a dialog with the "open in Safari → Share → Add to Home Screen" guide
+  (`lang/*/apps.php`; the dialog is not in the Figma file and reuses the
+  careers `.pg-modal` shell) and this address; without JS the button is a
+  plain link to it.
+- `app_qr_media_id` — QR code image (media library), shown on the cover
+  from `md` up only, as in the frames.
+
+Page copy lives in `lang/*/apps.php`; icons in `public/images/apps`; styles
+in `resources/scss/pages/_apps.scss`.
+
+The server must allow uploads of that size (`upload_max_filesize`,
+`post_max_size`, and `client_max_body_size` on nginx).
+
 ### ArticleCategory — `article_categories`
 
 `name`, `slug` (unique), `description`, `sort_order`, `is_active`. Deleting

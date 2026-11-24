@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Site\AppsPageController;
 use App\Http\Controllers\Site\ArticleController;
 use App\Http\Controllers\Site\BusinessController;
 use App\Http\Controllers\Site\CareersPageController;
@@ -29,6 +30,7 @@ Route::get('/', HomeController::class)->name('home');
 // rate limited per IP (see AppServiceProvider).
 Route::get('/contact', ContactPageController::class)->name('contact');
 Route::get('/team', TeamPageController::class)->name('team');
+Route::get('/apps', AppsPageController::class)->name('apps');
 Route::get('/careers', CareersPageController::class)->name('careers');
 Route::get('/careers/{job}', [CareersPageController::class, 'show'])->whereNumber('job')->name('careers.show');
 Route::post('/careers/{job}/apply', [JobApplicationController::class, 'store'])->whereNumber('job')->middleware('throttle:job-apply')->name('careers.apply');

@@ -149,7 +149,7 @@ reusable `<x-admin.seo-fields>` section (see `docs/SEO.md`). Lists paginate
 | FAQ | `/admin/faqs` | home page questions and answers (`faqs.view` / `faqs.manage`; editors included) |
 | Automatic news | `/admin/news` | Claude writes daily financial/crypto news from web search; schedule, topics, publish/draft, run now, run log (`news.manage`; admin + super admin) — see `docs/CMS.md` → Automatic news |
 | Applications | `/admin/applications` | résumés from the careers page; unseen count in the sidebar (`applications.view` / `applications.manage`) |
-| Businesses | `/admin/businesses` | group businesses: home page cards + their own pages (`businesses.view` / `businesses.manage` / `businesses.publish`; editors manage drafts only) |
+| Businesses | `/admin/businesses` | group businesses: home page cards + their own pages (`businesses.view` / `businesses.manage` / `businesses.publish`; editors manage drafts only). The «اپلیکیشن» section of the form feeds the `/apps` download page (APK, iPhone web app address, QR code — `docs/CMS.md` → App downloads) |
 | Menus | `/admin/menus` | menu + inline item editor (nested via parent; "زیرمنوی خودکار" = children generated from published businesses; default items come from `MenusSeeder`) |
 | Redirects | `/admin/redirects` | |
 | Settings | `/admin/settings/{group}` | generated from `config/settings.php` |

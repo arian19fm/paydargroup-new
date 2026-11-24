@@ -24,6 +24,7 @@ class StaticPagesSource implements SitemapSource
         'articles.index',
         'careers',
         'team',
+        'apps',
         'contact',
     ];
 
@@ -45,6 +46,7 @@ class StaticPagesSource implements SitemapSource
             'articles.index' => $latestArticle(),
             'careers' => $this->max(JobOpening::query()->active()->max('updated_at')),
             'team' => $this->max(TeamMember::query()->active()->max('updated_at')),
+            'apps' => $this->max(Business::query()->published()->withApp()->max('updated_at')),
             default => null,
         };
     }

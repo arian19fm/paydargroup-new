@@ -86,6 +86,69 @@ class BusinessAdminTest extends TestCase
         $this->assertNull($business->fresh()->benefits_poster_media_id);
     }
 
+    public function test_app_download_file_qr_and_addresses_are_managed_from_the_form(): void
+    {
+        Storage::fake('public');
+        $admin = $this->adminUser('admin');
+
+        $this->actingAs($admin)->post('/admin/businesses', [
+            'title' => 'پایدار فاند', 'slug' => 'paydar-fund', 'accent' => 'fund', 'status' => 'draft',
+            'app_enabled' => 1, 'app_name' => 'فاند', 'app_description' => 'توضیح کارت', 'app_color' => '#2A412A', 'app_link_color' => '#a97c50',
+            'app_ios_url' => 'https://app.fund.example.com', 'website_url' => 'https://www.paydar.fund',
+            'app_logo' => UploadedFile::fake()->image('logo.png', 120, 160),
+            'app_android_file' => UploadedFile::fake()->create('fund-release.apk', 2048, 'application/vnd.android.package-archive'),
+            'app_qr' => UploadedFile::fake()->image('qr.png', 400, 400),
+        ])->assertSessionHasNoErrors()->assertRedirect();
+
+        $business = Business::firstOrFail();
+        $first = $business->app_android_path;
+        $this->assertTrue($business->app_enabled);
+        $this->assertSame('فاند', $business->appTitle());
+        $this->assertSame('توضیح کارت', $business->appText());
+        $this->assertSame('--pg-app-color: #2a412a; --pg-app-link: #a97c50;', $business->appStyle());
+        $this->assertSame('paydar.fund', $business->websiteHost());
+        $this->assertTrue(Media::findOrFail($business->app_logo_media_id)->isImage());
+        $this->assertMatchesRegularExpression('#^apps/paydar-fund-[a-z0-9]{8}\.apk$#', $first);
+        $this->assertSame(2048 * 1024, $business->app_android_size);
+        $this->assertSame('/storage/'.$first, $business->androidUrl());
+        $this->assertTrue(Media::findOrFail($business->app_qr_media_id)->isImage());
+        Storage::disk('public')->assertExists($first);
+
+        $this->actingAs($admin)->get("/admin/businesses/{$business->id}/edit")->assertOk()->assertSee(basename($first))->assertSee('https://app.fund.example.com');
+
+        // A new upload replaces the file and removes the old one.
+        $base = ['title' => 'پایدار فاند', 'slug' => 'paydar-fund', 'accent' => 'fund', 'status' => 'draft', 'app_enabled' => 1];
+        $this->actingAs($admin)->put("/admin/businesses/{$business->id}", $base + [
+            'app_qr_media_id' => $business->app_qr_media_id,
+            'app_android_file' => UploadedFile::fake()->create('fund-next.apk', 1024, 'application/zip'),
+        ])->assertSessionHasNoErrors();
+        $second = $business->fresh()->app_android_path;
+        $this->assertNotSame($first, $second);
+        Storage::disk('public')->assertMissing($first);
+        Storage::disk('public')->assertExists($second);
+
+        // Saving without touching the file keeps it.
+        $this->actingAs($admin)->put("/admin/businesses/{$business->id}", $base)->assertSessionHasNoErrors();
+        $this->assertSame($second, $business->fresh()->app_android_path);
+
+        $this->actingAs($admin)->put("/admin/businesses/{$business->id}", ['app_enabled' => 0, 'remove_app_android_file' => 1, 'remove_app_qr' => 1, 'remove_app_logo' => 1] + $base)->assertSessionHasNoErrors();
+        $business->refresh();
+        $this->assertFalse($business->app_enabled);
+        $this->assertNull($business->app_android_path);
+        $this->assertNull($business->app_android_size);
+        $this->assertNull($business->app_qr_media_id);
+        $this->assertNull($business->app_logo_media_id);
+        $this->assertSame('پایدار فاند', $business->appTitle());
+        $this->assertNull($business->appStyle());
+        Storage::disk('public')->assertMissing($second);
+
+        $this->actingAs($admin)->put("/admin/businesses/{$business->id}", $base + [
+            'app_android_file' => UploadedFile::fake()->create('virus.exe', 10, 'application/octet-stream'),
+            'app_ios_url' => 'javascript:alert(1)', 'app_android_url' => 'ftp://x', 'app_color' => 'red; background: url(x)', 'app_link_color' => '#12345',
+            'app_logo' => UploadedFile::fake()->image('logo.jpg'),
+        ])->assertSessionHasErrors(['app_android_file', 'app_ios_url', 'app_android_url', 'app_color', 'app_link_color', 'app_logo']);
+    }
+
     public function test_validation_rejects_bad_accent_slug_url_and_file(): void
     {
         $admin = $this->adminUser('admin');
