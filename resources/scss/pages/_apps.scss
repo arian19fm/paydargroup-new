@@ -284,6 +284,17 @@ $apps-ink: #1c252e; // grey/800
     border: 1px solid var(--pg-apps-line);
     background: var(--pg-background);
     scroll-margin-top: 24px;
+    transition: box-shadow .3s ease;
+
+    // Focus is moved here by the quick-jump chips (script only); the ring
+    // below says which card was picked, so no focus outline on top of it.
+    &:focus {
+        outline: 0;
+    }
+
+    &.is-landed {
+        box-shadow: 0 0 0 3px var(--pg-app-color, #{$apps-ink});
+    }
 }
 
 .pg-app-card__cover {

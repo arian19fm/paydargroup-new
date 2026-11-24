@@ -19,6 +19,7 @@ import './site/job-apply';
 import './site/share-link';
 import './site/article-reading';
 import './site/benefits-cycle';
+import './site/apps-jump';
 import './admin/char-counter';
 import { mountVueComponents } from './vue/mount';
 
