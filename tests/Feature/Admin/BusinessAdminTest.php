@@ -149,6 +149,38 @@ class BusinessAdminTest extends TestCase
         ])->assertSessionHasErrors(['app_android_file', 'app_ios_url', 'app_android_url', 'app_color', 'app_link_color', 'app_logo']);
     }
 
+    public function test_a_failed_save_leaves_no_uploaded_files_or_media_behind(): void
+    {
+        Storage::fake('public');
+        $admin = $this->adminUser('admin');
+        $business = Business::factory()->create(['slug' => 'paydar-fund', 'app_android_path' => 'apps/paydar-fund-current.apk']);
+        Storage::disk('public')->put('apps/paydar-fund-current.apk', 'apk');
+
+        // The database rejects the row after the uploads were stored.
+        Business::saving(fn () => throw new \RuntimeException('database refused the row'));
+
+        $this->withoutExceptionHandling();
+
+        try {
+            $this->actingAs($admin)->put("/admin/businesses/{$business->id}", [
+                'title' => 'پایدار فاند', 'slug' => 'paydar-fund', 'accent' => 'fund', 'status' => 'draft', 'app_enabled' => 1, 'app_name' => 'پایدار فاند',
+                'app_logo' => UploadedFile::fake()->image('logo.png', 120, 160),
+                'app_qr' => UploadedFile::fake()->image('qr.png', 400, 400),
+                'app_android_file' => UploadedFile::fake()->create('next.apk', 1024, 'application/zip'),
+            ]);
+            $this->fail('the save should have thrown');
+        } catch (\RuntimeException $e) {
+            $this->assertSame('database refused the row', $e->getMessage());
+        } finally {
+            Business::flushEventListeners();
+        }
+
+        $this->assertSame(0, Media::count());
+        $this->assertSame([], Storage::disk('public')->allFiles('media'));
+        $this->assertSame(['apps/paydar-fund-current.apk'], Storage::disk('public')->allFiles('apps'));
+        $this->assertSame('apps/paydar-fund-current.apk', $business->fresh()->app_android_path);
+    }
+
     public function test_validation_rejects_bad_accent_slug_url_and_file(): void
     {
         $admin = $this->adminUser('admin');

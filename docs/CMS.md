@@ -77,6 +77,19 @@ sits on the business (admin → کسب‌وکارها → «اپلیکیشن»):
 - `app_qr_media_id` — QR code image (media library), shown on the cover
   from `md` up only, as in the frames.
 
+Saving is one unit (`BusinessController::persist()`): uploads and the row
+are written in a transaction, and if the save fails the files stored by
+that request are deleted again, so no orphan media or APK is left; the APK
+being replaced is removed only after a successful save.
+
+Columns added with `ALTER TABLE` take the *table's* default charset, not
+the connection's. `2026_11_25_100000_fix_app_download_columns_charset`
+converts the app columns to utf8mb4 and sets the table default (a server
+whose `businesses` table had a legacy default rejected Persian text with
+error 1366). When adding text columns to an existing table, check
+`SHOW CREATE TABLE` on the server or give the column an explicit
+`->charset('utf8mb4')`.
+
 Page copy lives in `lang/*/apps.php`; icons in `public/images/apps`; styles
 in `resources/scss/pages/_apps.scss`.
 

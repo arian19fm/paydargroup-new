@@ -9,11 +9,16 @@ use App\Support\Media\MediaService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Throwable;
 
 class BusinessController extends Controller
 {
+    /** Files stored by the current request: [disk, path] pairs, removed again if the save fails. */
+    protected array $stored = [];
+
     public function __construct(protected MediaService $media)
     {
         $this->authorizeResource(Business::class, 'business');
@@ -41,8 +46,7 @@ class BusinessController extends Controller
 
     public function store(BusinessRequest $request): RedirectResponse
     {
-        $business = Business::create($this->withAppFile($request, $this->withUploadedImage($request, $request->businessData())));
-        $business->saveSeo($request->seoPayload());
+        $business = $this->persist($request, new Business);
 
         return redirect()->route('admin.businesses.edit', $business)->with('success', __('admin.saved'));
     }
@@ -56,8 +60,7 @@ class BusinessController extends Controller
 
     public function update(BusinessRequest $request, Business $business): RedirectResponse
     {
-        $business->update($this->withAppFile($request, $this->withUploadedImage($request, $request->businessData()), $business));
-        $business->saveSeo($request->seoPayload());
+        $this->persist($request, $business);
 
         return redirect()->route('admin.businesses.edit', $business)->with('success', __('admin.saved'));
     }
@@ -69,15 +72,50 @@ class BusinessController extends Controller
         return redirect()->route('admin.businesses.index')->with('success', __('admin.deleted'));
     }
 
+    /**
+     * Store the uploads and save the business as one unit. The rows are in
+     * a transaction; files are not, so when the save fails the files this
+     * request stored are removed again (their media rows roll back) and
+     * nothing is left orphaned. The Android file being replaced is deleted
+     * only once the save has succeeded.
+     */
+    protected function persist(BusinessRequest $request, Business $business): Business
+    {
+        $previousApp = $business->app_android_path;
+        $this->stored = [];
+
+        try {
+            DB::transaction(function () use ($request, $business) {
+                $data = $this->withAppFile($request, $this->withUploadedImage($request, $request->businessData()));
+                $business->fill($data)->save();
+                $business->saveSeo($request->seoPayload());
+            });
+        } catch (Throwable $e) {
+            foreach ($this->stored as [$disk, $path]) {
+                Storage::disk($disk)->delete($path);
+            }
+
+            throw $e;
+        }
+
+        if ($previousApp && $previousApp !== $business->app_android_path) {
+            Storage::disk(Business::APP_DISK)->delete($previousApp);
+        }
+
+        return $business;
+    }
+
     /** Files uploaded from the form go into the media library, named after the business. */
     protected function withUploadedImage(BusinessRequest $request, array $data): array
     {
         foreach (['image' => 'image_media_id', 'benefits_media' => 'benefits_media_id', 'benefits_poster' => 'benefits_poster_media_id', 'app_logo' => 'app_logo_media_id', 'app_qr' => 'app_qr_media_id'] as $field => $column) {
             if ($request->hasFile($field)) {
-                $data[$column] = $this->media->upload($request->file($field), $request->user(), [
+                $media = $this->media->upload($request->file($field), $request->user(), [
                     'title' => $data['title'],
                     'alt_text' => $data['title'],
-                ])->id;
+                ]);
+                $this->stored[] = [$media->disk, $media->path];
+                $data[$column] = $media->id;
             }
         }
 
@@ -86,27 +124,19 @@ class BusinessController extends Controller
 
     /**
      * The Android install file lives on the public disk under apps/, named
-     * after the business so the download keeps a readable name. A new upload
-     * or the remove flag deletes the previous file.
+     * after the business so the download keeps a readable name. The file it
+     * replaces is removed by persist() after the save.
      */
-    protected function withAppFile(BusinessRequest $request, array $data, ?Business $business = null): array
+    protected function withAppFile(BusinessRequest $request, array $data): array
     {
-        $disk = Storage::disk(Business::APP_DISK);
-        $previous = $business?->app_android_path;
-
         if ($request->hasFile('app_android_file')) {
             $file = $request->file('app_android_file');
             $data['app_android_path'] = $file->storeAs('apps', $data['slug'].'-'.Str::lower(Str::random(8)).'.apk', ['disk' => Business::APP_DISK]);
             $data['app_android_size'] = $file->getSize();
+            $this->stored[] = [Business::APP_DISK, $data['app_android_path']];
         } elseif ($request->boolean('remove_app_android_file')) {
             $data['app_android_path'] = null;
             $data['app_android_size'] = null;
-        } else {
-            return $data;
-        }
-
-        if ($previous && $previous !== $data['app_android_path']) {
-            $disk->delete($previous);
         }
 
         return $data;
