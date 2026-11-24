@@ -350,13 +350,14 @@ $apps-ink: #1c252e; // grey/800
     justify-content: center;
     width: 52px;
     height: 52px;
-    background: #fff;
 
+    // No tile behind the logo: it sits straight on the cover colour and
+    // uses the whole 52px box.
     img {
         width: auto;
-        max-width: 38px;
+        max-width: 100%;
         height: auto;
-        max-height: 40px;
+        max-height: 100%;
         object-fit: contain;
     }
 }
@@ -395,6 +396,7 @@ $apps-ink: #1c252e; // grey/800
     display: flex;
     padding: 7px;
     border: 1px solid $apps-line;
+    border-radius: 8px;
     background: #fff;
 
     img {
