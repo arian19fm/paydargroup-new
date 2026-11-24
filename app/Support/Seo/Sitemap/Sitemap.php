@@ -6,6 +6,7 @@ use App\Models\Article;
 use App\Support\Seo\SeoManager;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 /**
@@ -86,11 +87,18 @@ class Sitemap
     /** @return array{xml: string, lastmod: ?\DateTimeInterface} */
     protected function section(string $name): array
     {
-        return $this->remember($name, function () use ($name) {
+        // Only plain values go into the cache: stores that serialize (database,
+        // file, redis) refuse to restore objects (cache.serializable_classes),
+        // so a cached Carbon would come back as __PHP_Incomplete_Class.
+        $cached = $this->remember($name, function () use ($name) {
             $xml = $this->builder->urlset($this->urls(config("seo.sitemaps.{$name}", [])), $newest);
 
-            return ['xml' => $xml, 'lastmod' => $newest];
+            return ['xml' => $xml, 'lastmod' => $newest?->format(DATE_ATOM)];
         });
+
+        $lastmod = is_string($cached['lastmod'] ?? null) ? Carbon::parse($cached['lastmod']) : null;
+
+        return ['xml' => $cached['xml'], 'lastmod' => $lastmod];
     }
 
     /**

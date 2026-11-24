@@ -7,6 +7,7 @@ use App\Models\ArticleCategory;
 use App\Models\Media;
 use App\Models\NewsRun;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
 
 class RobotsAndSitemapTest extends TestCase
@@ -96,6 +97,19 @@ class RobotsAndSitemapTest extends TestCase
         $this->assertNotFalse(simplexml_load_string($xml));
 
         $this->get('/sitemap.xml')->assertSee('<loc>https://paydargroup.test/sitemap-news.xml</loc>', false);
+    }
+
+    public function test_index_survives_a_cache_store_that_serializes(): void
+    {
+        // Production caches in the database, where objects are not restored (cache.serializable_classes).
+        config(['cache.default' => 'database']);
+        Article::factory()->published()->create(['slug' => 'cached', 'updated_at' => '2026-10-01 10:00:00']);
+
+        $this->get('/sitemaps/articles.xml')->assertOk();   // caches the section with its lastmod
+        Cache::forget(config('seo.sitemap_cache_key').'.index');
+
+        $this->get('/sitemap.xml')->assertOk()->assertSee('<lastmod>2026-10-01T10:00:00', false);
+        $this->get('/sitemap.xml')->assertOk();
     }
 
     public function test_cached_sitemaps_are_refreshed_when_content_changes(): void
